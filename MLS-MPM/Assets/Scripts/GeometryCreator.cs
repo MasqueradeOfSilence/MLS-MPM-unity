@@ -11,10 +11,10 @@ public class GeometryCreator: MonoBehaviour
     /*
      * Currently using tiny spheres to represent particles. 
      * May need to turn off collider physics.
-     * Currently a Vector2, but will be extended to a Vector3.
+     * Currently a Vector2, but will be extended to a Vector3 in the 3D Version (to be coded).
      * Need to have another function that uses Particles on top
      */
-    public static GameObject SpawnParticleSphere(Vector2 location)
+    public static GameObject SpawnParticleSphere_2DVersion(Vector2 location)
     {
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = location;

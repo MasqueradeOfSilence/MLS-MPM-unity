@@ -28,9 +28,10 @@ public class AssetTests
     [Test]
     public void SpawnParticleSphereShouldCreateANewSphere()
     {
+        // 2D vectors for now, which we convert to 3D, just for the system of spheres only right now. 
         GameObject newSphere = GeometryCreator.SpawnParticleSphere(new Vector2(0.1f, 0.2f));
         Assert.IsNotNull(newSphere);
-        //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Assert.IsInstanceOf(typeof(PrimitiveType.Sphere), newSphere);
+        // test its basic sphere attributes: 3D position, name, etc.
+        // double check on your numbering system
     }
 }
