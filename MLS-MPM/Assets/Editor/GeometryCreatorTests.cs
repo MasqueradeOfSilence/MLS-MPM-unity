@@ -2,8 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 
 /*
- * Asset Tests: Tests for our various game objects
- * We will probably build classes on top of these...
+ * Testing the GeometryCreator, which enables our math for MLS-MPM to integrate with the Unity game engine.
  */
 [TestFixture]
 public class GeometryCreatorTests
@@ -46,5 +45,20 @@ public class GeometryCreatorTests
         expectedID = 1;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
         GeometryCreator.ResetSphereID();
+    }
+
+    [Test]
+    public void CreateParticleShouldCreateAParticleObject()
+    {
+        // Particle objects should have spheres underneath the hood. Abstracted out. 
+        // There should be a few particle tests (possibly only one for the correct data members) but not in this file.
+    }
+
+    [Test]
+    public void SpawnParticleSphereShouldAddToAListOfParticles()
+    {
+        // should they be a list of spheres? or particle objects...?
+        // we could also make a wrapper to give us back particles
+
     }
 }
