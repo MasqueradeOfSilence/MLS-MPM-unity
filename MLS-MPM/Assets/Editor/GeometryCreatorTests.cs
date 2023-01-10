@@ -6,7 +6,7 @@ using UnityEngine;
  * We will probably build classes on top of these...
  */
 [TestFixture]
-public class AssetTests
+public class GeometryCreatorTests
 {
     [Test]
     public void BaseSphereShouldExist()
@@ -29,9 +29,22 @@ public class AssetTests
     public void SpawnParticleSphereShouldCreateANewSphere()
     {
         // 2D vectors for now, which we convert to 3D, just for the system of spheres only right now. 
-        GameObject newSphere = GeometryCreator.SpawnParticleSphere(new Vector2(0.1f, 0.2f));
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new Vector2(0.1f, 0.2f));
         Assert.IsNotNull(newSphere);
-        // test its basic sphere attributes: 3D position, name, etc.
-        // double check on your numbering system
+        Assert.AreEqual(newSphere.transform.position, new Vector3(0.1f, 0.2f, 0f));
+        Assert.AreEqual(newSphere.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f));
+        Assert.IsTrue(newSphere.name.Contains("Sphere"));
+    }
+
+    [Test]
+    public void SphereIDShouldIncrementWhenANewSphereIsCreated()
+    {
+        GeometryCreator.ResetSphereID();
+        int expectedID = 0;
+        Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new Vector2(0.1f, 0.2f));
+        expectedID = 1;
+        Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
+        GeometryCreator.ResetSphereID();
     }
 }
