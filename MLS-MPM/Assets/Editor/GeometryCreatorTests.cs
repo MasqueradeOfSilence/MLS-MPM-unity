@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using UnityEngine;
-
 /*
  * Testing the GeometryCreator, which enables our math for MLS-MPM to integrate with the Unity game engine.
  */
