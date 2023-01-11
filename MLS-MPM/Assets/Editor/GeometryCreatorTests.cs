@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using Unity.Mathematics;
 /*
  * Testing the GeometryCreator, which enables our math for MLS-MPM to integrate with the Unity game engine.
  */
@@ -44,6 +45,24 @@ public class GeometryCreatorTests
         expectedID = 1;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
         GeometryCreator.ResetSphereID();
+    }
+
+    [Test]
+    public void SpawnFinalSpheresShouldConvertParticlesIntoSphericalGameObjects()
+    {
+        // need a wrapper for this process...
+        Particle p1 = ScriptableObject.CreateInstance("Particle") as Particle;
+        Vector2 testPosition = new Vector2(0, 0);
+        Vector2 testVelocity = new Vector2(0, 1);
+        double testMass = 1;
+        double2x2 testC = new double2x2();
+        p1.InitParticle(testPosition, testVelocity, testMass, testC);
+        Particle p2 = ScriptableObject.CreateInstance("Particle") as Particle;
+        p2.InitParticle(testPosition, testVelocity, testMass, testC);
+        Particle[] particles = new Particle[] { p1, p2 };
+        GameObject[] finalParticleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles);
+        Assert.AreEqual(2, finalParticleSpheres.Length);
+        // next: test contents
     }
 
     [Test]

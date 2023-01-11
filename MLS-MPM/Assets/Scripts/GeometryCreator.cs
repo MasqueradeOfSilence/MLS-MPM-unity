@@ -24,6 +24,19 @@ public class GeometryCreator: MonoBehaviour
         return sphere;
     }
 
+    // Note: Spawn may not be the best name, as we don't put them into the game until later
+    public static GameObject[] SpawnFinalParticleSpheres(Particle[] particles)
+    {
+        GameObject[] finalParticleSpheres = new GameObject[particles.Length];
+        for (int i = 0; i < particles.Length; i++)
+        {
+            Particle p = particles[i];
+            GameObject particleSphere = p.ConstructSphereFromParticle();
+            finalParticleSpheres[i] = particleSphere;
+        }
+        return finalParticleSpheres;
+    }
+
     public static int GetSphereID()
     {
         return sphereID;
