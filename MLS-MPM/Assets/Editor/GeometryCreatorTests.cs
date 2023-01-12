@@ -50,33 +50,39 @@ public class GeometryCreatorTests
     [Test]
     public void SpawnFinalSpheresShouldConvertParticlesIntoSphericalGameObjects()
     {
-        // need a wrapper for this process...
-        Particle p1 = ScriptableObject.CreateInstance("Particle") as Particle;
         Vector2 testPosition = new Vector2(0, 0);
         Vector2 testVelocity = new Vector2(0, 1);
         double testMass = 1;
         double2x2 testC = new double2x2();
-        p1.InitParticle(testPosition, testVelocity, testMass, testC);
-        Particle p2 = ScriptableObject.CreateInstance("Particle") as Particle;
-        p2.InitParticle(testPosition, testVelocity, testMass, testC);
+        Particle p1 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
+        Particle p2 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
         Particle[] particles = new Particle[] { p1, p2 };
         GameObject[] finalParticleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles);
         Assert.AreEqual(2, finalParticleSpheres.Length);
-        // next: test contents
+        GameObject particleSphere0 = finalParticleSpheres[0];
+        GameObject particleSphere1 = finalParticleSpheres[1];
+        Assert.IsTrue(particleSphere0.name.Contains("Sphere"));
+        Assert.IsTrue(particleSphere1.name.Contains("Sphere"));
     }
 
     [Test]
-    public void CreateParticleShouldCreateAParticleObject()
+    public void CreateNewParticleShouldCreateAParticleObject()
     {
         // Particle objects should have spheres underneath the hood. Abstracted out. 
         // There should be a few particle tests (possibly only one for the correct data members) but not in this file.
+        Vector2 position = new Vector2(1, 2);
+        Vector2 velocity = new Vector2(2, 3);
+        double mass = 1;
+        double2x2 c = new double2x2();
+        Particle p = GeometryCreator.CreateNewParticle(position, velocity, mass, c);
+        Assert.IsNotNull(p);
+        Assert.AreEqual(position, p.GetPosition());
+        Assert.AreEqual(velocity, p.GetVelocity());
+        Assert.AreEqual(mass, p.GetMass());
+        Assert.AreEqual(c, p.GetAffineMomentumMatrix());
     }
 
-    [Test]
-    public void SpawnParticleSphereShouldAddToAListOfParticles()
-    {
-        // should they be a list of spheres? or particle objects...?
-        // we could also make a wrapper to give us back particles
+    // possible test here for adding particles into the actual scene
 
-    }
+    // test for moving particles around the scene should have its own class
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Mathematics;
 
 /*
  * Utility class to spawn geometry.
@@ -35,6 +36,14 @@ public class GeometryCreator: MonoBehaviour
             finalParticleSpheres[i] = particleSphere;
         }
         return finalParticleSpheres;
+    }
+
+    // Use this wrapper for the convoluted way Unity makes you do it
+    public static Particle CreateNewParticle(Vector2 position, Vector2 velocity, double mass, double2x2 c)
+    {
+        Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
+        particle.InitParticle(position, velocity, mass, c);
+        return particle;
     }
 
     public static int GetSphereID()
