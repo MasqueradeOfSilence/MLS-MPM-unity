@@ -10,14 +10,14 @@ public class GeometryCreatorTests
     [Test]
     public void BaseSphereShouldExist()
     {
-        GameObject baseSphere = GameObject.Find("BaseSphere");
+        GameObject baseSphere = GameObject.Find("ExampleGeo");
         Assert.IsNotNull(baseSphere);
     }
 
     [Test]
     public void BaseSphereShouldBeSmall()
     {
-        GameObject baseSphere = GameObject.Find("BaseSphere");
+        GameObject baseSphere = GameObject.Find("ExampleGeo");
         // local vs. lossy scale shouldn't matter right now
         Vector3 actualScale = baseSphere.transform.localScale;
         Vector3 expectedScale = new Vector3(0.1f, 0.1f, 0.1f);
