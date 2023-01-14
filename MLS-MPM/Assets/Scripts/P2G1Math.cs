@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 
@@ -98,7 +96,7 @@ public class P2G1Math: MonoBehaviour
     {
         double x = massContribution * (particleVelocity[0] + Q[0]);
         double y = massContribution * (particleVelocity[1] + Q[1]);
-        double2 newCellVelocity = new double2(particleVelocity[0] + x, particleVelocity[1] + y);
+        double2 newCellVelocity = new(particleVelocity[0] + x, particleVelocity[1] + y);
         return newCellVelocity;
     }
 

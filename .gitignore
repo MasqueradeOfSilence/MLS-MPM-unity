@@ -13,6 +13,7 @@ MLS-MPM/Library/
 MLS-MPM/obj/
 MLS-MPM/UserSettings/
 MLS-MPM/Packages/
+MLS-MPM/Logs/
 
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored

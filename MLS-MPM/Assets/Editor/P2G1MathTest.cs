@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using NUnit.Framework;
 using Unity.Mathematics;
 
@@ -110,7 +107,7 @@ public class P2G1MathTest
         double2x2 C = new double2x2(0.1, 1, 0.2, 2);
         double2 distanceFromCurrentParticleToCurrentNeighbor = new double2(-0.7, -0.5);
         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
-        double2 expectedQ = new double2(-0.57, -1.14);
+        double2 expectedQ = new(-0.57, -1.14);
         Assert.That(Q, Is.EqualTo(expectedQ).Within(0.01));
     }
 
@@ -141,8 +138,8 @@ public class P2G1MathTest
         // Add momentum to update the cell velocity.
         // Momentum is computed as mass contribution * (particle velocity + Q)
         double massContribution = 0.16;
-        double2 particleVelocity = new double2(2, 2);
-        double2 expectedNewCellVelocity = new double2(2.2288, 2.1376);
+        double2 particleVelocity = new(2, 2);
+        double2 expectedNewCellVelocity = new(2.2288, 2.1376);
         double2 Q = new double2(-0.57, -1.14);
         double2 actualNewCellVelocity = P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particleVelocity, Q);
         Assert.That(expectedNewCellVelocity, Is.EqualTo(actualNewCellVelocity).Within(0.01));
