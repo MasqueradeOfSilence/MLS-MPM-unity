@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System;
 
 /*
  * Game Interface class: inserts particles directly into the Unity scene, as spherical GameObjects
@@ -9,34 +10,67 @@ using Unity.Mathematics;
 
 public class GameInterface: MonoBehaviour
 {
-    GameObject[] listOfParticleSpheres;
-    int numIterations = 0;
+    private GameObject[] listOfParticleSpheres;
+    private bool weNeedToAddAllTheParticles = false;
+    private bool weNeedToNukeAllTheParticles = false;
+
     void Update()
     {
-        // add: test for listOfPS being not null
-        if (numIterations == 0)
+        // Need to make PlayMode tests for these
+        if (weNeedToNukeAllTheParticles)
         {
-            numIterations++;
-            Vector2 testPosition = new Vector2(0, 0);
-            Vector2 testVelocity = new Vector2(0, 1);
-            double testMass = 1;
-            double2x2 testC = new double2x2();
-            Particle p1 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
-            listOfParticleSpheres = new GameObject[] { p1.ConstructSphereFromParticle() };
-            foreach (GameObject p in listOfParticleSpheres)
-            {
-                Instantiate(p);
-            }
+            weNeedToNukeAllTheParticles = false;
+            NukeAllParticles();
+        }
+        else if (weNeedToAddAllTheParticles)
+        {
+            weNeedToAddAllTheParticles = false;
+            AddAllParticles();
         }
     }
+
+    private void NukeAllParticles()
+    {
+        foreach (GameObject p in listOfParticleSpheres)
+        {
+            Destroy(p);
+        }
+    }
+
+    private void AddAllParticles()
+    {
+        foreach (GameObject p in listOfParticleSpheres)
+        {
+            Instantiate(p);
+        }
+    }
+
+
     public void DumpParticlesIntoScene(Particle[] particles)
     {
-        // note: change the test for this. this is getting into actual playtime tests...
         GameObject[] particleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles);
         listOfParticleSpheres = particleSpheres;
-        foreach (GameObject particleSphere in particleSpheres)
-        {
-            //Instantiate(particleSphere);
-        }
+        weNeedToAddAllTheParticles = true;
+    }
+
+    public void RemoveParticlesFromScene()
+    {
+        Array.Clear(listOfParticleSpheres, 0, listOfParticleSpheres.Length);
+        weNeedToNukeAllTheParticles = true;
+    }
+
+    public bool GetIfWeNeedToAddAllTheParticles()
+    {
+        return weNeedToAddAllTheParticles;
+    }
+
+    public bool GetIfWeNeedToNukeAllTheParticles()
+    {
+        return weNeedToNukeAllTheParticles;
+    }
+
+    public GameObject[] GetListOfParticleSpheres()
+    {
+        return listOfParticleSpheres;
     }
 }

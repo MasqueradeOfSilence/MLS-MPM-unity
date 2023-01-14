@@ -5,11 +5,13 @@ using Unity.Mathematics;
 [TestFixture]
 public class GameInterfaceTests : MonoBehaviour
 {
-    // no
-    private GameInterface gameInterface = new GameInterface();
+    private GameInterface gameInterface;
+
+    // Most of these tests should be completed on PlayMode, not EditMode.
     [Test]
-    public void DumpParticlesIntoSceneShouldAddAListOfGameObjectsToTheCurrentScene()
+    public void DumpParticlesIntoSceneShouldTellUpdateToAddParticles()
     {
+        gameInterface = GameObject.Find("ExampleGeo").AddComponent<GameInterface>();
         Vector2 testPosition = new Vector2(0, 0);
         Vector2 testVelocity = new Vector2(0, 1);
         double testMass = 1;
@@ -18,24 +20,14 @@ public class GameInterfaceTests : MonoBehaviour
         Particle p2 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
         Particle[] particles = new Particle[] { p1, p2 };
         gameInterface.DumpParticlesIntoScene(particles);
-        GameObject[] gameObjects = (GameObject[])FindObjectsOfType(typeof(GameObject));
-        int actualNumberOfParticlesInScene = 0;
-        for (int i = 0; i < gameObjects.Length; i++)
-        {
-            if (gameObjects[i].name.Contains("Sphere"))
-            {
-                print(gameObjects[i].name);
-                actualNumberOfParticlesInScene++;
-            }
-        }
-        int expectedNumberOfParticlesInScene = 2;
-        // (expected, actual) format
-        Assert.AreEqual(expectedNumberOfParticlesInScene, actualNumberOfParticlesInScene);
+        Assert.IsTrue(gameInterface.GetIfWeNeedToAddAllTheParticles());
     }
 
     [Test]
-    public void RemoveParticlesFromSceneShouldRemoveAllParticlesFromTheScene()
+    public void RemoveParticlesFromSceneShouldTellUpdateToRemoveParticles()
     {
-
+        gameInterface.RemoveParticlesFromScene();
+        Assert.IsTrue(gameInterface.GetIfWeNeedToNukeAllTheParticles());
     }
+
 }

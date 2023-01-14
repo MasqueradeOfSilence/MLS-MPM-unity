@@ -81,8 +81,4 @@ public class GeometryCreatorTests
         Assert.AreEqual(mass, p.GetMass());
         Assert.AreEqual(c, p.GetAffineMomentumMatrix());
     }
-
-    // possible test here for adding particles into the actual scene
-
-    // test for moving particles around the scene should have its own class
 }
