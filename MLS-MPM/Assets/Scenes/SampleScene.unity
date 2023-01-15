@@ -314,6 +314,7 @@ GameObject:
   - component: {fileID: 1528600908}
   - component: {fileID: 1528600907}
   - component: {fileID: 1528600911}
+  - component: {fileID: 1528600912}
   m_Layer: 0
   m_Name: ExampleGeo
   m_TagString: Untagged
@@ -409,5 +410,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64da8de8f2462044f9f1ea087a74fe4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1528600912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528600906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0538ea8ddded73d4787fbed9dc3c1c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
