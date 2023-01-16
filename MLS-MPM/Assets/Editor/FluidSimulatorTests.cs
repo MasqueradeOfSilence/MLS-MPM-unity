@@ -20,5 +20,7 @@ public class FluidSimulatorTests
     public void InitializePositionsShouldCreateAGridOfEvenlySpacedInitialPositionsForCells()
     {
         // once this is written, write the test to fill up the particle array w/default values, then uncomment line 16.
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+
     }
 }
