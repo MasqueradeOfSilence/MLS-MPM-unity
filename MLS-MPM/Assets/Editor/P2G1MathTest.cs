@@ -86,8 +86,8 @@ public class P2G1MathTest
         int nx = 0;
         int ny = 0;
         int[] correspondingCellPosition = { 3, 6 };
-        double[] expectedNeighborPosition = { 2, 5 };
-        double[] actualNeighborPosition = P2G1Math.ComputeNeighborPosition(correspondingCellPosition, nx, ny);
+        int[] expectedNeighborPosition = { 2, 5 };
+        int[] actualNeighborPosition = P2G1Math.ComputeNeighborPosition(correspondingCellPosition, nx, ny);
         Assert.That(expectedNeighborPosition, Is.EqualTo(actualNeighborPosition).Within(0.01));
     }
 

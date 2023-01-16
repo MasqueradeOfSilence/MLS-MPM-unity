@@ -8,9 +8,10 @@ using Unity.Mathematics;
 
 public class P2G1Math: MonoBehaviour
 {
+
     public static int[] ParticlePositionToCellPosition(double[] particlePosition)
     {
-        return Array.ConvertAll<double, int>(particlePosition, x => (int)x);
+        return Array.ConvertAll(particlePosition, x => (int)x);
     }
 
     public static double[] ComputeDistanceFromParticleToCell(double[] particlePosition, int[] correspondingCellPosition)
@@ -58,11 +59,11 @@ public class P2G1Math: MonoBehaviour
         return weights[nx][0] * weights[ny][1];
     }
 
-    public static double[] ComputeNeighborPosition(int[] correspondingCellPosition, int nx, int ny)
+    public static int[] ComputeNeighborPosition(int[] correspondingCellPosition, int nx, int ny)
     {
-        double x = correspondingCellPosition[0] + nx - 1;
-        double y = correspondingCellPosition[1] + ny - 1;
-        double[] neighborPosition = { x, y };
+        int x = correspondingCellPosition[0] + nx - 1;
+        int y = correspondingCellPosition[1] + ny - 1;
+        int[] neighborPosition = { x, y };
         return neighborPosition;
     }
 

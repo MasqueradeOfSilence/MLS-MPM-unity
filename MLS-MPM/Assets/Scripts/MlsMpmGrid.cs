@@ -15,7 +15,7 @@ public class MlsMpmGrid : ScriptableObject
             {
                 GridCell cell = CreateInstance("GridCell") as GridCell;
                 double2 initialVelocity = new(0, 0);
-                double initialMass = 1;
+                double initialMass = 0;
                 cell.InitGridCell(initialVelocity, initialMass);
                 grid[i, j] = cell;
             }
@@ -30,5 +30,30 @@ public class MlsMpmGrid : ScriptableObject
     public int2 GetSize()
     {
         return new(grid.GetLength(0), grid.GetLength(1));
+    }
+
+    public GridCell At(int x, int y)
+    {
+        if (grid == null)
+        {
+            int defaultResolution = 96;
+            InitMlsMpmGrid(defaultResolution);
+        }
+        return grid[x, y];
+    }
+
+    public GridCell At(int[] position)
+    {
+        return At(position[0], position[1]);
+    }
+
+    public void UpdateCellAt(int x, int y, GridCell updated)
+    {
+        if (grid == null)
+        {
+            int defaultResolution = 96;
+            InitMlsMpmGrid(defaultResolution);
+        }
+        grid[x, y] = updated;
     }
 }

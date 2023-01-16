@@ -5,8 +5,11 @@ public class FluidSimulator : MonoBehaviour
 {
     private Particle[,] particles;
     private MlsMpmGrid grid;
-    // nialltl used 64...
+    // nialltl used 64...delete this comment if 96 works fine
     private int gridResolution = 96;
+    private const double timestep = 0.2;
+    // should be 5 if timestep is 0.2
+    private const int numSimulationsPerUpdate = (int)(1 / timestep);
 
     public void InitializeGridAndParticleArrays()
     {
@@ -40,6 +43,95 @@ public class FluidSimulator : MonoBehaviour
         return gridOfTemporaryParticlePositions;
     }
 
+    public void ClearGrid()
+    {
+        if (grid == null)
+        {
+            grid = ScriptableObject.CreateInstance("MlsMpmGrid") as MlsMpmGrid;
+        }
+        grid.InitMlsMpmGrid(gridResolution);
+    }
+
+    public void ParticleToGridStep1()
+    {
+        for (int i = 0; i < particles.GetLength(0); i++)
+        {
+            for (int j = 0; j < particles.GetLength(1); j++)
+            {
+                Particle particle = particles[i, j];
+                double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
+                int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
+                double2x2 C = particle.GetAffineMomentumMatrix();
+                int neighborDimension = 3;
+                for (int nx = 0; nx < neighborDimension; nx++)
+                {
+                    for (int ny = 0; ny < neighborDimension; ny++)
+                    {
+                        double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
+                        int[] neighborPosition = P2G1Math.ComputeNeighborPosition(cellPosition, nx, ny);
+                        double[] distanceFromCurrentParticleToCurrentNeighbor = P2G1Math.ComputeDistanceFromCurrentParticleToCurrentNeighbor(neighborPosition, particlePosition);
+                        double2 Q = P2G1Math.ComputeQ(C, GeneralMathUtils.Format2DVectorForMath(distanceFromCurrentParticleToCurrentNeighbor));
+                        double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
+                        // note: number of particles = number of cells, since they are controlled by gridResolution
+                        GridCell correspondingCell = grid.At(i, j);
+                        correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
+                        correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q));
+                        // deep copy
+                        grid.UpdateCellAt(i, j, correspondingCell);
+                    }
+                }
+            }
+        }
+    }
+
+    public void ParticleToGridStep2()
+    {
+        for (int i = 0; i < particles.GetLength(0); i++)
+        {
+            for (int j = 0; j < particles.GetLength(1); j++)
+            {
+                Particle particle = particles[i, j];
+                double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
+                int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
+                /* 
+                 * We estimate the particle's volume by summing up the neighborhood's weighted mass contribution.
+                 * See Equation 152 of MPM course. 
+                 */
+                int[] nearestGridCellToParticlePosition = P2G2Math.FindNearestGridCellToParticle(particlePosition);
+                GridCell nearestGridCellToParticle = grid.At(nearestGridCellToParticlePosition);
+                double mass = nearestGridCellToParticle.GetMass();
+                double density = 0;
+                int neighborDimension = 3;
+                for (int nx = 0; nx < neighborDimension; nx++)
+                {
+                    for (int ny = 0; ny < neighborDimension; ny++)
+                    {
+                        double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
+                        density += P2G2Math.ComputeUpdatedDensity(weight, mass, density);
+                    }
+                }
+
+            }
+        }
+    }
+
+    public void GridToParticleStep()
+    {
+
+    }
+
+    public void Simulate()
+    {
+        ClearGrid();
+        ParticleToGridStep1();
+        ParticleToGridStep2();
+        GridToParticleStep();
+    }
+
     private void InitializeParticles(double2[,] temporaryParticlePositions)
     {
         // we could try decreasing the size to 8192 like nialltl does?
@@ -50,10 +142,9 @@ public class FluidSimulator : MonoBehaviour
             {
                 Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
                 double2 initialVelocity = new(0, 0);
-                double initialMass = 0;
-                double2x2 initialC = new double2x2();
+                double initialMass = 1;
+                double2x2 initialC = new double2x2(0, 0, 0, 0);
                 particle.InitParticle(temporaryParticlePositions[i, j], initialVelocity, initialMass, initialC);
-                // grid might be too small
                 particles[i, j] = particle;
             }
         }
@@ -74,20 +165,28 @@ public class FluidSimulator : MonoBehaviour
         return toReturn;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void PutInitialParticlesIntoGame()
     {
-        print("LOG: Starting fluid simulator");
-        InitializeGridAndParticleArrays();
         GameObject exampleGeo = GameObject.Find("ExampleGeo");
         GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
         gameInterface.DumpParticlesIntoScene(flattenParticles());
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        print("LOG: Starting fluid simulator");
+        InitializeGridAndParticleArrays();
+        PutInitialParticlesIntoGame();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        for (int i = 0; i < numSimulationsPerUpdate; i++)
+        {
+            Simulate();
+        }
     }
 
     public int GetParticleCount()
