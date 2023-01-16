@@ -14,10 +14,10 @@ public class GeometryCreator: MonoBehaviour
      * Currently a Vector2, but will be extended to a Vector3 in the 3D Version (to be coded).
      * Need to have another function that uses Particles on top
      */
-    public static GameObject SpawnParticleSphere_2DVersion(Vector2 location)
+    public static GameObject SpawnParticleSphere_2DVersion(double2 location)
     {
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.position = new Vector3(location.x, location.y, 0);
+        sphere.transform.position = new Vector3((float)location.x, (float)location.y, 0);
         // Fix Z at 0 for now
         sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         sphere.name = "Sphere" + sphereID.ToString();
@@ -39,7 +39,7 @@ public class GeometryCreator: MonoBehaviour
     }
 
     // Use this wrapper for the convoluted way Unity makes you do it
-    public static Particle CreateNewParticle(Vector2 position, Vector2 velocity, double mass, double2x2 c)
+    public static Particle CreateNewParticle(double2 position, double2 velocity, double mass, double2x2 c)
     {
         Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
         particle.InitParticle(position, velocity, mass, c);

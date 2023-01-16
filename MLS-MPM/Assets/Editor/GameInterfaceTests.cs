@@ -12,8 +12,8 @@ public class GameInterfaceTests : MonoBehaviour
     public void DumpParticlesIntoSceneShouldTellUpdateToAddParticles()
     {
         gameInterface = GameObject.Find("ExampleGeo").AddComponent<GameInterface>();
-        Vector2 testPosition = new Vector2(0, 0);
-        Vector2 testVelocity = new Vector2(0, 1);
+        double2 testPosition = new(0, 0);
+        double2 testVelocity = new(0, 1);
         double testMass = 1;
         double2x2 testC = new double2x2();
         Particle p1 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);

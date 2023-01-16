@@ -13,14 +13,16 @@ public class GameInterface: MonoBehaviour
 
     void Update()
     {
-        // Need to make PlayMode tests for these
+        // Do not remove particles from scene on the last iteration
         if (weNeedToNukeAllTheParticles)
         {
+            print("Removing particles from scene");
             weNeedToNukeAllTheParticles = false;
             NukeAllParticles();
         }
         else if (weNeedToAddAllTheParticles)
         {
+            print("Adding particles into scene");
             weNeedToAddAllTheParticles = false;
             AddAllParticles();
         }

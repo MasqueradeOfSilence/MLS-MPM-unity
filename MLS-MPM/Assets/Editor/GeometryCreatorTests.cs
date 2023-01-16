@@ -28,7 +28,7 @@ public class GeometryCreatorTests
     public void SpawnParticleSphereShouldCreateANewSphere()
     {
         // 2D vectors for now, which we convert to 3D, just for the system of spheres only right now. 
-        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new Vector2(0.1f, 0.2f));
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f));
         Assert.IsNotNull(newSphere);
         Assert.AreEqual(newSphere.transform.position, new Vector3(0.1f, 0.2f, 0f));
         Assert.AreEqual(newSphere.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f));
@@ -41,7 +41,7 @@ public class GeometryCreatorTests
         GeometryCreator.ResetSphereID();
         int expectedID = 0;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
-        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new Vector2(0.1f, 0.2f));
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f));
         expectedID = 1;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
         GeometryCreator.ResetSphereID();
@@ -50,8 +50,8 @@ public class GeometryCreatorTests
     [Test]
     public void SpawnFinalSpheresShouldConvertParticlesIntoSphericalGameObjects()
     {
-        Vector2 testPosition = new Vector2(0, 0);
-        Vector2 testVelocity = new Vector2(0, 1);
+        double2 testPosition = new(0, 0);
+        double2 testVelocity = new(0, 1);
         double testMass = 1;
         double2x2 testC = new double2x2();
         Particle p1 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
@@ -70,8 +70,8 @@ public class GeometryCreatorTests
     {
         // Particle objects should have spheres underneath the hood. Abstracted out. 
         // There should be a few particle tests (possibly only one for the correct data members) but not in this file.
-        Vector2 position = new Vector2(1, 2);
-        Vector2 velocity = new Vector2(2, 3);
+        double2 position = new(1, 2);
+        double2 velocity = new(2, 3);
         double mass = 1;
         double2x2 c = new double2x2();
         Particle p = GeometryCreator.CreateNewParticle(position, velocity, mass, c);

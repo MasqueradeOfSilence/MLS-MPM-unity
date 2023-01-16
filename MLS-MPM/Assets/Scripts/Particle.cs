@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class Particle : ScriptableObject
 {
-    private Vector2 position;
-    private Vector2 velocity;
+    private double2 position;
+    private double2 velocity;
     private double mass;
     // The affine momentum matrix C
     private double2x2 affineMomentumMatrix;
 
-    public void InitParticle(Vector2 position, Vector2 velocity, double mass, double2x2 affineMomentumMatrix)
+    public void InitParticle(double2 position, double2 velocity, double mass, double2x2 affineMomentumMatrix)
     {
         this.position = position;
         this.velocity = velocity;
@@ -22,12 +22,12 @@ public class Particle : ScriptableObject
         return GeometryCreator.SpawnParticleSphere_2DVersion(position);
     }
 
-    public Vector2 GetPosition()
+    public double2 GetPosition()
     {
         return position;
     }
 
-    public Vector2 GetVelocity()
+    public double2 GetVelocity()
     {
         return velocity;
     }

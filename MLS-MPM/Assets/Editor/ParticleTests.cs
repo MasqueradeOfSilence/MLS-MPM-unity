@@ -8,7 +8,7 @@ public class ParticleTests
     [Test]
     public void ParticleClassShouldExist()
     {
-        Vector2 test = new Vector2(0, 0);
+        double2 test = new(0, 0);
         double testMass = 0;
         double2x2 testC = new double2x2();
         Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
@@ -19,8 +19,8 @@ public class ParticleTests
     [Test]
     public void ConstructSphereFromParticleShouldBuildASphereWithTheSamePositionAsTheParticle()
     {
-        Vector2 testPosition = new Vector2(0, 0);
-        Vector2 testVelocity = new Vector2(0, 1);
+        double2 testPosition = new(0, 0);
+        double2 testVelocity = new(0, 1);
         double testMass = 1;
         double2x2 testC = new double2x2();
         Particle particle = ScriptableObject.CreateInstance("Particle") as Particle; 
