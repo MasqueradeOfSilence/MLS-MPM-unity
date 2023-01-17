@@ -35,10 +35,13 @@ public class GameInterface: MonoBehaviour
         {
             Destroy(p);
         }
+        listOfParticleSpheres = new GameObject[0];
+        Debug.Log("Just deleted all particles, there are: " + listOfParticleSpheres.Length);
     }
 
     public void AddAllParticles()
     {
+        Debug.Log("Add all particles, there are: " + listOfParticleSpheres.Length);
         foreach (GameObject p in listOfParticleSpheres)
         {
             Instantiate(p);
@@ -51,6 +54,7 @@ public class GameInterface: MonoBehaviour
         GameObject[] particleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles);
         listOfParticleSpheres = particleSpheres;
         weNeedToAddAllTheParticles = true;
+        AddAllParticles();
     }
 
     public void RemoveParticlesFromScene()
