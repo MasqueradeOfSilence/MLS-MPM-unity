@@ -57,7 +57,7 @@ public class P2G2Math : MonoBehaviour
         return initialStrain;
     }
 
-    public static double2x2 ComputeViscosity(double2x2 strain, double2x2 dynamicViscosity)
+    public static double2x2 ComputeViscosity(double2x2 strain, double dynamicViscosity)
     {
         double2x2 a = strain;
         a *= dynamicViscosity;
@@ -78,7 +78,7 @@ public class P2G2Math : MonoBehaviour
         double2x2 term0 = -volume * 4 * stress * dt;
         return term0;
     }
-    public static double[] ComputeDistanceFromCellToNeighbor(double[] neighborCellPosition, double[] currentCellPosition)
+    public static double[] ComputeDistanceFromCellToNeighbor(int[] neighborCellPosition, int[] currentCellPosition)
     {
         double x = (neighborCellPosition[0] - currentCellPosition[0]) + 0.5;
         double y = (neighborCellPosition[1] - currentCellPosition[1]) + 0.5;
@@ -93,7 +93,7 @@ public class P2G2Math : MonoBehaviour
         return math.mul(firstFactorMatrix, secondFactorVector);
     }
 
-    public static double2 UpdateCellVelocity(double2 momentum, double initialCellVelocity)
+    public static double2 UpdateCellVelocity(double2 momentum, double2 initialCellVelocity)
     {
         return momentum + initialCellVelocity;
     }

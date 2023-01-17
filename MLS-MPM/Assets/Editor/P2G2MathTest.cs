@@ -124,8 +124,8 @@ public class P2G2MathTest
 	[Test]
 	public void ComputeDistanceFromCellToNeighborShouldCorrectlyCalculateDistance()
 	{
-		double[] neighborCellPosition = { 0, 1 };
-		double[] currentCellPosition = { 1, 2 };
+		int[] neighborCellPosition = { 0, 1 };
+		int[] currentCellPosition = { 1, 2 };
 		double[] expectedDistance = { -0.5, -0.5 };
 		double[] actualDistance = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborCellPosition, currentCellPosition);
 		Assert.That(actualDistance, Is.EqualTo(expectedDistance).Within(0.01));
@@ -147,7 +147,7 @@ public class P2G2MathTest
 	public void TestUpdateCellVelocity()
 	{
 		// initial state has this velocity at 0
-		double initialCellVelocity = 0;
+		double2 initialCellVelocity = new(0, 0);
 		double2 momentum = new(-4.17335, -4.23486);
 		double2 expectedUpdatedCellVelocity = new(-4.17335, -4.23486);
 		double2 actualUpdatedCellVelocity = P2G2Math.UpdateCellVelocity(momentum, initialCellVelocity);

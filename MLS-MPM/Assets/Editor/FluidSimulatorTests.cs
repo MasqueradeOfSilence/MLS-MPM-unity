@@ -86,13 +86,15 @@ public class FluidSimulatorTests
 
     public void ParticleToGridStep2ShouldUpdateTheVelocityOfEachCellUsingMomentum()
     {
+        Debug.unityLogger.logEnabled = true;
+        Debug.Log("HELLO");
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeGridAndParticleArrays();
         fluidSimulator.ParticleToGridStep1();
         fluidSimulator.ParticleToGridStep2();
-        //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
-        //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
-        //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
+        Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
+        Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
+        Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
         fluidSimulator.ClearGrid();
     }
 

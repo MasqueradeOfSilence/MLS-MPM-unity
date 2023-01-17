@@ -39,6 +39,21 @@ public class GeneralMathUtils : MonoBehaviour
 		return P2G1Math.ComputeWeight(weights, nx, ny);
     }
 
+	public static int[] ComputeNeighborPosition(int[] cellPosition, int nx, int ny)
+    {
+		return P2G1Math.ComputeNeighborPosition(cellPosition, nx, ny);
+	}
+
+	public static double[,] Format2x2MatrixForMath(double2x2 matrix)
+    {
+		return new double[,] { { matrix.c0.x, matrix.c0.y }, { matrix.c1.x, matrix.c1.y } };
+    }
+
+	public static double2x2 Format2x2MatrixForMath(double[,] matrix)
+    {
+		return new double2x2(matrix[0, 0], matrix[0, 1], matrix[1, 0], matrix[1, 1]);
+    }
+
 	public static double[] Format2DVectorForMath(double2 double2)
     {
 		return new double[2] { double2.x, double2.y };

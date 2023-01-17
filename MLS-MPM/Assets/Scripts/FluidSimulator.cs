@@ -10,6 +10,10 @@ public class FluidSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
+    private const double dynamicViscosity = 0.1;
+    private const double restDensity = 4;
+    private const double eosStiffness = 10;
+    private const double eosPower = 4;
 
     public void InitializeGridAndParticleArrays()
     {
@@ -70,7 +74,7 @@ public class FluidSimulator : MonoBehaviour
                     for (int ny = 0; ny < neighborDimension; ny++)
                     {
                         double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
-                        int[] neighborPosition = P2G1Math.ComputeNeighborPosition(cellPosition, nx, ny);
+                        int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
                         double[] distanceFromCurrentParticleToCurrentNeighbor = P2G1Math.ComputeDistanceFromCurrentParticleToCurrentNeighbor(neighborPosition, particlePosition);
                         double2 Q = P2G1Math.ComputeQ(C, GeneralMathUtils.Format2DVectorForMath(distanceFromCurrentParticleToCurrentNeighbor));
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
@@ -114,7 +118,30 @@ public class FluidSimulator : MonoBehaviour
                         density += P2G2Math.ComputeUpdatedDensity(weight, mass, density);
                     }
                 }
-
+                double volume = P2G2Math.ComputeVolume(mass, density);
+                double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
+                double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
+                double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
+                double trace = P2G2Math.ComputeTrace(GeneralMathUtils.Format2x2MatrixForMath(strain));
+                strain = GeneralMathUtils.Format2x2MatrixForMath(P2G2Math.UpdateStrain(GeneralMathUtils.Format2x2MatrixForMath(strain), trace));
+                double2x2 viscosity = P2G2Math.ComputeViscosity(strain, dynamicViscosity);
+                stress = P2G2Math.UpdateStress(stress, viscosity);
+                double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
+                for (int nx = 0; nx < neighborDimension; nx++)
+                {
+                    for (int ny = 0; ny < neighborDimension; ny++)
+                    {
+                        double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
+                        int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
+                        double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
+                        GridCell correspondingCell = grid.At(i, j);
+                        double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, GeneralMathUtils.Format2DVectorForMath(distanceFromCellToNeighbor));
+                        double2 updatedVelocity = P2G2Math.UpdateCellVelocity(momentum, correspondingCell.GetVelocity());
+                        correspondingCell.SetVelocity(updatedVelocity);
+                        // deep copy
+                        grid.UpdateCellAt(i, j, correspondingCell);
+                    }
+                }
             }
         }
     }
