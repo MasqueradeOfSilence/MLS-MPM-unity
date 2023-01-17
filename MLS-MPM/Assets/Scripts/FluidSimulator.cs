@@ -1,6 +1,11 @@
 using UnityEngine;
 using Unity.Mathematics;
 
+/**
+ * Fluid Simulator: Simulate a basic liquid. 
+ * Foam simulation will be done differently, in the Foam Simulator class.
+ */
+
 public class FluidSimulator : MonoBehaviour
 {
     private Particle[,] particles;
@@ -14,6 +19,8 @@ public class FluidSimulator : MonoBehaviour
     private const double restDensity = 4;
     private const double eosStiffness = 10;
     private const double eosPower = 4;
+    private const double gravity = -0.3;
+    private const int neighborDimension = 3;
 
     public void InitializeGridAndParticleArrays()
     {
@@ -22,6 +29,7 @@ public class FluidSimulator : MonoBehaviour
         particles = new Particle[grid.GetGridResolution(), grid.GetGridResolution()];
         double2[,] temporaryParticlePositions = BuildGridOfTemporaryParticlePositions();
         InitializeParticles(temporaryParticlePositions);
+        PutNewParticlesIntoGame();
     }
 
     public double2[,] BuildGridOfTemporaryParticlePositions()
@@ -68,7 +76,6 @@ public class FluidSimulator : MonoBehaviour
                 double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
                 double2x2 C = particle.GetAffineMomentumMatrix();
-                int neighborDimension = 3;
                 for (int nx = 0; nx < neighborDimension; nx++)
                 {
                     for (int ny = 0; ny < neighborDimension; ny++)
@@ -86,6 +93,7 @@ public class FluidSimulator : MonoBehaviour
                         grid.UpdateCellAt(i, j, correspondingCell);
                     }
                 }
+                particles[i, j] = particle;
             }
         }
     }
@@ -109,7 +117,6 @@ public class FluidSimulator : MonoBehaviour
                 GridCell nearestGridCellToParticle = grid.At(nearestGridCellToParticlePosition);
                 double mass = nearestGridCellToParticle.GetMass();
                 double density = 0;
-                int neighborDimension = 3;
                 for (int nx = 0; nx < neighborDimension; nx++)
                 {
                     for (int ny = 0; ny < neighborDimension; ny++)
@@ -142,13 +149,69 @@ public class FluidSimulator : MonoBehaviour
                         grid.UpdateCellAt(i, j, correspondingCell);
                     }
                 }
+                particles[i, j] = particle;
+            }
+        }
+    }
+
+    public void UpdateGrid()
+    {
+        for (int i = 0; i < gridResolution; i++)
+        {
+            for (int j = 0; j < gridResolution; j++)
+            {
+                GridCell currentCell = grid.At(i, j);
+                if (currentCell.GetMass() > 0)
+                {
+                    currentCell.SetVelocity(currentCell.GetVelocity() / currentCell.GetMass());
+                    currentCell.SetVelocity(currentCell.GetVelocity() + (timestep * new double2(0, gravity)));
+                    double2 updatedCellVelocityWithEnforcedBoundaryConditions = UpdateCellVelocityWithEnforcedBoundaryConditions(i, currentCell.GetVelocity());
+                    currentCell.SetVelocity(updatedCellVelocityWithEnforcedBoundaryConditions);
+                }
             }
         }
     }
 
     public void GridToParticleStep()
     {
-
+        for (int i = 0; i < particles.GetLength(0); i++)
+        {
+            for (int j = 0; j < particles.GetLength(1); j++) 
+            {
+                Particle particle = particles[i, j];
+                particle.SetVelocity(0);
+                double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
+                int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
+                // APIC matrix (equation 8)
+                double2x2 B = 0;
+                for (int nx = 0; nx < neighborDimension; nx++)
+                {
+                    for (int ny = 0; ny < neighborDimension; ny++)
+                    {
+                        double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
+                        int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
+                        double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
+                        double[] neighborCellVelocity = GeneralMathUtils.Format2DVectorForMath(grid.At(neighborPosition).GetVelocity());
+                        double[] weightedVelocity = G2PMath.ComputeWeightedVelocity(neighborCellVelocity, weight);
+                        double[,] term = G2PMath.ComputeTerm(weightedVelocity, distanceFromCellToNeighbor);
+                        B = G2PMath.ComputeUpdatedB(B, GeneralMathUtils.Format2x2MatrixForMath(term));
+                        double[] updatedVelocity = G2PMath.ComputeUpdatedParticleVelocity(GeneralMathUtils.Format2DVectorForMath(particle.GetVelocity()), weightedVelocity);
+                        particle.SetVelocity(GeneralMathUtils.Format2DVectorForMath(distanceFromCellToNeighbor));
+                    }
+                }
+                double2x2 updatedC = G2PMath.RecomputeCMatrix(B);
+                particle.SetAffineMomentumMatrix(updatedC);
+                double[] updatedPosition = G2PMath.AdvectParticle(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), GeneralMathUtils.Format2DVectorForMath(particle.GetVelocity()), timestep);
+                particle.SetPosition(GeneralMathUtils.Format2DVectorForMath(updatedPosition));
+                double2 clampedPosition = ClampPosition(particle);
+                particle.SetPosition(clampedPosition);
+                double2 boundaryConditionEnforcedVelocity = UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(particle);
+                particle.SetVelocity(boundaryConditionEnforcedVelocity);
+                particles[i, j] = particle;
+            }
+        }
     }
 
     public void Simulate()
@@ -156,7 +219,56 @@ public class FluidSimulator : MonoBehaviour
         ClearGrid();
         ParticleToGridStep1();
         ParticleToGridStep2();
+        UpdateGrid();
         GridToParticleStep();
+    }
+
+    private double2 UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(Particle particle)
+    {
+        double2 updatedVelocity = particle.GetVelocity();
+        double2 xN = particle.GetPosition() + particle.GetVelocity();
+        const double wallMin = 3;
+        double wallMax = gridResolution - 4;
+        double particleVelocityX = particle.GetVelocity().x;
+        double particleVelocityY = particle.GetVelocity().y;
+        if (xN.x < wallMin)
+        {
+            particle.UpdateVelocityX(particleVelocityX + (wallMin - xN.x));
+        }
+        if (xN.x > wallMax)
+        {
+            particle.UpdateVelocityX(particleVelocityX + (wallMax - xN.x));
+        }
+        if (xN.y < wallMin)
+        {
+            particle.UpdateVelocityX(particleVelocityX + (wallMin - xN.y));
+        }
+        if (xN.y > wallMax)
+        {
+            particle.UpdateVelocityX(particleVelocityX + (wallMax - xN.y));
+        }
+        return updatedVelocity;
+    }
+
+    private double2 ClampPosition(Particle particle)
+    {
+        return math.clamp(particle.GetPosition(), 1, gridResolution - 2);
+    }
+
+    private double2 UpdateCellVelocityWithEnforcedBoundaryConditions(int i, double2 velocity)
+    {
+        double2 updatedVelocity = velocity;
+        int x = i / gridResolution;
+        int y = i % gridResolution;
+        if (x < 2 || x > gridResolution - 3)
+        {
+            velocity.x = 0;
+        }
+        if (y < 2 || y > gridResolution - 3)
+        {
+            velocity.y = 0;
+        }
+        return updatedVelocity;
     }
 
     private void InitializeParticles(double2[,] temporaryParticlePositions)
@@ -192,11 +304,19 @@ public class FluidSimulator : MonoBehaviour
         return toReturn;
     }
 
-    private void PutInitialParticlesIntoGame()
+    private void PutNewParticlesIntoGame()
     {
         GameObject exampleGeo = GameObject.Find("ExampleGeo");
         GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
         gameInterface.DumpParticlesIntoScene(flattenParticles());
+        gameInterface.AddAllParticles();
+    }
+
+    private void RefreshGameParticles()
+    {
+        GameObject exampleGeo = GameObject.Find("ExampleGeo");
+        GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
+        gameInterface.NukeAllParticles();
     }
 
     // Start is called before the first frame update
@@ -204,16 +324,19 @@ public class FluidSimulator : MonoBehaviour
     {
         print("LOG: Starting fluid simulator");
         InitializeGridAndParticleArrays();
-        PutInitialParticlesIntoGame();
+        PutNewParticlesIntoGame();
     }
 
     // Update is called once per frame
     void Update()
     {
+        RefreshGameParticles();
         for (int i = 0; i < numSimulationsPerUpdate; i++)
         {
             Simulate();
         }
+        // not sure why particles won't delete
+        PutNewParticlesIntoGame();
     }
 
     public int GetParticleCount()

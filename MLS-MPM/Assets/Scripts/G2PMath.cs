@@ -11,12 +11,12 @@ public class G2PMath : MonoBehaviour
         return weightedVelocity;
     }
 
-    public static double[,] ComputeTerm(double[] weightedVelocity, double[] distanceFromCellToNeighbor)
+    public static double[,] ComputeTerm(double[] weightedVelocity, double[] distanceFromParticleToNeighboringCell)
     {
-        double[,] term = { { weightedVelocity[0] * distanceFromCellToNeighbor[0],
-                    weightedVelocity[1] * distanceFromCellToNeighbor[0] },
-                    { weightedVelocity[0] * distanceFromCellToNeighbor[1],
-                    weightedVelocity[1] * distanceFromCellToNeighbor[1] } };
+        double[,] term = { { weightedVelocity[0] * distanceFromParticleToNeighboringCell[0],
+                    weightedVelocity[1] * distanceFromParticleToNeighboringCell[0] },
+                    { weightedVelocity[0] * distanceFromParticleToNeighboringCell[1],
+                    weightedVelocity[1] * distanceFromParticleToNeighboringCell[1] } };
         return term;
     }
 

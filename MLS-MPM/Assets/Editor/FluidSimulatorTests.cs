@@ -35,7 +35,7 @@ public class FluidSimulatorTests
     }
 
     [Test]
-    public void SimulateShouldCorrectlyRunClearGrid_P2G1_P2G2_AndG2PToUpdateParticlePositions()
+    public void SimulateShouldCorrectlyRunClearGrid_P2G1_P2G2_UpdateGridAndG2PToUpdateParticlePositions()
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeGridAndParticleArrays();
@@ -84,17 +84,48 @@ public class FluidSimulatorTests
         fluidSimulator.ClearGrid();
     }
 
+    [Test]
     public void ParticleToGridStep2ShouldUpdateTheVelocityOfEachCellUsingMomentum()
     {
-        Debug.unityLogger.logEnabled = true;
-        Debug.Log("HELLO");
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeGridAndParticleArrays();
         fluidSimulator.ParticleToGridStep1();
         fluidSimulator.ParticleToGridStep2();
-        Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
-        Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
-        Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(21, 87).GetVelocity());
+        fluidSimulator.ClearGrid();
+    }
+
+    [Test]
+    public void UpdateGridShouldConvertMomentumToVelocity_ApplyGravity_AndEnforceBoundaryConditions()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeGridAndParticleArrays();
+        fluidSimulator.ParticleToGridStep1();
+        fluidSimulator.ParticleToGridStep2();
+        fluidSimulator.UpdateGrid();
+        //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
+        //Debug.Log(fluidSimulator.GetGrid().At(21, 87).GetVelocity());
+        fluidSimulator.ClearGrid();
+    }
+
+    [Test]
+    public void GridToParticleStepShouldAdvectParticlesToNewPositionsAndEnforceBoundaryConditions()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeGridAndParticleArrays();
+        fluidSimulator.ParticleToGridStep1();
+        fluidSimulator.ParticleToGridStep2();
+        fluidSimulator.UpdateGrid();
+        fluidSimulator.GridToParticleStep();
+        //Debug.Log(fluidSimulator.GetParticles()[0, 0].GetPosition());
+        //Debug.Log(fluidSimulator.GetParticles()[95, 95].GetPosition());
+        //Debug.Log(fluidSimulator.GetParticles()[48, 48].GetPosition());
+        //Debug.Log(fluidSimulator.GetParticles()[21, 87].GetPosition());
         fluidSimulator.ClearGrid();
     }
 

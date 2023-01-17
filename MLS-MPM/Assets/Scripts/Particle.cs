@@ -41,4 +41,29 @@ public class Particle : ScriptableObject
     {
         return affineMomentumMatrix;
     }
+
+    public void SetPosition(double2 position)
+    {
+        this.position = position;
+    }
+
+    public void SetVelocity(double2 velocity)
+    {
+        this.velocity = velocity;
+    }
+
+    public void SetAffineMomentumMatrix(double2x2 C)
+    {
+        affineMomentumMatrix = C;
+    }
+
+    public void UpdateVelocityX(double velocityX)
+    {
+        this.velocity.x = velocityX;
+    }
+
+    public void UpdateVelocityY(double velocityY)
+    {
+        this.velocity.y = velocityY;
+    }
 }

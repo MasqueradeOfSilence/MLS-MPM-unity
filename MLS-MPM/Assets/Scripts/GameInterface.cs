@@ -14,21 +14,22 @@ public class GameInterface: MonoBehaviour
     void Update()
     {
         // Do not remove particles from scene on the last iteration
-        if (weNeedToNukeAllTheParticles)
-        {
-            print("Removing particles from scene");
-            weNeedToNukeAllTheParticles = false;
-            NukeAllParticles();
-        }
-        else if (weNeedToAddAllTheParticles)
-        {
-            print("Adding particles into scene");
-            weNeedToAddAllTheParticles = false;
-            AddAllParticles();
-        }
+        //if (weNeedToNukeAllTheParticles)
+        //{
+        //    print("Removing particles from scene");
+        //    weNeedToNukeAllTheParticles = false;
+        //    NukeAllParticles();
+        //    Array.Clear(listOfParticleSpheres, 0, listOfParticleSpheres.Length);
+        //}
+        //else if (weNeedToAddAllTheParticles)
+        //{
+        //    print("Adding particles into scene");
+        //    weNeedToAddAllTheParticles = false;
+        //    AddAllParticles();
+        //}
     }
 
-    private void NukeAllParticles()
+    public void NukeAllParticles()
     {
         foreach (GameObject p in listOfParticleSpheres)
         {
@@ -36,7 +37,7 @@ public class GameInterface: MonoBehaviour
         }
     }
 
-    private void AddAllParticles()
+    public void AddAllParticles()
     {
         foreach (GameObject p in listOfParticleSpheres)
         {
@@ -54,7 +55,6 @@ public class GameInterface: MonoBehaviour
 
     public void RemoveParticlesFromScene()
     {
-        Array.Clear(listOfParticleSpheres, 0, listOfParticleSpheres.Length);
         weNeedToNukeAllTheParticles = true;
     }
 
