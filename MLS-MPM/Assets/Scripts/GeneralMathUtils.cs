@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using System;
 
 public class GeneralMathUtils : MonoBehaviour
 {
@@ -21,12 +22,14 @@ public class GeneralMathUtils : MonoBehaviour
 
 	public static int[] ParticlePositionToCellPosition(double[] particlePosition)
     {
-		return P2G1Math.ParticlePositionToCellPosition(particlePosition);
+		return Array.ConvertAll(particlePosition, x => (int)x);
 	}
 
 	public static double[] ComputeDistanceFromParticleToCell(double[] particlePosition, int[] correspondingCellPosition)
     {
-		return P2G1Math.ComputeDistanceFromParticleToCell(particlePosition, correspondingCellPosition);
+		double[] cellPosition = Array.ConvertAll<int, double>(correspondingCellPosition, x => x);
+		double[] distance = { particlePosition[0] - cellPosition[0] - 0.5, particlePosition[1] - cellPosition[1] - 0.5 };
+		return distance;
 	}
 
 	public static double[][] ComputeAllWeights(double[] distanceFromParticleToCell)
@@ -36,14 +39,18 @@ public class GeneralMathUtils : MonoBehaviour
 
 	public static double ComputeWeight(double[][] weights, int nx, int ny)
     {
-		return P2G1Math.ComputeWeight(weights, nx, ny);
-    }
+		return weights[nx][0] * weights[ny][1];
+	}
 
 	public static int[] ComputeNeighborPosition(int[] cellPosition, int nx, int ny)
     {
-		return P2G1Math.ComputeNeighborPosition(cellPosition, nx, ny);
+		int x = cellPosition[0] + nx - 1;
+		int y = cellPosition[1] + ny - 1;
+		int[] neighborPosition = { x, y };
+		return neighborPosition;
 	}
 
+	// TODO: Would be ideal to make these private and make the FluidSimulator class as clean as possible.
 	public static double[,] Format2x2MatrixForMath(double2x2 matrix)
     {
 		return new double[,] { { matrix.c0.x, matrix.c0.y }, { matrix.c1.x, matrix.c1.y } };
