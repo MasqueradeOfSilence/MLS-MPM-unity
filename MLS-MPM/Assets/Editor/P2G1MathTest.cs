@@ -5,29 +5,6 @@ using Unity.Mathematics;
 public class P2G1MathTest
 {
     [Test]
-    public void ParticlePositionToCellPositionShouldCorrectlyConvert()
-    {
-        double[] particlePosition = { 3.2, 6 };
-        int[] expectedCorrespondingCellPosition = { 3, 6 };
-        int[] actualCorrespondingCellPosition = P2G1Math.ParticlePositionToCellPosition(particlePosition);
-        CollectionAssert.AreEqual(actualCorrespondingCellPosition, expectedCorrespondingCellPosition);
-        // checking false case
-        int[] unequal1 = { 0, 2 };
-        int[] unequal2 = { 1, 2 };
-        CollectionAssert.AreNotEqual(unequal1, unequal2);
-    }
-
-    [Test]
-    public void ComputeDistanceFromParticleToCellShouldCorrectlyCalculateDistance()
-    {
-        double[] particlePosition = { 3.2, 6 };
-        int[] correspondingCellPosition = { 3, 6 };
-        double[] expectedDistance = { -0.3, -0.5 };
-        double[] distanceFromParticleToCell = P2G1Math.ComputeDistanceFromParticleToCell(particlePosition, correspondingCellPosition);
-        Assert.That(expectedDistance, Is.EqualTo(distanceFromParticleToCell).Within(0.01));
-    }
-
-    [Test]
     public void ComputeWeight0ShouldCorrectlyCalculateWeight0()
     {
         double[] expectedWeight0 = { 0.32, 0.5 };
@@ -64,31 +41,6 @@ public class P2G1MathTest
         double[] distanceFromParticleToCell = { -0.3, -0.5 };
         double[][] actualWeights = P2G1Math.ComputeAllWeights(distanceFromParticleToCell);
         Assert.That(expectedWeights, Is.EqualTo(actualWeights).Within(0.01));
-    }
-
-    [Test]
-    public void ComputeWeightShouldUseWeights0Through2ToCalculateTheFinalWeight()
-    {
-        double expectedWeight = 0.16;
-        double[] weight0 = { 0.32, 0.5 };
-        double[] weight1 = { 0.66, 0.5 };
-        double[] weight2 = { 0.02, 0 };
-        double[][] weights = { weight0, weight1, weight2 };
-        int nx = 0;
-        int ny = 0;
-        double actualWeight = P2G1Math.ComputeWeight(weights, nx, ny);
-        Assert.That(expectedWeight, Is.EqualTo(actualWeight).Within(0.01));
-    }
-
-    [Test]
-    public void ComputeCurrentNeighborPositionShouldCorrectlyCalculateTheNeighborPosition()
-    {
-        int nx = 0;
-        int ny = 0;
-        int[] correspondingCellPosition = { 3, 6 };
-        int[] expectedNeighborPosition = { 2, 5 };
-        int[] actualNeighborPosition = P2G1Math.ComputeNeighborPosition(correspondingCellPosition, nx, ny);
-        Assert.That(expectedNeighborPosition, Is.EqualTo(actualNeighborPosition).Within(0.01));
     }
 
     [Test]

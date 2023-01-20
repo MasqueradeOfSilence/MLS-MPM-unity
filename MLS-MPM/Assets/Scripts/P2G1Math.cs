@@ -8,19 +8,6 @@ using Unity.Mathematics;
 
 public class P2G1Math: MonoBehaviour
 {
-
-    public static int[] ParticlePositionToCellPosition(double[] particlePosition)
-    {
-        return Array.ConvertAll(particlePosition, x => (int)x);
-    }
-
-    public static double[] ComputeDistanceFromParticleToCell(double[] particlePosition, int[] correspondingCellPosition)
-    {
-        double[] cellPosition = Array.ConvertAll<int, double>(correspondingCellPosition, x => x);
-        double[] distance = { particlePosition[0] - cellPosition[0] - 0.5, particlePosition[1] - cellPosition[1] - 0.5 };
-        return distance;
-    }
-
     public static double[] ComputeWeight0(double[] distanceFromParticleToCell)
     {
         double x = 0.5 * Math.Pow((0.5 - distanceFromParticleToCell[0]), 2);
@@ -52,19 +39,6 @@ public class P2G1Math: MonoBehaviour
         double[] weight2 = ComputeWeight2(distanceFromParticleToCell);
         double[][] weights = { weight0, weight1, weight2 };
         return weights;
-    }
-
-    public static double ComputeWeight(double[][] weights, int nx, int ny)
-    {
-        return weights[nx][0] * weights[ny][1];
-    }
-
-    public static int[] ComputeNeighborPosition(int[] correspondingCellPosition, int nx, int ny)
-    {
-        int x = correspondingCellPosition[0] + nx - 1;
-        int y = correspondingCellPosition[1] + ny - 1;
-        int[] neighborPosition = { x, y };
-        return neighborPosition;
     }
 
     public static double[] ComputeDistanceFromCurrentParticleToCurrentNeighbor(int[] currentNeighborPosition, double[] particlePosition)

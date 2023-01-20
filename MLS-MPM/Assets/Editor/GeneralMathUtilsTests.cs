@@ -5,8 +5,6 @@ using UnityEngine;
 [TestFixture]
 public class GeneralMathUtilsTests
 {
-
-    // ADD: Test for deepEquals
     // Try to do in-function-call conversions as little as possible
     // And move all of the common functions OUT of P2G1
 
@@ -20,7 +18,15 @@ public class GeneralMathUtilsTests
         Assert.IsFalse(GeneralMathUtils.DeepEquals(b, c));
     }
 
-    // Next test the double2x2s
+    [Test]
+    public void DeepEqualsShouldAlsoCompareDouble2x2sForEquality()
+    {
+        double2x2 a = new(0.01, 0.02, 0.03, 0.04);
+        double2x2 b = new(0.01, 0.02, 0.03, 0.04);
+        double2x2 c = new(0.01, 0.01, 0.03, 0.04);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(a, b));
+        Assert.IsFalse(GeneralMathUtils.DeepEquals(b, c));
+    }
 
     [Test]
     public void ParticlePositionToCellPositionShouldCorrectlyConvert()
