@@ -52,6 +52,7 @@ public class FluidSimulator : MonoBehaviour
             jInt = 0;
             iInt++;
         }
+        // we would get 9216, but it's rounded down to 8192
         return gridOfTemporaryParticlePositions;
     }
 

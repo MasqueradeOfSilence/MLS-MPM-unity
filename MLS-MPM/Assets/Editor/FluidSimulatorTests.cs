@@ -21,6 +21,7 @@ public class FluidSimulatorTests
     [Test]
     public void BuildGridOfTemporaryParticlePositionsShouldCreateEvenlySpacedParticlesFrom16_16To64_64()
     {
+        // might be a bad grid size
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         double2[,] temporaryParticlePositionGrid = fluidSimulator.BuildGridOfTemporaryParticlePositions();
         double2 expectedFirstPosition = new(16, 16);
