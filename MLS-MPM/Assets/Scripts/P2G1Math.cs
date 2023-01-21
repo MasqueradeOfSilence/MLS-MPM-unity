@@ -49,6 +49,12 @@ public class P2G1Math: MonoBehaviour
         return distanceFromCurrentParticleToCurrentNeighbor;
     }
 
+    public static double2 ComputeQ(double2x2 C, double[] distanceFromCurrentParticleToCurrentNeighbor)
+    {
+        double2 formatted = GeneralMathUtils.Format2DVectorForMath(distanceFromCurrentParticleToCurrentNeighbor);
+        return ComputeQ(C, formatted);
+    }
+
     public static double2 ComputeQ(double2x2 C, double2 distanceFromCurrentParticleToCurrentNeighbor)
     {
         double2x2 a = C;

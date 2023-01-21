@@ -42,9 +42,19 @@ public class Particle : ScriptableObject
         return affineMomentumMatrix;
     }
 
+    public void SetPosition(double[] position)
+    {
+        this.position = GeneralMathUtils.Format2DVectorForMath(position);
+    }
+
     public void SetPosition(double2 position)
     {
         this.position = position;
+    }
+
+    public void SetVelocity(double[] velocity)
+    {
+        this.velocity = GeneralMathUtils.Format2DVectorForMath(velocity);
     }
 
     public void SetVelocity(double2 velocity)

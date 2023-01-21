@@ -45,9 +45,26 @@ public class P2G2Math : MonoBehaviour
         return strainMatrix;
     }
 
+    public static double ComputeTrace(double2x2 strain)
+    {
+        double[,] formatted = GeneralMathUtils.Format2x2MatrixForMath(strain);
+        return ComputeTrace(formatted);
+    }
+
     public static double ComputeTrace(double[,] strain)
     {
         return strain[1, 0] + strain[0, 1];
+    }
+
+    public static double2x2 UpdateStrainAndReturnUnityMatrix(double2x2 initialStrain, double trace)
+    {
+        return GeneralMathUtils.Format2x2MatrixForMath(UpdateStrain(initialStrain, trace));
+    }
+
+    public static double[,] UpdateStrain(double2x2 initialStrain, double trace)
+    {
+        double[,] formatted = GeneralMathUtils.Format2x2MatrixForMath(initialStrain);
+        return UpdateStrain(formatted, trace);
     }
 
     public static double[,] UpdateStrain(double[,] initialStrain, double trace)
@@ -84,6 +101,12 @@ public class P2G2Math : MonoBehaviour
         double y = (neighborCellPosition[1] - currentCellPosition[1]) + 0.5;
         double[] distanceFromCellToNeighbor = { x, y };
         return distanceFromCellToNeighbor;
+    }
+
+    public static double2 ComputeMomentum(double2x2 equation16Term0, double weight, double[] distanceFromCellToNeighbor)
+    {
+        double2 formatted = GeneralMathUtils.Format2DVectorForMath(distanceFromCellToNeighbor);
+        return ComputeMomentum(equation16Term0, weight, formatted);
     }
 
     public static double2 ComputeMomentum(double2x2 equation16Term0, double weight, double2 distanceFromCellToNeighbor)

@@ -20,11 +20,23 @@ public class G2PMath : MonoBehaviour
         return term;
     }
 
+    public static double2x2 ComputeUpdatedB(double2x2 initialB, double[,] term)
+    {
+        double2x2 formatted = GeneralMathUtils.Format2x2MatrixForMath(term);
+        return ComputeUpdatedB(initialB, formatted);
+    }
+
     public static double2x2 ComputeUpdatedB(double2x2 initialB, double2x2 term)
     {
         double2x2 factor1 = initialB;
         double2x2 factor2 = term;
         return factor1 + factor2;
+    }
+
+    public static double[] ComputeUpdatedParticleVelocity(double2 initialParticleVelocity, double[] weightedVelocity)
+    {
+        double[] formatted = GeneralMathUtils.Format2DVectorForMath(initialParticleVelocity);
+        return ComputeUpdatedParticleVelocity(formatted, weightedVelocity);
     }
 
     public static double[] ComputeUpdatedParticleVelocity(double[] initialParticleVelocity, double[] weightedVelocity)
@@ -38,6 +50,13 @@ public class G2PMath : MonoBehaviour
     public static double2x2 RecomputeCMatrix(double2x2 B)
     {
         return B * 4;
+    }
+
+    public static double[] AdvectParticle(double2 initialParticlePosition, double2 particleVelocity, double dt)
+    {
+        double[] formatted1 = GeneralMathUtils.Format2DVectorForMath(initialParticlePosition);
+        double[] formatted2 = GeneralMathUtils.Format2DVectorForMath(particleVelocity);
+        return AdvectParticle(formatted1, formatted2, dt);
     }
 
     public static double[] AdvectParticle(double[] initialParticlePosition, double[] particleVelocity, double dt)

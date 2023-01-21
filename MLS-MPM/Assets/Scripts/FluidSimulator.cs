@@ -73,7 +73,7 @@ public class FluidSimulator : MonoBehaviour
                 Particle particle = particles[i, j];
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
-                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
                 double2x2 C = particle.GetAffineMomentumMatrix();
                 for (int nx = 0; nx < neighborDimension; nx++)
@@ -83,7 +83,7 @@ public class FluidSimulator : MonoBehaviour
                         double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
                         int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
                         double[] distanceFromCurrentParticleToCurrentNeighbor = P2G1Math.ComputeDistanceFromCurrentParticleToCurrentNeighbor(neighborPosition, particlePosition);
-                        double2 Q = P2G1Math.ComputeQ(C, GeneralMathUtils.Format2DVectorForMath(distanceFromCurrentParticleToCurrentNeighbor));
+                        double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by gridResolution
                         GridCell correspondingCell = grid.At(i, j);
@@ -107,7 +107,7 @@ public class FluidSimulator : MonoBehaviour
                 Particle particle = particles[i, j];
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
-                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
                 /* 
                  * We estimate the particle's volume by summing up the neighborhood's weighted mass contribution.
@@ -129,8 +129,8 @@ public class FluidSimulator : MonoBehaviour
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
-                double trace = P2G2Math.ComputeTrace(GeneralMathUtils.Format2x2MatrixForMath(strain));
-                strain = GeneralMathUtils.Format2x2MatrixForMath(P2G2Math.UpdateStrain(GeneralMathUtils.Format2x2MatrixForMath(strain), trace));
+                double trace = P2G2Math.ComputeTrace(strain);
+                strain = P2G2Math.UpdateStrainAndReturnUnityMatrix(strain, trace);
                 double2x2 viscosity = P2G2Math.ComputeViscosity(strain, dynamicViscosity);
                 stress = P2G2Math.UpdateStress(stress, viscosity);
                 double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
@@ -142,7 +142,7 @@ public class FluidSimulator : MonoBehaviour
                         int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
                         double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
                         GridCell correspondingCell = grid.At(i, j);
-                        double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, GeneralMathUtils.Format2DVectorForMath(distanceFromCellToNeighbor));
+                        double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, distanceFromCellToNeighbor);
                         double2 updatedVelocity = P2G2Math.UpdateCellVelocity(momentum, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
                         // deep copy
@@ -182,7 +182,7 @@ public class FluidSimulator : MonoBehaviour
                 particle.SetVelocity(0);
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
-                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), cellPosition);
+                double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
                 // APIC matrix (equation 8)
                 double2x2 B = 0;
@@ -196,15 +196,15 @@ public class FluidSimulator : MonoBehaviour
                         double[] neighborCellVelocity = GeneralMathUtils.Format2DVectorForMath(grid.At(neighborPosition).GetVelocity());
                         double[] weightedVelocity = G2PMath.ComputeWeightedVelocity(neighborCellVelocity, weight);
                         double[,] term = G2PMath.ComputeTerm(weightedVelocity, distanceFromCellToNeighbor);
-                        B = G2PMath.ComputeUpdatedB(B, GeneralMathUtils.Format2x2MatrixForMath(term));
-                        double[] updatedVelocity = G2PMath.ComputeUpdatedParticleVelocity(GeneralMathUtils.Format2DVectorForMath(particle.GetVelocity()), weightedVelocity);
-                        particle.SetVelocity(GeneralMathUtils.Format2DVectorForMath(distanceFromCellToNeighbor));
+                        B = G2PMath.ComputeUpdatedB(B, term);
+                        double[] updatedVelocity = G2PMath.ComputeUpdatedParticleVelocity(particle.GetVelocity(), weightedVelocity);
+                        particle.SetVelocity(updatedVelocity);
                     }
                 }
                 double2x2 updatedC = G2PMath.RecomputeCMatrix(B);
                 particle.SetAffineMomentumMatrix(updatedC);
-                double[] updatedPosition = G2PMath.AdvectParticle(GeneralMathUtils.Format2DVectorForMath(particle.GetPosition()), GeneralMathUtils.Format2DVectorForMath(particle.GetVelocity()), timestep);
-                particle.SetPosition(GeneralMathUtils.Format2DVectorForMath(updatedPosition));
+                double[] updatedPosition = G2PMath.AdvectParticle(particle.GetPosition(), particle.GetVelocity(), timestep);
+                particle.SetPosition(updatedPosition);
                 double2 clampedPosition = ClampPosition(particle);
                 particle.SetPosition(clampedPosition);
                 double2 boundaryConditionEnforcedVelocity = UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(particle);
@@ -241,11 +241,11 @@ public class FluidSimulator : MonoBehaviour
         }
         if (xN.y < wallMin)
         {
-            particle.UpdateVelocityX(particleVelocityX + (wallMin - xN.y));
+            particle.UpdateVelocityX(particleVelocityY + (wallMin - xN.y));
         }
         if (xN.y > wallMax)
         {
-            particle.UpdateVelocityX(particleVelocityX + (wallMax - xN.y));
+            particle.UpdateVelocityX(particleVelocityY + (wallMax - xN.y));
         }
         return updatedVelocity;
     }
