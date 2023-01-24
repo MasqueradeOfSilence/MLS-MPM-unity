@@ -10,8 +10,8 @@ public class FluidSimulatorTests
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeGridAndParticleArrays();
-        // 16 to 48 with a spacing of 0.5, two dimensions = 128 particles.
-        int expectedParticleCount = 192;
+        // 16 to 48 with a spacing of 0.5, two dimensions = 4096 particles.
+        int expectedParticleCount = 4096;
         Assert.AreEqual(fluidSimulator.GetParticleCount(), expectedParticleCount);
         Assert.IsNotNull(fluidSimulator.GetGrid());
         Particle particle = fluidSimulator.GetParticles()[0, 0];
@@ -21,16 +21,15 @@ public class FluidSimulatorTests
     [Test]
     public void BuildGridOfTemporaryParticlePositionsShouldCreateEvenlySpacedParticlesFrom16_16To64_64()
     {
-        // might be a bad grid size
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         double2[,] temporaryParticlePositionGrid = fluidSimulator.BuildGridOfTemporaryParticlePositions();
         double2 expectedFirstPosition = new(16, 16);
         double2 actualFirstPosition = temporaryParticlePositionGrid[0, 0];
         Assert.AreEqual(actualFirstPosition, expectedFirstPosition);
-        double2 expectedLastPosition = new(63.5, 63.5);
+        double2 expectedLastPosition = new(47.5, 47.5);
         double2 actualLastPosition = temporaryParticlePositionGrid[temporaryParticlePositionGrid.GetLength(0) - 1, temporaryParticlePositionGrid.GetLength(1) - 1];
         Assert.AreEqual(actualLastPosition, expectedLastPosition);
-        double expectedParticlePositionGridSize = 9216; // 96 x 96
+        double expectedParticlePositionGridSize = 4096;
         double actualParticlePositionGridSize = temporaryParticlePositionGrid.Length;
         Assert.AreEqual(actualParticlePositionGridSize, expectedParticlePositionGridSize);
     }
@@ -57,8 +56,8 @@ public class FluidSimulatorTests
         double expectedLastCellMass = 0;
         int firstCellXPosition = 0;
         int firstCellYPosition = 0;
-        int lastCellXPosition = 95;
-        int lastCellYPosition = 95;
+        int lastCellXPosition = 63;
+        int lastCellYPosition = 63;
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         // clear grid just re-initializes, so no need for first init call
         fluidSimulator.ClearGrid();

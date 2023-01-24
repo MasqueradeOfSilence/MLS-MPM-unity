@@ -10,8 +10,8 @@ public class FluidSimulator : MonoBehaviour
 {
     private Particle[,] particles;
     private MlsMpmGrid grid;
-    // nialltl used 64...delete this comment if 96 works fine
-    private int gridResolution = 96;
+    // 64 x 64
+    private int gridResolution = 64;
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
@@ -36,8 +36,8 @@ public class FluidSimulator : MonoBehaviour
     {
         double spacing = 0.5;
         double startPosition = 16;
-        double endPosition = 64;
-        int tempParticleArrayResolution = 96;
+        double endPosition = 48;
+        int tempParticleArrayResolution = 64;
         double2[,] gridOfTemporaryParticlePositions = new double2[tempParticleArrayResolution, tempParticleArrayResolution];
         int iInt = 0;
         int jInt = 0;
@@ -52,7 +52,6 @@ public class FluidSimulator : MonoBehaviour
             jInt = 0;
             iInt++;
         }
-        // we would get 9216, but it's rounded down to 8192
         return gridOfTemporaryParticlePositions;
     }
 
@@ -274,8 +273,7 @@ public class FluidSimulator : MonoBehaviour
 
     private void InitializeParticles(double2[,] temporaryParticlePositions)
     {
-        // we could try decreasing the size to 8192 like nialltl does?
-        int tempParticleArrayResolution = 96;
+        int tempParticleArrayResolution = 64;
         for (int i = 0; i < tempParticleArrayResolution; i++)
         {
             for (int j = 0; j < tempParticleArrayResolution; j++)
@@ -351,7 +349,7 @@ public class FluidSimulator : MonoBehaviour
 
     public int GetParticleCount()
     {
-        return particles.GetLength(0) + particles.GetLength(1);
+        return particles.GetLength(0) * particles.GetLength(1);
     }
 
     public Particle[,] GetParticles()
