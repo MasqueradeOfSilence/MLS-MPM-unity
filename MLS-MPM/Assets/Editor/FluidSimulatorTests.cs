@@ -34,7 +34,7 @@ public class FluidSimulatorTests
         Assert.AreEqual(actualParticlePositionGridSize, expectedParticlePositionGridSize);
     }
 
-    // TODO: Finish this test
+    // TODO: Finish this test and all the ones below it
 
     //[Test]
     //public void SimulateShouldCorrectlyRunClearGrid_P2G1_P2G2_UpdateGridAndG2PToUpdateParticlePositions()
