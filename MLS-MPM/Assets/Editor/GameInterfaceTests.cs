@@ -23,6 +23,7 @@ public class GameInterfaceTests : MonoBehaviour
         Assert.IsTrue(gameInterface.GetIfWeNeedToAddAllTheParticles());
     }
 
+    // TODO fix this whole thing, boolean tests are not sufficient
     [Test]
     public void RemoveParticlesFromSceneShouldTellUpdateToRemoveParticles()
     {
