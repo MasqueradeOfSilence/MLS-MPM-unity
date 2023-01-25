@@ -6,6 +6,12 @@ using Unity.Mathematics;
 public class FluidSimulatorTests
 {
     [Test]
+    public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
+    {
+        // create mocks and test that the functions are called.
+    }
+
+    [Test]
     public void InitializeGridShouldInstantiateTheGrid()
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
@@ -65,9 +71,11 @@ public class FluidSimulatorTests
         Assert.AreEqual(lastCell.GetMass(), expectedLastCellMass);
     }
 
-    public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
+    [Test]
+    public void P2G1ShouldModifyEachParticle()
     {
-
+        // Walk first, middle, and last particles through the simulation
+        // Test expected particle masses and velocities
     }
 
 }
