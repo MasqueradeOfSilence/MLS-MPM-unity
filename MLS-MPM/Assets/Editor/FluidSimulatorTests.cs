@@ -6,20 +6,29 @@ using Unity.Mathematics;
 public class FluidSimulatorTests
 {
     [Test]
-    public void InitializeGridAndParticleArraysShouldFillAnArrayOfParticlesAndInstantiateTheGrid()
+    public void InitializeGridShouldInstantiateTheGrid()
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-        fluidSimulator.InitializeGridAndParticleArrays();
+        fluidSimulator.InitializeGrid();
+        Assert.IsNotNull(fluidSimulator.GetGrid());
+        int2 expectedSize = new(64, 64);
+        Assert.AreEqual(fluidSimulator.GetGrid().GetSize(), expectedSize);
+    }
+
+    public void InitializeParticlesWrapperShouldInitialize4096Particles()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeGrid();
+        fluidSimulator.InitializeParticles();
         // 16 to 48 with a spacing of 0.5, two dimensions = 4096 particles.
         int expectedParticleCount = 4096;
         Assert.AreEqual(fluidSimulator.GetParticleCount(), expectedParticleCount);
-        Assert.IsNotNull(fluidSimulator.GetGrid());
         Particle particle = fluidSimulator.GetParticles()[0, 0];
         Assert.IsNotNull(particle);
     }
 
     [Test]
-    public void BuildGridOfTemporaryParticlePositionsShouldCreateEvenlySpacedParticlesFrom16_16To64_64()
+    public void BuildGridOfTemporaryParticlePositionsShouldCreateEvenlySpacedParticlesFrom16_16To48_48()
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         double2[,] temporaryParticlePositionGrid = fluidSimulator.BuildGridOfTemporaryParticlePositions();
@@ -33,19 +42,6 @@ public class FluidSimulatorTests
         double actualParticlePositionGridSize = temporaryParticlePositionGrid.Length;
         Assert.AreEqual(actualParticlePositionGridSize, expectedParticlePositionGridSize);
     }
-
-    // TODO: Finish this test and all the ones below it
-
-    //[Test]
-    //public void SimulateShouldCorrectlyRunClearGrid_P2G1_P2G2_UpdateGridAndG2PToUpdateParticlePositions()
-    //{
-    //    FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-    //    fluidSimulator.InitializeGridAndParticleArrays();
-    //    // we are only testing one simulation step
-    //    fluidSimulator.Simulate();
-    //    // Instead of setting mocks for the 3 steps, we can check the final particle position (first and last).
-    //    // include boundary checking
-    //}
 
     [Test]
     public void ClearGridShouldResetTheGridBySettingCellMassesAndVelocitiesToZero()
@@ -69,67 +65,9 @@ public class FluidSimulatorTests
         Assert.AreEqual(lastCell.GetMass(), expectedLastCellMass);
     }
 
-    // Commenting out for now because these tests don't do much yet and really slow down the suite
+    public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
+    {
 
-    //[Test]
-    //public void ParticleToGridStep1ShouldUpdateTheMassAndVelocityOfEachCell()
-    //{
-    //    FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-    //    fluidSimulator.InitializeGridAndParticleArrays();
-    //    fluidSimulator.ParticleToGridStep1();
-    //    // masses will update, likely to 1. not sure if velocities will update until a later frame.
-    //    //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetMass());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetMass());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetMass());
-    //    fluidSimulator.ClearGrid();
-    //}
-
-    //[Test]
-    //public void ParticleToGridStep2ShouldUpdateTheVelocityOfEachCellUsingMomentum()
-    //{
-    //    FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-    //    fluidSimulator.InitializeGridAndParticleArrays();
-    //    fluidSimulator.ParticleToGridStep1();
-    //    fluidSimulator.ParticleToGridStep2();
-    //    //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(21, 87).GetVelocity());
-    //    fluidSimulator.ClearGrid();
-    //}
-
-    //[Test]
-    //public void UpdateGridShouldConvertMomentumToVelocity_ApplyGravity_AndEnforceBoundaryConditions()
-    //{
-    //    FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-    //    fluidSimulator.InitializeGridAndParticleArrays();
-    //    fluidSimulator.ParticleToGridStep1();
-    //    fluidSimulator.ParticleToGridStep2();
-    //    fluidSimulator.UpdateGrid();
-    //    //Debug.Log(fluidSimulator.GetGrid().At(0, 0).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(95, 95).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(48, 48).GetVelocity());
-    //    //Debug.Log(fluidSimulator.GetGrid().At(21, 87).GetVelocity());
-    //    fluidSimulator.ClearGrid();
-    //}
-
-    //[Test]
-    //public void GridToParticleStepShouldAdvectParticlesToNewPositionsAndEnforceBoundaryConditions()
-    //{
-    //    FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
-    //    fluidSimulator.InitializeGridAndParticleArrays();
-    //    fluidSimulator.ParticleToGridStep1();
-    //    fluidSimulator.ParticleToGridStep2();
-    //    fluidSimulator.UpdateGrid();
-    //    fluidSimulator.GridToParticleStep();
-    //    //Debug.Log(fluidSimulator.GetParticles()[0, 0].GetPosition());
-    //    //Debug.Log(fluidSimulator.GetParticles()[95, 95].GetPosition());
-    //    //Debug.Log(fluidSimulator.GetParticles()[48, 48].GetPosition());
-    //    //Debug.Log(fluidSimulator.GetParticles()[21, 87].GetPosition());
-    //    fluidSimulator.ClearGrid();
-    //}
+    }
 
 }

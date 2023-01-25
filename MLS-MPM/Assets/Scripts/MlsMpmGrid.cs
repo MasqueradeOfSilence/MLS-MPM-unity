@@ -36,7 +36,7 @@ public class MlsMpmGrid : ScriptableObject
     {
         if (grid == null)
         {
-            int defaultResolution = 96;
+            int defaultResolution = 64;
             InitMlsMpmGrid(defaultResolution);
         }
         return grid[x, y];
@@ -51,7 +51,7 @@ public class MlsMpmGrid : ScriptableObject
     {
         if (grid == null)
         {
-            int defaultResolution = 96;
+            int defaultResolution = 64;
             InitMlsMpmGrid(defaultResolution);
         }
         grid[x, y] = updated;

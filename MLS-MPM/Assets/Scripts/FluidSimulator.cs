@@ -22,14 +22,24 @@ public class FluidSimulator : MonoBehaviour
     private const double gravity = -0.3;
     private const int neighborDimension = 3;
 
-    public void InitializeGridAndParticleArrays()
+    public void InitializeFluidSimulator()
+    {
+        InitializeGrid();
+        InitializeParticles();
+        PutNewParticlesIntoGame();
+    }
+
+    public void InitializeGrid()
     {
         grid = ScriptableObject.CreateInstance("MlsMpmGrid") as MlsMpmGrid;
         grid.InitMlsMpmGrid(gridResolution);
+    }
+
+    public void InitializeParticles()
+    {
         particles = new Particle[grid.GetGridResolution(), grid.GetGridResolution()];
         double2[,] temporaryParticlePositions = BuildGridOfTemporaryParticlePositions();
         InitializeParticles(temporaryParticlePositions);
-        PutNewParticlesIntoGame();
     }
 
     public double2[,] BuildGridOfTemporaryParticlePositions()
@@ -328,7 +338,7 @@ public class FluidSimulator : MonoBehaviour
     void Start()
     {
         print("LOG: Starting fluid simulator");
-        InitializeGridAndParticleArrays();
+        InitializeGrid();
         PutNewParticlesIntoGame();
     }
 
