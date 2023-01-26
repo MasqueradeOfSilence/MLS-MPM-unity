@@ -76,6 +76,7 @@ public class FluidSimulator : MonoBehaviour
 
     public void ParticleToGridStep1()
     {
+        // Particle array must be initialized and populated with position + velocity for each particle, before calling this step. Specifically, call InitializeParticles(), no parameters.
         for (int i = 0; i < particles.GetLength(0); i++)
         {
             for (int j = 0; j < particles.GetLength(1); j++)
