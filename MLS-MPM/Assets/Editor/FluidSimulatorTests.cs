@@ -72,9 +72,10 @@ public class FluidSimulatorTests
     }
 
     [Test]
-    public void P2G1ShouldModifyEachParticle()
+    public void P2G1ShouldModifyEachGridCellUsingParticleAttributes()
     {
         // Walk first, middle, and last particles through the simulation
+        // note: this may require too much manual computation, another option is all 3
         // Test expected particle masses and velocities
     }
 

@@ -4,6 +4,7 @@ using Unity.Mathematics;
 /**
  * Fluid Simulator: Simulate a basic liquid. 
  * Foam simulation will be done differently, in the Foam Simulator class.
+ * Source: Nialltl's incremental MPM repository and corresponding tutorial.
  */
 
 public class FluidSimulator : MonoBehaviour
