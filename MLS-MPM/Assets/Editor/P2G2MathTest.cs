@@ -30,7 +30,7 @@ public class P2G2MathTest
 	{
 		double particleMass = 2;
 		double density = 4.6128;
-		double expectedVolume = 9.2256;
+		double expectedVolume = 0.433576136;
 		double actualVolume = P2G2Math.ComputeVolume(particleMass, density);
 		Assert.That(actualVolume, Is.EqualTo(expectedVolume).Within(0.01));
 	}

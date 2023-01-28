@@ -74,9 +74,54 @@ public class FluidSimulatorTests
     [Test]
     public void P2G1ShouldModifyEachGridCellUsingParticleAttributes()
     {
-        // Walk first, middle, and last particles through the simulation
-        // note: this may require too much manual computation, another option is all 3
         // Test expected particle masses and velocities
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        // Let's save ourselves a few loops.
+        int testNeighborDimension = 1;
+        fluidSimulator.SetNeighborDimension(testNeighborDimension);
+        Particle[,] particles = new Particle[1, 1];
+        Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new(0, 0, 0, 0);
+        double2 initialPosition = new(16, 16);
+        particle.InitParticle(initialPosition, initialVelocity, initialMass, initialC);
+        particles[0, 0] = particle;
+        fluidSimulator.SetParticles(particles);
+        double expectedNewMass = 0.25;
+        double2 expectedNewVelocity = new(0, 0);
+        fluidSimulator.ParticleToGridStep1();
+        GridCell firstCell = fluidSimulator.GetGrid().At(0, 0);
+        Assert.AreEqual(expectedNewMass, firstCell.GetMass());
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedNewVelocity, firstCell.GetVelocity()));
+    }
+
+    [Test]
+    public void P2G2ShouldUpdateGridCellVelocityWithMomentum()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        int testNeighborDimension = 1;
+        fluidSimulator.SetNeighborDimension(testNeighborDimension);
+        Particle[,] particles = new Particle[1, 1];
+        Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new double2x2(1, 1, 1, 1);
+        double2 initialPosition = new(16, 16);
+        particle.InitParticle(initialPosition, initialVelocity, initialMass, initialC);
+        particles[0, 0] = particle;
+        fluidSimulator.SetParticles(particles);
+        MlsMpmGrid grid = ScriptableObject.CreateInstance("MlsMpmGrid") as MlsMpmGrid;
+        grid.InitMlsMpmGrid(20);
+        GridCell cell = grid.At(16, 16);
+        double initialCellMass = 0.25;
+        cell.SetMass(initialCellMass);
+        grid.UpdateCellAt(16, 16, cell);
+        fluidSimulator.SetGrid(grid);
+        double2 expectedVelocity = new(0.64, 0.64);
+        fluidSimulator.ParticleToGridStep2();
+        double2 actualVelocity = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
     }
 
 }

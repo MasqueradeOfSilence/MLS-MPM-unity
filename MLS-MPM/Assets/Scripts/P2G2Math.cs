@@ -24,7 +24,7 @@ public class P2G2Math : MonoBehaviour
 
     public static double ComputeVolume(double particleMass, double density)
     {
-        return particleMass * density;
+        return particleMass / density;
     }
 
     public static double ComputePressure(double eosStiffness, double density, double restDensity, double eosPower)

@@ -21,7 +21,7 @@ public class FluidSimulator : MonoBehaviour
     private const double eosStiffness = 10;
     private const double eosPower = 4;
     private const double gravity = -0.3;
-    private const int neighborDimension = 3;
+    private int neighborDimension = 3;
 
     public void InitializeFluidSimulator()
     {
@@ -75,9 +75,27 @@ public class FluidSimulator : MonoBehaviour
         grid.InitMlsMpmGrid(gridResolution);
     }
 
+    private bool GridSizeIsZero()
+    {
+        return grid == null || (grid.GetSize()[0] == 0 && grid.GetSize()[1] == 0);
+    }
+
+    private bool ParticlesSizeIsZero()
+    {
+        return particles == null || particles.Length == 0;
+    }
+
     public void ParticleToGridStep1()
     {
-        // Particle array must be initialized and populated with position + velocity for each particle, before calling this step. Specifically, call InitializeParticles(), no parameters.
+        if (GridSizeIsZero())
+        {
+            InitializeGrid();
+        }
+        // Particle array must be initialized and populated with position + velocity for each particle for this function to perform correctly.
+        if (ParticlesSizeIsZero())
+        {
+            InitializeParticles();
+        }
         for (int i = 0; i < particles.GetLength(0); i++)
         {
             for (int j = 0; j < particles.GetLength(1); j++)
@@ -137,7 +155,8 @@ public class FluidSimulator : MonoBehaviour
                         density += P2G2Math.ComputeUpdatedDensity(weight, mass, density);
                     }
                 }
-                double volume = P2G2Math.ComputeVolume(mass, density);
+                // grid cell mass? or particle mass?
+                double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
@@ -161,6 +180,7 @@ public class FluidSimulator : MonoBehaviour
                         grid.UpdateCellAt(i, j, correspondingCell);
                     }
                 }
+                // necessary?
                 particles[i, j] = particle;
             }
         }
@@ -372,5 +392,21 @@ public class FluidSimulator : MonoBehaviour
     public MlsMpmGrid GetGrid()
     {
         return grid;
+    }
+
+    public void SetParticles(Particle[,] particles)
+    {
+        this.particles = particles;
+    }
+
+    public void SetGrid(MlsMpmGrid grid)
+    {
+        this.grid = grid;
+    }
+
+    // For testing purposes
+    public void SetNeighborDimension(int neighborDimension)
+    {
+        this.neighborDimension = neighborDimension;
     }
 }
