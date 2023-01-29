@@ -147,19 +147,19 @@ public class FluidSimulatorTests
         double initialMassCell = 0.25;
         cell1.SetMass(initialMassCell);
         cell1.SetVelocity(initialVelocityCell);
+        GridCell cell2 = grid.At(3, 3);
+        cell2.SetMass(initialMassCell);
+        cell2.SetVelocity(initialVelocityCell);
         grid.UpdateCellAt(0, 0, cell1);
-        grid.UpdateCellAt(2, 0, cell1);
-        //fluidSimulator.SetGridResolution(4);
+        grid.UpdateCellAt(3, 3, cell2);
         // Boundary condition is enforced for first
         double2 expectedVelocity1 = new(0, 0);
         // And not for second
-        double2 expectedVelocity2 = new(2.56, 1.96);
+        double2 expectedVelocity2 = new(2.56, 2.5);
         fluidSimulator.SetGrid(grid);
         fluidSimulator.UpdateGrid();
         double2 actualVelocity1 = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
-        double2 actualVelocity2 = fluidSimulator.GetGrid().At(2, 0).GetVelocity();
-        Debug.LogWarning(actualVelocity1);
-        Debug.LogWarning(actualVelocity2);
+        double2 actualVelocity2 = fluidSimulator.GetGrid().At(3, 3).GetVelocity();
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity1, actualVelocity1));
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity2, actualVelocity2));
 

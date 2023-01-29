@@ -197,7 +197,7 @@ public class FluidSimulator : MonoBehaviour
                 {
                     currentCell.SetVelocity(currentCell.GetVelocity() / currentCell.GetMass());
                     currentCell.SetVelocity(currentCell.GetVelocity() + (timestep * new double2(0, gravity)));
-                    double2 updatedCellVelocityWithEnforcedBoundaryConditions = UpdateCellVelocityWithEnforcedBoundaryConditions(i, currentCell.GetVelocity());
+                    double2 updatedCellVelocityWithEnforcedBoundaryConditions = UpdateCellVelocityWithEnforcedBoundaryConditions(i, j, currentCell.GetVelocity());
                     currentCell.SetVelocity(updatedCellVelocityWithEnforcedBoundaryConditions);
                 }
             }
@@ -287,20 +287,16 @@ public class FluidSimulator : MonoBehaviour
         return math.clamp(particle.GetPosition(), 1, gridResolution - 2);
     }
 
-    private double2 UpdateCellVelocityWithEnforcedBoundaryConditions(int i, double2 velocity)
+    private double2 UpdateCellVelocityWithEnforcedBoundaryConditions(int i, int j, double2 velocity)
     {
         double2 updatedVelocity = velocity;
-        // note: this algorithm is not correct for our 2D grid. Need to recompute the boundaries
-        int x = i / gridResolution;
-        int y = i % gridResolution;
-        if (x < 2 || x > gridResolution - 3)
+
+        if (i < 2 || i > gridResolution - 3)
         {
-            Debug.LogWarning("hello 1 with i " + i);
             updatedVelocity.x = 0;
         }
-        if (y < 2 || y > gridResolution - 3)
+        if (j < 2 || j > gridResolution - 3)
         {
-            Debug.LogWarning("hello 2 with i " + i);
             updatedVelocity.y = 0;
         }
         return updatedVelocity;
