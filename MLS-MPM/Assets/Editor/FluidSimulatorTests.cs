@@ -124,4 +124,45 @@ public class FluidSimulatorTests
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
     }
 
+    [Test]
+    public void UpdateGridShouldUpdateCellVelocitiesAndEnforceBoundaryConditions()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        int testNeighborDimension = 1;
+        fluidSimulator.SetNeighborDimension(testNeighborDimension);
+        Particle[,] particles = new Particle[4, 4];
+        Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new double2x2(1, 1, 1, 1);
+        double2 initialPosition = new(16, 16);
+        particle.InitParticle(initialPosition, initialVelocity, initialMass, initialC);
+        particles[0, 0] = particle;
+        particles[0, 2] = particle;
+        fluidSimulator.SetParticles(particles);
+        MlsMpmGrid grid = ScriptableObject.CreateInstance("MlsMpmGrid") as MlsMpmGrid;
+        grid.InitMlsMpmGrid(64);
+        GridCell cell1 = grid.At(0, 0);
+        double2 initialVelocityCell = new(0.64, 0.64);
+        double initialMassCell = 0.25;
+        cell1.SetMass(initialMassCell);
+        cell1.SetVelocity(initialVelocityCell);
+        grid.UpdateCellAt(0, 0, cell1);
+        grid.UpdateCellAt(2, 0, cell1);
+        //fluidSimulator.SetGridResolution(4);
+        // Boundary condition is enforced for first
+        double2 expectedVelocity1 = new(0, 0);
+        // And not for second
+        double2 expectedVelocity2 = new(2.56, 1.96);
+        fluidSimulator.SetGrid(grid);
+        fluidSimulator.UpdateGrid();
+        double2 actualVelocity1 = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
+        double2 actualVelocity2 = fluidSimulator.GetGrid().At(2, 0).GetVelocity();
+        Debug.LogWarning(actualVelocity1);
+        Debug.LogWarning(actualVelocity2);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity1, actualVelocity1));
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity2, actualVelocity2));
+
+    }
+
 }

@@ -5,6 +5,7 @@ public class MlsMpmGrid : ScriptableObject
 {
     private int gridResolution;
     private GridCell[,] grid;
+
     public void InitMlsMpmGrid(int gridResolution)
     {
         grid = new GridCell[gridResolution, gridResolution];

@@ -290,15 +290,18 @@ public class FluidSimulator : MonoBehaviour
     private double2 UpdateCellVelocityWithEnforcedBoundaryConditions(int i, double2 velocity)
     {
         double2 updatedVelocity = velocity;
+        // note: this algorithm is not correct for our 2D grid. Need to recompute the boundaries
         int x = i / gridResolution;
         int y = i % gridResolution;
         if (x < 2 || x > gridResolution - 3)
         {
-            velocity.x = 0;
+            Debug.LogWarning("hello 1 with i " + i);
+            updatedVelocity.x = 0;
         }
         if (y < 2 || y > gridResolution - 3)
         {
-            velocity.y = 0;
+            Debug.LogWarning("hello 2 with i " + i);
+            updatedVelocity.y = 0;
         }
         return updatedVelocity;
     }
@@ -408,5 +411,10 @@ public class FluidSimulator : MonoBehaviour
     public void SetNeighborDimension(int neighborDimension)
     {
         this.neighborDimension = neighborDimension;
+    }
+
+    public void SetGridResolution(int gridResolution)
+    {
+        this.gridResolution = gridResolution;
     }
 }
