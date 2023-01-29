@@ -255,6 +255,7 @@ public class FluidSimulator : MonoBehaviour
         GridToParticleStep();
     }
 
+    // note: probably not accurate for a 2D array, TODO: fix
     private double2 UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(Particle particle)
     {
         double2 updatedVelocity = particle.GetVelocity();
@@ -319,7 +320,7 @@ public class FluidSimulator : MonoBehaviour
         }
     }
 
-    private Particle[] flattenParticles()
+    private Particle[] FlattenParticles()
     {
         Particle[] toReturn = new Particle[gridResolution * gridResolution];
         int index = 0;
@@ -339,7 +340,7 @@ public class FluidSimulator : MonoBehaviour
         Debug.Log("Adding particles");
         GameObject exampleGeo = GameObject.Find("ExampleGeo");
         GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
-        gameInterface.DumpParticlesIntoScene(flattenParticles());
+        gameInterface.DumpParticlesIntoScene(FlattenParticles());
         //gameInterface.AddAllParticles();
     }
 
