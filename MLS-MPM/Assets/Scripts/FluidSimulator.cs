@@ -211,7 +211,8 @@ public class FluidSimulator : MonoBehaviour
             for (int j = 0; j < particles.GetLength(1); j++) 
             {
                 Particle particle = particles[i, j];
-                particle.SetVelocity(0);
+                // Zero out particle velocity
+                particle.SetVelocity(new double2(0, 0));
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
                 double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
@@ -224,6 +225,7 @@ public class FluidSimulator : MonoBehaviour
                     {
                         double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
                         int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
+                        // TODO: ideally abstract this function out to GeneralMathUtils since we use it in 2 steps
                         double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
                         double[] neighborCellVelocity = GeneralMathUtils.Format2DVectorForMath(grid.At(neighborPosition).GetVelocity());
                         double[] weightedVelocity = G2PMath.ComputeWeightedVelocity(neighborCellVelocity, weight);
@@ -255,7 +257,7 @@ public class FluidSimulator : MonoBehaviour
         GridToParticleStep();
     }
 
-    // note: probably not accurate for a 2D array, TODO: fix
+    // note: possibly not accurate for a 2D array, TODO: fix
     private double2 UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(Particle particle)
     {
         double2 updatedVelocity = particle.GetVelocity();

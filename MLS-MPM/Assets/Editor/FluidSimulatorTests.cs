@@ -162,7 +162,6 @@ public class FluidSimulatorTests
         double2 actualVelocity2 = fluidSimulator.GetGrid().At(3, 3).GetVelocity();
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity1, actualVelocity1));
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity2, actualVelocity2));
-
     }
 
 }
