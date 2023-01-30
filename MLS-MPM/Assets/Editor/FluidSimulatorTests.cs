@@ -164,4 +164,53 @@ public class FluidSimulatorTests
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity2, actualVelocity2));
     }
 
+    [Test]
+    public void UpdateCellVelocityWithEnforcedBoundaryConditionsG2PShouldEnforceBoundaries()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        double mass = 1.0;
+        double2x2 C = new double2x2(1, 1, 1, 1);
+        double2 particlePosition = new(1, 1);
+
+        // First: Test a particle that won't hit any boundaries
+        Particle p1 = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 particleVelocity1 = new(50, 50);
+        p1.InitParticle(particlePosition, particleVelocity1, mass, C);
+        double2 expectedReturnedVelocity1 = new(50, 50);
+        double2 actualReturnedVelocity1 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p1);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity1, actualReturnedVelocity1));
+
+        // xN.x < wallMin
+        Particle p2 = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 particleVelocity2 = new(1, 50);
+        p2.InitParticle(particlePosition, particleVelocity2, mass, C);
+        double2 expectedReturnedVelocity2 = new(2, 50);
+        double2 actualReturnedVelocity2 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p2);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity2, actualReturnedVelocity2));
+
+        // xN.x > wallMax
+        Particle p3 = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 particleVelocity3 = new(150, 50);
+        p3.InitParticle(particlePosition, particleVelocity3, mass, C);
+        double2 expectedReturnedVelocity3 = new(59, 50);
+        double2 actualReturnedVelocity3 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p3);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity3, actualReturnedVelocity3));
+
+        // xN.y < wallMin
+        Particle p4 = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 particleVelocity4 = new(50, 1);
+        p4.InitParticle(particlePosition, particleVelocity4, mass, C);
+        double2 expectedReturnedVelocity4 = new(50, 2);
+        double2 actualReturnedVelocity4 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p4);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity4, actualReturnedVelocity4));
+
+        // xN.y > wallMax
+        Particle p5 = ScriptableObject.CreateInstance("Particle") as Particle;
+        double2 particleVelocity5 = new(50, 150);
+        p5.InitParticle(particlePosition, particleVelocity5, mass, C);
+        double2 expectedReturnedVelocity5 = new(50, 59);
+        double2 actualReturnedVelocity5 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p5);
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity5, actualReturnedVelocity5));
+    }
+
 }
