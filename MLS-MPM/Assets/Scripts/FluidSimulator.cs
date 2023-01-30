@@ -225,7 +225,7 @@ public class FluidSimulator : MonoBehaviour
                     {
                         double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
                         int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
-                        // TODO: ideally abstract this function out to GeneralMathUtils since we use it in 2 steps
+                        // TODO: ideally abstract this function out to GeneralMathUtils since we use it in 2 different steps
                         double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
                         double[] neighborCellVelocity = GeneralMathUtils.Format2DVectorForMath(grid.At(neighborPosition).GetVelocity());
                         double[] weightedVelocity = G2PMath.ComputeWeightedVelocity(neighborCellVelocity, weight);
