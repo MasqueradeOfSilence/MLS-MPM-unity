@@ -257,7 +257,7 @@ public class FluidSimulator : MonoBehaviour
         GridToParticleStep();
     }
 
-    // note: possibly not accurate for a 2D array, TODO: fix
+    // TODO: see if this still works when using a 2D array instead of 1D, I think it should
     private double2 UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(Particle particle)
     {
         double2 updatedVelocity = particle.GetVelocity();
@@ -268,19 +268,21 @@ public class FluidSimulator : MonoBehaviour
         double particleVelocityY = particle.GetVelocity().y;
         if (xN.x < wallMin)
         {
-            particle.UpdateVelocityX(particleVelocityX + (wallMin - xN.x));
+            updatedVelocity.x = particleVelocityX + (wallMin - xN.x);
         }
         if (xN.x > wallMax)
         {
-            particle.UpdateVelocityX(particleVelocityX + (wallMax - xN.x));
+            updatedVelocity.x = particleVelocityX + (wallMax - xN.x);
         }
         if (xN.y < wallMin)
         {
-            particle.UpdateVelocityX(particleVelocityY + (wallMin - xN.y));
+            particle.UpdateVelocityY(particleVelocityY + (wallMin - xN.y));
+            updatedVelocity.y = particleVelocityY + (wallMin - xN.y);
         }
         if (xN.y > wallMax)
         {
-            particle.UpdateVelocityX(particleVelocityY + (wallMax - xN.y));
+            particle.UpdateVelocityY(particleVelocityY + (wallMax - xN.y));
+            updatedVelocity.y = particleVelocityY + (wallMax - xN.y);
         }
         return updatedVelocity;
     }
