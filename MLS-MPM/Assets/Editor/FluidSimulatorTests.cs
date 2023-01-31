@@ -247,7 +247,23 @@ public class FluidSimulatorTests
         grid.UpdateCellAt(15, 15, cell2);
         fluidSimulator.SetGrid(grid);
 
-        // note: it works up until term, continue testing after that
+        // Execute step
         fluidSimulator.GridToParticleStep();
+
+        // Expected values
+        double2x2 expectedC = new(-1.28, -1.25, -1.28, -1.25);
+        double2 expectedVelocity = new(0.64, 0.625);
+        double2 expectedPosition = new(16.128, 16.125);
+
+        // Actual values
+        Particle firstParticle = fluidSimulator.GetParticles()[0, 0];
+        double2x2 actualC = firstParticle.GetAffineMomentumMatrix();
+        double2 actualVelocity = firstParticle.GetVelocity();
+        double2 actualPosition = firstParticle.GetPosition();
+
+        //Equality tests
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedC, actualC));
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedPosition, actualPosition));
     }
 }
