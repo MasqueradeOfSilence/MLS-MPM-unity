@@ -5,7 +5,6 @@ using Unity.Mathematics;
 [TestFixture]
 public class FluidSimulatorTests
 {
-
     [Test]
     public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
     {

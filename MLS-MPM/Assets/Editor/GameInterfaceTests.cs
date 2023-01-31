@@ -3,15 +3,13 @@ using NUnit.Framework;
 using Unity.Mathematics;
 
 [TestFixture]
-public class GameInterfaceTests : MonoBehaviour
+public class GameInterfaceTests
 {
-    private GameInterface gameInterface;
-
     // Most of these tests should be completed on PlayMode, not EditMode.
     [Test]
-    public void DumpParticlesIntoSceneShouldTellUpdateToAddParticles()
+    public void DumpParticlesIntoSceneShouldAddParticles()
     {
-        gameInterface = GameObject.Find("ExampleGeo").AddComponent<GameInterface>();
+        GameInterface gameInterface = GameObject.Find("ExampleGeo").AddComponent<GameInterface>();
         double2 testPosition = new(0, 0);
         double2 testVelocity = new(0, 1);
         double testMass = 1;
@@ -20,15 +18,9 @@ public class GameInterfaceTests : MonoBehaviour
         Particle p2 = GeometryCreator.CreateNewParticle(testPosition, testVelocity, testMass, testC);
         Particle[] particles = new Particle[] { p1, p2 };
         gameInterface.DumpParticlesIntoScene(particles);
-        Assert.IsTrue(gameInterface.GetIfWeNeedToAddAllTheParticles());
+        Assert.IsTrue(gameInterface.GetListOfParticleSpheres().Length > 0);
     }
 
-    // TODO fix this whole thing, boolean tests are not sufficient
-    [Test]
-    public void RemoveParticlesFromSceneShouldTellUpdateToRemoveParticles()
-    {
-        gameInterface.RemoveParticlesFromScene();
-        Assert.IsTrue(gameInterface.GetIfWeNeedToNukeAllTheParticles());
-    }
+    // Removing particles cannot be tested as-is on Edit Mode.
 
 }

@@ -335,50 +335,23 @@ public class FluidSimulator : MonoBehaviour
         return toReturn;
     }
 
-    private void PutNewParticlesIntoGame()
-    {
-        Debug.Log("Adding particles");
-        GameObject exampleGeo = GameObject.Find("ExampleGeo");
-        GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
-        gameInterface.DumpParticlesIntoScene(FlattenParticles());
-        //gameInterface.AddAllParticles();
-    }
-
-    private void RefreshGameParticles()
-    {
-        Debug.Log("Nuking particles");
-        // Note: We still have a list of particles here. Shouldn't those be cleared each time?
-        //particles = new Particle[grid.GetGridResolution(), grid.GetGridResolution()];
-        //double2[,] temporaryParticlePositions = BuildGridOfTemporaryParticlePositions();
-        //InitializeParticles(temporaryParticlePositions);
-        GameObject exampleGeo = GameObject.Find("ExampleGeo");
-        GameInterface gameInterface = exampleGeo.GetComponent<GameInterface>();
-        gameInterface.NukeAllParticles();
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        print("LOG: Starting fluid simulator");
+        print("Starting fluid simulator");
         InitializeGrid();
-        PutNewParticlesIntoGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        RefreshGameParticles();
-
         for (int i = 0; i < numSimulationsPerUpdate; i++)
         {
             Simulate();
         }
-        // TODO: Bug: particles either don't delete or constantly do, or remain motionless
-        PutNewParticlesIntoGame();
-        // this will cause null errors
-        // particles = new Particle[gridResolution, gridResolution];
     }
 
+    // Getters and Setters
     public int GetParticleCount()
     {
         return particles.GetLength(0) * particles.GetLength(1);
