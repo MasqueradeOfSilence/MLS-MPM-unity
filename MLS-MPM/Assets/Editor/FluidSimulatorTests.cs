@@ -5,10 +5,18 @@ using Unity.Mathematics;
 [TestFixture]
 public class FluidSimulatorTests
 {
+
     [Test]
     public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
     {
-        // create mocks and test that the functions are called.
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeFluidSimulator();
+        int2 expectedGridSize = new(64, 64);
+        int expectedNumberOfParticles = 4096;
+        int2 actualGridSize = fluidSimulator.GetGrid().GetSize();
+        int actualNumberOfParticles = fluidSimulator.GetParticleCount();
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedGridSize, actualGridSize));
+        Assert.AreEqual(expectedNumberOfParticles, actualNumberOfParticles);
     }
 
     [Test]
@@ -265,5 +273,23 @@ public class FluidSimulatorTests
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedC, actualC));
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedPosition, actualPosition));
+    }
+
+    [Test]
+    public void SimulateShouldUpdateParticleAttributes()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeFluidSimulator();
+        double2 initialVelocity = fluidSimulator.GetParticles()[0, 0].GetVelocity();
+        double2 initialPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
+        double2x2 initialC = fluidSimulator.GetParticles()[0, 0].GetAffineMomentumMatrix();
+        fluidSimulator.Simulate();
+        // particle velocity, position, C. Due to the complexity of stepping through, we will simply check for changes for now. 
+        double2 finalVelocity = fluidSimulator.GetParticles()[0, 0].GetVelocity();
+        double2 finalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
+        double2x2 finalC = fluidSimulator.GetParticles()[0, 0].GetAffineMomentumMatrix();
+        Assert.IsFalse(GeneralMathUtils.DeepEquals(initialVelocity, finalVelocity));
+        Assert.IsFalse(GeneralMathUtils.DeepEquals(initialPosition, finalPosition));
+        Assert.IsFalse(GeneralMathUtils.DeepEquals(initialC, finalC));
     }
 }

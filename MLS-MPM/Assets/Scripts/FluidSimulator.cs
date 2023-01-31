@@ -27,7 +27,7 @@ public class FluidSimulator : MonoBehaviour
     {
         InitializeGrid();
         InitializeParticles();
-        PutNewParticlesIntoGame();
+        //PutNewParticlesIntoGame();
     }
 
     public void InitializeGrid()
@@ -176,7 +176,6 @@ public class FluidSimulator : MonoBehaviour
                         double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, distanceFromCellToNeighbor);
                         double2 updatedVelocity = P2G2Math.UpdateCellVelocity(momentum, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
-                        // deep copy
                         grid.UpdateCellAt(i, j, correspondingCell);
                     }
                 }
