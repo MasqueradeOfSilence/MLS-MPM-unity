@@ -139,10 +139,6 @@ public class FluidSimulator : MonoBehaviour
             {
                 Particle particle = particles[i, j];
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
-                if (i == 0 && j == 0)
-                {
-                    Debug.LogWarning("Watched variable: " + particle.GetPosition());
-                }
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
                 double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
@@ -150,16 +146,16 @@ public class FluidSimulator : MonoBehaviour
                  * We estimate the particle's volume by summing up the neighborhood's weighted mass contribution.
                  * See Equation 152 of MPM course. 
                  */
-                int[] nearestGridCellToParticlePosition = P2G2Math.FindNearestGridCellToParticle(particlePosition);
-                GridCell nearestGridCellToParticle = grid.At(nearestGridCellToParticlePosition);
-                double mass = nearestGridCellToParticle.GetMass();
                 double density = 0;
                 for (int nx = 0; nx < neighborDimension; nx++)
                 {
                     for (int ny = 0; ny < neighborDimension; ny++)
                     {
                         double weight = GeneralMathUtils.ComputeWeight(weights, nx, ny);
-                        density += P2G2Math.ComputeUpdatedDensity(weight, mass, density);
+                        int[] pertinentGridCellCoordinates = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
+                        GridCell nearestGridCellToParticle = grid.At(pertinentGridCellCoordinates);
+                        double mass = nearestGridCellToParticle.GetMass();
+                        density = P2G2Math.ComputeUpdatedDensity(weight, mass, density);
                     }
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);

@@ -124,10 +124,14 @@ public class FluidSimulatorTests
         double initialCellMass = 0.25;
         cell.SetMass(initialCellMass);
         grid.UpdateCellAt(16, 16, cell);
+        GridCell cell2 = grid.At(15, 15);
+        cell2.SetMass(initialCellMass);
+        grid.UpdateCellAt(15, 15, cell2);
         fluidSimulator.SetGrid(grid);
         double2 expectedVelocity = new(0.64, 0.64);
         fluidSimulator.ParticleToGridStep2();
         double2 actualVelocity = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
+        Debug.LogWarning("The actual velocity: " + actualVelocity);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
     }
 
@@ -299,5 +303,7 @@ public class FluidSimulatorTests
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeFluidSimulator();
         fluidSimulator.Simulate();
+        double2 finalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
+        Debug.LogWarning("THE END: " + finalPosition);
     }
 }
