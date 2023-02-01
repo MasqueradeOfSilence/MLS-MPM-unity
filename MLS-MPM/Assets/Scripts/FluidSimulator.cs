@@ -346,12 +346,12 @@ public class FluidSimulator : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         gameInterface.RemoveParticlesFromScene();
-        //StartCoroutine(WaitThenSimulate());
         yield return new WaitForSeconds(1);
-        Simulate();
+        for (int i = 0; i < numSimulationsPerUpdate; i++)
+        {
+            Simulate();
+        }
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
-        yield return new WaitForSeconds(1);
-        gameInterface.RemoveParticlesFromScene();
     }
 
     // Start is called before the first frame update
@@ -364,12 +364,15 @@ public class FluidSimulator : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
-        if (i == 0)
-        {
-            StartCoroutine(WaitThenRemove());
-            i++;
-        }
+    {
+        // Each frame, run x simulations, then update the position of each particle
+
+        //StartCoroutine(WaitThenRemove());
+        //if (i == 0)
+        //{
+        //    StartCoroutine(WaitThenRemove());
+        //    i++;
+        //}
         //for (int i = 0; i < numSimulationsPerUpdate; i++)
         //{
         //    Simulate();

@@ -20,6 +20,14 @@ public class GeneralMathUtils : MonoBehaviour
 			math.abs(a[1][1] - b[1][1]) < threshold;
 	}
 
+	public static bool DeepEquals(Vector3 a, Vector3 b)
+    {
+		double threshold = 0.0001;
+		return math.abs(a[0] - b[0]) < threshold &&
+			math.abs(a[1] - b[1]) < threshold &&
+            math.abs(a[2] - b[2]) < threshold;
+	}
+
 	public static int[] ParticlePositionToCellPosition(double[] particlePosition)
     {
 		return Array.ConvertAll(particlePosition, x => (int)x);

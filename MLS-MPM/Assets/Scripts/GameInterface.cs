@@ -31,6 +31,17 @@ public class GameInterface: MonoBehaviour
         AddAllParticles();
     }
 
+    public void UpdateParticles(Particle[] particles)
+    {
+        // should be equal lengths
+        for (int i = 0; i < listOfParticleSpheres.Length; i++)
+        {
+            GameObject currentParticleSphere = listOfParticleSpheres[i];
+            Particle currentParticle = particles[i];
+            currentParticleSphere.transform.position = new Vector3((float)currentParticle.GetPosition().x, (float)currentParticle.GetPosition().y, 0);
+        }
+    }
+
     public void RemoveParticlesFromScene()
     {
         NukeAllParticles();
