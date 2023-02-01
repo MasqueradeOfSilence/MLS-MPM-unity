@@ -24,6 +24,10 @@ public class P2G2Math : MonoBehaviour
 
     public static double ComputeVolume(double particleMass, double density)
     {
+        if (density == 0)
+        {
+            Debug.LogError("Density is 0 in P2G2Math.ComputeVolume()! Displaying divide by zero error...");
+        }
         return particleMass / density;
     }
 
@@ -95,6 +99,7 @@ public class P2G2Math : MonoBehaviour
         double2x2 term0 = -volume * 4 * stress * dt;
         return term0;
     }
+
     public static double[] ComputeDistanceFromCellToNeighbor(int[] neighborCellPosition, int[] currentCellPosition)
     {
         double x = (neighborCellPosition[0] - currentCellPosition[0]) + 0.5;

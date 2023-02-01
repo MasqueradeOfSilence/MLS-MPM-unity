@@ -303,7 +303,8 @@ public class FluidSimulatorTests
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
         fluidSimulator.InitializeFluidSimulator();
         fluidSimulator.Simulate();
-        double2 finalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
-        Debug.LogWarning("THE END: " + finalPosition);
+        double2 expectedFinalPosition = new(15.996, 15.984);
+        double2 actualFinalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedFinalPosition, actualFinalPosition));
     }
 }

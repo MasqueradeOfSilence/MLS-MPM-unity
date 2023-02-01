@@ -160,7 +160,6 @@ public class FluidSimulator : MonoBehaviour
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
-                //Debug.LogWarning(pressure);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
                 double trace = P2G2Math.ComputeTrace(strain);
@@ -177,6 +176,7 @@ public class FluidSimulator : MonoBehaviour
                         double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
                         GridCell correspondingCell = grid.At(i, j);
                         double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, distanceFromCellToNeighbor);
+                        // Update cell velocity by adding momentum to it.
                         double2 updatedVelocity = P2G2Math.UpdateCellVelocity(momentum, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
                         grid.UpdateCellAt(i, j, correspondingCell);
@@ -232,6 +232,7 @@ public class FluidSimulator : MonoBehaviour
                         double[] weightedVelocity = G2PMath.ComputeWeightedVelocity(neighborCellVelocity, weight);
                         double[,] term = G2PMath.ComputeTerm(weightedVelocity, distanceFromCellToNeighbor);
                         B = G2PMath.ComputeUpdatedB(B, term);
+                        // Because we're transferring the grid velocity to the particle velocity.
                         double[] updatedVelocity = G2PMath.ComputeUpdatedParticleVelocity(particle.GetVelocity(), weightedVelocity);
                         particle.SetVelocity(updatedVelocity);
                     }
