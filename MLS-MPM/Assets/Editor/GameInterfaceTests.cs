@@ -9,7 +9,7 @@ public class GameInterfaceTests
     [Test]
     public void DumpParticlesIntoSceneShouldAddParticles()
     {
-        GameInterface gameInterface = GameObject.Find("ExampleGeo").AddComponent<GameInterface>();
+        GameInterface gameInterface = GameObject.Find("CreatorDestroyer").AddComponent<GameInterface>();
         double2 testPosition = new(0, 0);
         double2 testVelocity = new(0, 1);
         double testMass = 1;

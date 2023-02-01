@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Mathematics;
+using System.Collections;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -22,12 +23,13 @@ public class FluidSimulator : MonoBehaviour
     private const double eosPower = 4;
     private const double gravity = -0.3;
     private int neighborDimension = 3;
+    private GameInterface gameInterface;
 
     public void InitializeFluidSimulator()
     {
         InitializeGrid();
         InitializeParticles();
-        //PutNewParticlesIntoGame();
+        gameInterface = GameObject.Find("CreatorDestroyer").AddComponent<GameInterface>();
     }
 
     public void InitializeGrid()
@@ -155,9 +157,9 @@ public class FluidSimulator : MonoBehaviour
                         density += P2G2Math.ComputeUpdatedDensity(weight, mass, density);
                     }
                 }
-                // grid cell mass? or particle mass?
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
+                Debug.LogWarning(pressure);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
                 double trace = P2G2Math.ComputeTrace(strain);
@@ -179,8 +181,6 @@ public class FluidSimulator : MonoBehaviour
                         grid.UpdateCellAt(i, j, correspondingCell);
                     }
                 }
-                // necessary?
-                particles[i, j] = particle;
             }
         }
     }
@@ -198,6 +198,7 @@ public class FluidSimulator : MonoBehaviour
                     currentCell.SetVelocity(currentCell.GetVelocity() + (timestep * new double2(0, gravity)));
                     double2 updatedCellVelocityWithEnforcedBoundaryConditions = UpdateCellVelocityWithEnforcedBoundaryConditions(i, j, currentCell.GetVelocity());
                     currentCell.SetVelocity(updatedCellVelocityWithEnforcedBoundaryConditions);
+                    grid.UpdateCellAt(i, j, currentCell);
                 }
             }
         }
@@ -238,6 +239,7 @@ public class FluidSimulator : MonoBehaviour
                 particle.SetAffineMomentumMatrix(updatedC);
                 double[] updatedPosition = G2PMath.AdvectParticle(particle.GetPosition(), particle.GetVelocity(), timestep);
                 particle.SetPosition(updatedPosition);
+                // before clamping
                 double2 clampedPosition = ClampPosition(particle);
                 particle.SetPosition(clampedPosition);
                 double2 boundaryConditionEnforcedVelocity = UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(particle);
@@ -335,20 +337,41 @@ public class FluidSimulator : MonoBehaviour
         return toReturn;
     }
 
+    int i = 0;
+
+    // testing
+    IEnumerator WaitThenRemove()
+    {
+        yield return new WaitForSeconds(1);
+        gameInterface.RemoveParticlesFromScene();
+        //StartCoroutine(WaitThenSimulate());
+        yield return new WaitForSeconds(1);
+        Simulate();
+        gameInterface.DumpParticlesIntoScene(FlattenParticles());
+        yield return new WaitForSeconds(1);
+        gameInterface.RemoveParticlesFromScene();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         print("Starting fluid simulator");
-        InitializeGrid();
+        InitializeFluidSimulator();
+        gameInterface.DumpParticlesIntoScene(FlattenParticles());
     }
 
     // Update is called once per frame
     void Update()
-    {
-        for (int i = 0; i < numSimulationsPerUpdate; i++)
+    {   
+        if (i == 0)
         {
-            Simulate();
+            StartCoroutine(WaitThenRemove());
+            i++;
         }
+        //for (int i = 0; i < numSimulationsPerUpdate; i++)
+        //{
+        //    Simulate();
+        //}
     }
 
     // Getters and Setters

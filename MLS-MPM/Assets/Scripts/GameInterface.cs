@@ -11,7 +11,8 @@ public class GameInterface: MonoBehaviour
     {
         foreach (GameObject p in listOfParticleSpheres)
         {
-            Destroy(p);
+            Destroy(GameObject.Find(p.name + "(Clone)"));
+            Destroy(GameObject.Find(p.name));
         }
     }
 
