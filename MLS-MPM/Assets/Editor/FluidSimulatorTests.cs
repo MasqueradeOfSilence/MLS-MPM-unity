@@ -290,7 +290,14 @@ public class FluidSimulatorTests
         Assert.IsFalse(GeneralMathUtils.DeepEquals(initialVelocity, finalVelocity));
         Assert.IsFalse(GeneralMathUtils.DeepEquals(initialPosition, finalPosition));
         Assert.IsFalse(GeneralMathUtils.DeepEquals(initialC, finalC));
+    }
 
-        // Step through the entire process.
+    // Since the first simulate test isn't strict enough
+    [Test]
+    public void SimulateShouldUpdateParticleAttributesCorrectly()
+    {
+        FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
+        fluidSimulator.InitializeFluidSimulator();
+        fluidSimulator.Simulate();
     }
 }

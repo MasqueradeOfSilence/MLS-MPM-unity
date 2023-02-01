@@ -118,6 +118,7 @@ public class FluidSimulator : MonoBehaviour
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by gridResolution
+                        // Make sure this grid cell is actually getting updated with each value
                         GridCell correspondingCell = grid.At(i, j);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
                         correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q));
@@ -138,6 +139,10 @@ public class FluidSimulator : MonoBehaviour
             {
                 Particle particle = particles[i, j];
                 double[] particlePosition = GeneralMathUtils.Format2DVectorForMath(particle.GetPosition());
+                if (i == 0 && j == 0)
+                {
+                    Debug.LogWarning("Watched variable: " + particle.GetPosition());
+                }
                 int[] cellPosition = GeneralMathUtils.ParticlePositionToCellPosition(particlePosition);
                 double[] distanceFromParticleToCell = GeneralMathUtils.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                 double[][] weights = GeneralMathUtils.ComputeAllWeights(distanceFromParticleToCell);
@@ -159,7 +164,7 @@ public class FluidSimulator : MonoBehaviour
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
-                Debug.LogWarning(pressure);
+                //Debug.LogWarning(pressure);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
                 double trace = P2G2Math.ComputeTrace(strain);
