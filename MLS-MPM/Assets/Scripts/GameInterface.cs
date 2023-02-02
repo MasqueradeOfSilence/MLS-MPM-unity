@@ -7,6 +7,16 @@ using UnityEngine;
 public class GameInterface: MonoBehaviour
 {
     private GameObject[] listOfParticleSpheres;
+
+    // Use this one to get rid of unwanted cloned spheres
+    public void NukeClones()
+    {
+        foreach (GameObject p in listOfParticleSpheres)
+        {
+            Destroy(GameObject.Find(p.name + "(Clone)"));
+        }
+    }
+
     private void NukeAllParticles()
     {
         foreach (GameObject p in listOfParticleSpheres)
