@@ -131,7 +131,6 @@ public class FluidSimulatorTests
         double2 expectedVelocity = new(0.64, 0.64);
         fluidSimulator.ParticleToGridStep2();
         double2 actualVelocity = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
-        Debug.LogWarning("The actual velocity: " + actualVelocity);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
     }
 

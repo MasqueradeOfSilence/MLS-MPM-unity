@@ -43,7 +43,6 @@ public class GameInterfaceTests
         GameObject firstSphere = gameInterface.GetListOfParticleSpheres()[0];
         Vector3 expectedUpdatedPosition = new(6, 6, 0);
         Vector3 actualUpdatedPosition = firstSphere.transform.position;
-        Debug.LogWarning(actualUpdatedPosition);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedUpdatedPosition, actualUpdatedPosition));
     }
 
