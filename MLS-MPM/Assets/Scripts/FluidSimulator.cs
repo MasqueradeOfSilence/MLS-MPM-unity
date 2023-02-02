@@ -265,23 +265,21 @@ public class FluidSimulator : MonoBehaviour
         double2 xN = particle.GetPosition() + particle.GetVelocity();
         const double wallMin = 3;
         double wallMax = gridResolution - 4;
-        double particleVelocityX = particle.GetVelocity().x;
-        double particleVelocityY = particle.GetVelocity().y;
         if (xN.x < wallMin)
         {
-            updatedVelocity.x = particleVelocityX + (wallMin - xN.x);
+            updatedVelocity.x += (wallMin - xN.x);
         }
         if (xN.x > wallMax)
         {
-            updatedVelocity.x = particleVelocityX + (wallMax - xN.x);
+            updatedVelocity.x += (wallMax - xN.x);
         }
         if (xN.y < wallMin)
         {
-            updatedVelocity.y = particleVelocityY + (wallMin - xN.y);
+            updatedVelocity.y += (wallMin - xN.y);
         }
         if (xN.y > wallMax)
         {
-            updatedVelocity.y = particleVelocityY + (wallMax - xN.y);
+            updatedVelocity.y += (wallMax - xN.y);
         }
         return updatedVelocity;
     }
