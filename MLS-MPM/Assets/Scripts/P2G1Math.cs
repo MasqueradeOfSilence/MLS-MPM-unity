@@ -73,12 +73,12 @@ public class P2G1Math: MonoBehaviour
         return initialCellMass + massContribution;
     }
 
-    public static double2 RecomputeCellVelocityAndReturnIt(double massContribution, double2 particleVelocity, double2 Q)
+    public static double2 RecomputeCellVelocityAndReturnIt(double massContribution, double2 particleVelocity, double2 Q, double2 oldCellVelocity)
     {
         double x = massContribution * (particleVelocity[0] + Q[0]);
         double y = massContribution * (particleVelocity[1] + Q[1]);
-        double2 newCellVelocity = new(particleVelocity[0] + x, particleVelocity[1] + y);
-        return newCellVelocity;
+        double2 newCellVelocity = new(x, y);
+        return oldCellVelocity + newCellVelocity;
     }
 
 }

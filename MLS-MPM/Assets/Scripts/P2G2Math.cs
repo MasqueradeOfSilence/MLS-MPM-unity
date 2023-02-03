@@ -114,10 +114,10 @@ public class P2G2Math : MonoBehaviour
         return ComputeMomentum(equation16Term0, weight, formatted);
     }
 
-    public static double2 ComputeMomentum(double2x2 equation16Term0, double weight, double2 distanceFromCellToNeighbor)
+    public static double2 ComputeMomentum(double2x2 equation16Term0, double weight, double2 distanceFromParticleToNeighbor)
     {
         double2x2 firstFactorMatrix = equation16Term0 * weight;
-        double2 secondFactorVector = distanceFromCellToNeighbor;
+        double2 secondFactorVector = distanceFromParticleToNeighbor;
         return math.mul(firstFactorMatrix, secondFactorVector);
     }
 

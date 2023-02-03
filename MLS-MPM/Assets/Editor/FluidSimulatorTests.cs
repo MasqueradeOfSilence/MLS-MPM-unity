@@ -187,7 +187,7 @@ public class FluidSimulatorTests
         double2 particleVelocity1 = new(50, 50);
         p1.InitParticle(particlePosition, particleVelocity1, mass, C);
         double2 expectedReturnedVelocity1 = new(50, 50);
-        double2 actualReturnedVelocity1 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p1);
+        double2 actualReturnedVelocity1 = fluidSimulator.UpdateParticleVelocityWithEnforcedBoundaryConditions(p1);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity1, actualReturnedVelocity1));
 
         // xN.x < wallMin
@@ -195,7 +195,7 @@ public class FluidSimulatorTests
         double2 particleVelocity2 = new(1, 50);
         p2.InitParticle(particlePosition, particleVelocity2, mass, C);
         double2 expectedReturnedVelocity2 = new(2, 50);
-        double2 actualReturnedVelocity2 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p2);
+        double2 actualReturnedVelocity2 = fluidSimulator.UpdateParticleVelocityWithEnforcedBoundaryConditions(p2);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity2, actualReturnedVelocity2));
 
         // xN.x > wallMax
@@ -203,7 +203,7 @@ public class FluidSimulatorTests
         double2 particleVelocity3 = new(150, 50);
         p3.InitParticle(particlePosition, particleVelocity3, mass, C);
         double2 expectedReturnedVelocity3 = new(59, 50);
-        double2 actualReturnedVelocity3 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p3);
+        double2 actualReturnedVelocity3 = fluidSimulator.UpdateParticleVelocityWithEnforcedBoundaryConditions(p3);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity3, actualReturnedVelocity3));
 
         // xN.y < wallMin
@@ -211,7 +211,7 @@ public class FluidSimulatorTests
         double2 particleVelocity4 = new(50, 1);
         p4.InitParticle(particlePosition, particleVelocity4, mass, C);
         double2 expectedReturnedVelocity4 = new(50, 2);
-        double2 actualReturnedVelocity4 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p4);
+        double2 actualReturnedVelocity4 = fluidSimulator.UpdateParticleVelocityWithEnforcedBoundaryConditions(p4);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity4, actualReturnedVelocity4));
 
         // xN.y > wallMax
@@ -219,7 +219,7 @@ public class FluidSimulatorTests
         double2 particleVelocity5 = new(50, 150);
         p5.InitParticle(particlePosition, particleVelocity5, mass, C);
         double2 expectedReturnedVelocity5 = new(50, 59);
-        double2 actualReturnedVelocity5 = fluidSimulator.UpdateCellVelocityWithEnforcedBoundaryConditionsG2P(p5);
+        double2 actualReturnedVelocity5 = fluidSimulator.UpdateParticleVelocityWithEnforcedBoundaryConditions(p5);
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedReturnedVelocity5, actualReturnedVelocity5));
     }
 
