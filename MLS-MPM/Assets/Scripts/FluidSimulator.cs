@@ -117,11 +117,12 @@ public class FluidSimulator : MonoBehaviour
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by gridResolution
-                        GridCell correspondingCell = grid.At(i, j);
+                        // I believe this should actually be the grid cell at neighbor position, NOT i, j!
+                        GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
                         correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q, correspondingCell.GetVelocity()));
-                        // deep copy
-                        grid.UpdateCellAt(i, j, correspondingCell);
+                        // deep copy, see above comment
+                        grid.UpdateCellAt(neighborPosition[0], neighborPosition[1], correspondingCell);
                     }
                 }
                 particles[i, j] = particle;
@@ -174,12 +175,12 @@ public class FluidSimulator : MonoBehaviour
                         int[] neighborPosition = GeneralMathUtils.ComputeNeighborPosition(cellPosition, nx, ny);
                         //double[] distanceFromCellToNeighbor = P2G2Math.ComputeDistanceFromCellToNeighbor(neighborPosition, cellPosition);
                         double[] distanceFromParticleToNeighbor = P2G1Math.ComputeDistanceFromCurrentParticleToCurrentNeighbor(neighborPosition, particlePosition);
-                        GridCell correspondingCell = grid.At(i, j);
+                        GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         double2 momentum = P2G2Math.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
                         // Update cell velocity by adding momentum to it.
                         double2 updatedVelocity = P2G2Math.UpdateCellVelocity(momentum, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
-                        grid.UpdateCellAt(i, j, correspondingCell);
+                        grid.UpdateCellAt(neighborPosition[0], neighborPosition[1], correspondingCell);
                     }
                 }
             }

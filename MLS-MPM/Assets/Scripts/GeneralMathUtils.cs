@@ -58,7 +58,6 @@ public class GeneralMathUtils : MonoBehaviour
 		return neighborPosition;
 	}
 
-	// TODO: Would be ideal to make these private and make the FluidSimulator class as clean as possible.
 	public static double[,] Format2x2MatrixForMath(double2x2 matrix)
     {
 		return new double[,] { { matrix.c0.x, matrix.c0.y }, { matrix.c1.x, matrix.c1.y } };

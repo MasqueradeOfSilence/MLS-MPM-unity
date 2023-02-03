@@ -41,6 +41,7 @@ public class P2G1Math: MonoBehaviour
         return weights;
     }
 
+    // TODO Might need to be moved to GeneralMathUtils
     public static double[] ComputeDistanceFromCurrentParticleToCurrentNeighbor(int[] currentNeighborPosition, double[] particlePosition)
     {
         double x = (currentNeighborPosition[0] - particlePosition[0]) + 0.5;
