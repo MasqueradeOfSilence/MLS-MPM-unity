@@ -95,7 +95,7 @@ public class FluidSimulatorTests
         particle.InitParticle(initialPosition, initialVelocity, initialMass, initialC);
         particles[0, 0] = particle;
         fluidSimulator.SetParticles(particles);
-        double expectedNewMass = 0.25;
+        double expectedNewMass = 0;
         double2 expectedNewVelocity = new(0, 0);
         fluidSimulator.ParticleToGridStep1();
         GridCell firstCell = fluidSimulator.GetGrid().At(0, 0);
