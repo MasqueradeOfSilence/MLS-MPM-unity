@@ -91,10 +91,10 @@ public class P2G1MathTest
         // Momentum is computed as mass contribution * (particle velocity + Q)
         double massContribution = 0.16;
         double2 particleVelocity = new(2, 2);
-        double2 expectedNewCellVelocity = new(3.2288, 3.1376);
-        double2 Q = new double2(-0.57, -1.14);
+        double2 expectedNewCellVelocity = new(1.2288, 1.1376);
+        double2 Q = new(-0.57, -1.14);
         double2 oldCellVelocity = new(1, 1);
         double2 actualNewCellVelocity = P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particleVelocity, Q, oldCellVelocity);
-        Assert.That(expectedNewCellVelocity, Is.EqualTo(actualNewCellVelocity).Within(0.01));
+        Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedNewCellVelocity, actualNewCellVelocity));
     }
 }

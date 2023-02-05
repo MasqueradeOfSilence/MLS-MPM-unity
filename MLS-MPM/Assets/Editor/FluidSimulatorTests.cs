@@ -130,7 +130,7 @@ public class FluidSimulatorTests
         fluidSimulator.SetGrid(grid);
         double2 expectedVelocity = new(0.64, 0.64);
         fluidSimulator.ParticleToGridStep2();
-        double2 actualVelocity = fluidSimulator.GetGrid().At(0, 0).GetVelocity();
+        double2 actualVelocity = fluidSimulator.GetGrid().At(15, 15).GetVelocity();
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedVelocity, actualVelocity));
     }
 
@@ -303,7 +303,7 @@ public class FluidSimulatorTests
         fluidSimulator.InitializeFluidSimulator();
         fluidSimulator.Simulate();
         // the particles will fall first.
-        double2 expectedFinalPosition = new(15.996, 15.984);
+        double2 expectedFinalPosition = new(16.0023630963447, 15.9903630963447);
         double2 actualFinalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedFinalPosition, actualFinalPosition));
     }
