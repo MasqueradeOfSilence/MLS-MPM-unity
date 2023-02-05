@@ -41,13 +41,10 @@ public class P2G1Math: MonoBehaviour
         return weights;
     }
 
-    // TODO Might need to be moved to GeneralMathUtils
+    // Keeping for now, may remove later.
     public static double[] ComputeDistanceFromCurrentParticleToCurrentNeighbor(int[] currentNeighborPosition, double[] particlePosition)
     {
-        double x = (currentNeighborPosition[0] - particlePosition[0]) + 0.5;
-        double y = (currentNeighborPosition[1] - particlePosition[1]) + 0.5;
-        double[] distanceFromCurrentParticleToCurrentNeighbor = { x, y };
-        return distanceFromCurrentParticleToCurrentNeighbor;
+        return GeneralMathUtils.ComputeDistanceFromCurrentParticleToCurrentNeighbor(currentNeighborPosition, particlePosition);
     }
 
     public static double2 ComputeQ(double2x2 C, double[] distanceFromCurrentParticleToCurrentNeighbor)

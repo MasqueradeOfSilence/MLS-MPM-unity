@@ -58,6 +58,14 @@ public class GeneralMathUtils : MonoBehaviour
 		return neighborPosition;
 	}
 
+	public static double[] ComputeDistanceFromCurrentParticleToCurrentNeighbor(int[] currentNeighborPosition, double[] particlePosition)
+	{
+		double x = (currentNeighborPosition[0] - particlePosition[0]) + 0.5;
+		double y = (currentNeighborPosition[1] - particlePosition[1]) + 0.5;
+		double[] distanceFromCurrentParticleToCurrentNeighbor = { x, y };
+		return distanceFromCurrentParticleToCurrentNeighbor;
+	}
+
 	public static double[,] Format2x2MatrixForMath(double2x2 matrix)
     {
 		return new double[,] { { matrix.c0.x, matrix.c0.y }, { matrix.c1.x, matrix.c1.y } };
