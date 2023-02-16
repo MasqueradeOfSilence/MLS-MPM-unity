@@ -250,6 +250,7 @@ public class FluidSimulator : MonoBehaviour
 
     public void Simulate()
     {
+        print("RUNNING FLUID SIMULATOR");
         ClearGrid();
         ParticleToGridStep1();
         ParticleToGridStep2();
