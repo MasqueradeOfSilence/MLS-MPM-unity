@@ -16,8 +16,8 @@ public class FoamSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
-    // Experimenting with higher viscosity for foam, but it starts to disintegrate at 2
-    private const double dynamicViscosity = 2;
+    // Bumping up dynamic viscosity for foam
+    private const double dynamicViscosity = 0.9;
     private const double restDensity = 4;
     private const double eosStiffness = 10;
     private const double eosPower = 4;
