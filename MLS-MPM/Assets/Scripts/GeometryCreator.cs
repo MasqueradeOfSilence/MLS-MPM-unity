@@ -20,8 +20,9 @@ public class GeometryCreator: MonoBehaviour
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, 0);
         // Fix Z at 0 for now
         sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        Material fluidMaterial = Resources.Load("Materials/FluidTest", typeof(Material)) as Material;
+        Material fluidMaterial = Resources.Load("FluidTest", typeof(Material)) as Material;
         sphere.GetComponent<MeshRenderer>().material = fluidMaterial;
+        sphere.GetComponent<Renderer>().material = fluidMaterial;
         sphere.name = "Sphere" + sphereID.ToString();
         sphereID++;
         return sphere;
