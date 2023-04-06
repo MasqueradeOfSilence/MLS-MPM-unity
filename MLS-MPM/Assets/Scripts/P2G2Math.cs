@@ -126,4 +126,14 @@ public class P2G2Math : MonoBehaviour
         return momentum + initialCellVelocity;
     }
 
+    public static double2x2 ComputeHerschelBulkleyStress(double yieldStress_T0, double2x2 strain_deltaVPlusDeltaVTransposed, 
+        double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower)
+    {
+        double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
+        double2x2 pressureTimesTranspose = CreateStressMatrix(pressure);
+        double2x2 viscositySecondHalf = viscosity_mu * new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n));
+        double2x2 viscosity = yieldStress_T0 + viscositySecondHalf;
+        return pressureTimesTranspose + viscosity;
+    }
+
 }

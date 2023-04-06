@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Unity.Mathematics;
+using UnityEngine;
 
 [TestFixture]
 public class P2G2MathTest
@@ -152,6 +153,26 @@ public class P2G2MathTest
 		double2 expectedUpdatedCellVelocity = new(-4.17335, -4.23486);
 		double2 actualUpdatedCellVelocity = P2G2Math.UpdateCellVelocity(momentum, initialCellVelocity);
 		Assert.IsTrue(GeneralMathUtils.DeepEquals(actualUpdatedCellVelocity, expectedUpdatedCellVelocity));
+	}
+
+	[Test]
+	public void ComputeHerschelBulkleyStressShouldCorrectlyComputeTheCauchyStressTensor()
+	{
+		// Inputs -- I am taking most of these values from the Columbia paper on Continuum Foam.
+		// Specifically these are shaving cream values (except for strain, for which I just chose an easy matrix for my manual tests, and density, which I also chose an easy value for)
+		double yieldStress_T0 = 31.9;
+		double2x2 strain_deltaVPlusDeltaVTransposed = new(2, 0, 0, 2);
+		double viscosity_mu = 27.2;
+		double flowIndex_n = 0.22;
+		double eosStiffness = 109;
+		double density = 90;
+		double restDensity = 77.7;
+		int eosPower = 7;
+		// Tests
+		double2x2 expectedHerschelBulkleyStress = new(-132.3329425379, 31.9, 31.9, -132.3329425379);
+		double2x2 actualHerschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain_deltaVPlusDeltaVTransposed, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower);
+		Debug.Log(actualHerschelBulkleyStress);
+		Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedHerschelBulkleyStress, actualHerschelBulkleyStress));
 	}
 
 }

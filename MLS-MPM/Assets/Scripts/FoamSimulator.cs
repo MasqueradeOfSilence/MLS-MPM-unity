@@ -16,8 +16,7 @@ public class FoamSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
-    // Bumping up dynamic viscosity for foam
-    private const double dynamicViscosity = 0.9;
+    private const double dynamicViscosity = 0.1;
     private const double restDensity = 4;
     private const double eosStiffness = 10;
     private const double eosPower = 4;
@@ -159,6 +158,9 @@ public class FoamSimulator : MonoBehaviour
                     }
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
+                // Note: Changing this to Herschel-Bulkley stress will likely mess with some unit tests. But this is where it will be implemented. 
+
+
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
