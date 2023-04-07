@@ -131,9 +131,14 @@ public class P2G2Math : MonoBehaviour
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double2x2 pressureTimesTranspose = CreateStressMatrix(pressure);
-        double2x2 viscositySecondHalf = viscosity_mu * new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n));
+        // viscositySecondHalf often gives us NaN -- we don't want to raise negative base to a fractional power, so the math is wrong, debug this
+        double2x2 viscositySecondHalf = viscosity_mu * (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n)));
+        //Debug.Log("First piece: " + math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n) + " and here was the first part: " + strain_deltaVPlusDeltaVTransposed[0]);
+        //Debug.Log("Second piece: " + math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n) + " and here was the first part: " + strain_deltaVPlusDeltaVTransposed[1]);
+        //Debug.Log("Whole double2x2 " + (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n))));
         double2x2 viscosity = yieldStress_T0 + viscositySecondHalf;
-        return pressureTimesTranspose + viscosity;
+        double2x2 toReturn = pressureTimesTranspose + viscosity;
+        return toReturn;
     }
 
 }

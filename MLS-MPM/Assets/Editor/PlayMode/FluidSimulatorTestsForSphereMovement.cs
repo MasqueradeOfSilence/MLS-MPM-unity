@@ -10,7 +10,7 @@ public class FluidSimulatorTestsForSphereMovement
     [OneTimeSetUp]
     public void LoadScene()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("FluidSolver");
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

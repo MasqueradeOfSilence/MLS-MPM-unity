@@ -158,16 +158,25 @@ public class FoamSimulator : MonoBehaviour
                     }
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
-                // Note: Changing this to Herschel-Bulkley stress will likely mess with some unit tests. But this is where it will be implemented. 
+                double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
+                // Attempting Herschel-Bulkley stress here. 
+                double yieldStress_T0 = 31.9;
+                double viscosity_mu = 27.2;
+                double flowIndex_n = 0.22;
+                double eosStiffness = 109;
+                double restDensity = 77.7;
+                int eosPower = 7;
+                double2x2 herschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower);
+                Debug.Log("H-B: " + herschelBulkleyStress);
 
 
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
-                double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
                 double trace = P2G2Math.ComputeTrace(strain);
                 strain.c0.y = strain.c1.x = trace;
                 double2x2 viscosity = P2G2Math.ComputeViscosity(strain, dynamicViscosity);
                 stress = P2G2Math.UpdateStress(stress, viscosity);
+                // stress vs. H-B
                 double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
                 for (int nx = 0; nx < neighborDimension; nx++)
                 {
