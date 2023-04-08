@@ -131,13 +131,29 @@ public class P2G2Math : MonoBehaviour
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double2x2 pressureTimesTranspose = CreateStressMatrix(pressure);
-        // viscositySecondHalf often gives us NaN -- we don't want to raise negative base to a fractional power, so the math is wrong, debug this
-        double2x2 viscositySecondHalf = viscosity_mu * (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n)));
-        //Debug.Log("First piece: " + math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n) + " and here was the first part: " + strain_deltaVPlusDeltaVTransposed[0]);
-        //Debug.Log("Second piece: " + math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n) + " and here was the first part: " + strain_deltaVPlusDeltaVTransposed[1]);
-        //Debug.Log("Whole double2x2 " + (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n))));
-        double2x2 viscosity = yieldStress_T0 + viscositySecondHalf;
-        double2x2 toReturn = pressureTimesTranspose + viscosity;
+        // viscosity often gives us NaN -- we don't want to raise negative base to a fractional power, so the math is wrong, debug this
+        // either strain_deltaVPlusDeltaVTransposed shouldn't have negative numbers at all, or something special should happen when it does, or it should be capped
+        // cap at 0 try:
+        //if (strain_deltaVPlusDeltaVTransposed[0][0] < 0)
+        //{
+        //    strain_deltaVPlusDeltaVTransposed[0][0] = Math.Abs(strain_deltaVPlusDeltaVTransposed[0][0]);
+        //}
+        //if (strain_deltaVPlusDeltaVTransposed[0][1] < 0)
+        //{
+        //    strain_deltaVPlusDeltaVTransposed[0][1] = Math.Abs(strain_deltaVPlusDeltaVTransposed[0][1]);
+        //}
+        //if (strain_deltaVPlusDeltaVTransposed[1][0] < 0)
+        //{
+        //    strain_deltaVPlusDeltaVTransposed[1][0] = Math.Abs(strain_deltaVPlusDeltaVTransposed[1][0]);
+        //}
+        //if (strain_deltaVPlusDeltaVTransposed[1][1] < 0)
+        //{
+        //    strain_deltaVPlusDeltaVTransposed[1][1] = Math.Abs(strain_deltaVPlusDeltaVTransposed[1][1]);
+        //}
+        double2x2 viscosity = viscosity_mu * (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n)));
+        double2x2 shearStress = yieldStress_T0 + viscosity;
+        //Debug.Log("Shear stress hello: " + shearStress);
+        double2x2 toReturn = pressureTimesTranspose + shearStress;
         return toReturn;
     }
 

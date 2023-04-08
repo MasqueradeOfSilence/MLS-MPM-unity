@@ -160,14 +160,28 @@ public class FoamSimulator : MonoBehaviour
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
                 // Attempting Herschel-Bulkley stress here. 
-                double yieldStress_T0 = 31.9;
-                double viscosity_mu = 27.2;
-                double flowIndex_n = 0.22;
-                double eosStiffness = 109;
-                double restDensity = 77.7;
-                int eosPower = 7;
+                // If T0 = 0 and n = 1, it should reduce to a Newtonian fluid. NOTE: this does, in fact, work
+
+                // the problem with n = 0.22 like in the columbia paper -> we have negative strain values that get raised to a decimal. this produces an error -> fixing my logic now
+
+                //double yieldStress_T0 = 31.9;
+                //double viscosity_mu = 27.2;
+                //double flowIndex_n = 0.22;
+                //double eosStiffness = 109;
+                //double restDensity = 77.7;
+                //int eosPower = 7;
+
+                // correctly reduces to Newtonian with these values
+                double yieldStress_T0 = 0;
+                // same as dynamic visc?
+                double viscosity_mu = dynamicViscosity;
+                double flowIndex_n = 1;
+                double eosStiffness = 10;
+                double restDensity = 4;
+                int eosPower = 4;
+
                 double2x2 herschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower);
-                Debug.Log("H-B: " + herschelBulkleyStress);
+                Debug.Log("H-B stress: " + herschelBulkleyStress);
 
 
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
@@ -176,8 +190,10 @@ public class FoamSimulator : MonoBehaviour
                 strain.c0.y = strain.c1.x = trace;
                 double2x2 viscosity = P2G2Math.ComputeViscosity(strain, dynamicViscosity);
                 stress = P2G2Math.UpdateStress(stress, viscosity);
+                Debug.Log("Normal stress: " + stress);
                 // stress vs. H-B
-                double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
+                //double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
+                double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
                 for (int nx = 0; nx < neighborDimension; nx++)
                 {
                     for (int ny = 0; ny < neighborDimension; ny++)
@@ -354,10 +370,21 @@ public class FoamSimulator : MonoBehaviour
         InitializeFluidSimulator();
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
     }
+    // test variable for stopping early -- either clean up or don't save
+    int testMe = 0;
 
     // Update is called once per frame
     void Update()
     {
+        //if (testMe == 3)
+        //{
+        //    Debug.Log("stopping...");
+        //}
+        //if (testMe > 3)
+        //{
+        //    // test
+        //    return;
+        //}
         // Each frame, run x simulations, then update the position of each particle
         for (int i = 0; i < numSimulationsPerUpdate; i++)
         {
@@ -365,6 +392,7 @@ public class FoamSimulator : MonoBehaviour
         }
         gameInterface.UpdateParticles(FlattenParticles());
         gameInterface.NukeClones();
+        testMe++;
     }
 
     // Getters and Setters

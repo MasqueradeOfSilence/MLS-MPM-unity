@@ -175,4 +175,6 @@ public class P2G2MathTest
 		Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedHerschelBulkleyStress, actualHerschelBulkleyStress));
 	}
 
+	// add a unit test for correctly reducing to a Newtonian fluid
+
 }
