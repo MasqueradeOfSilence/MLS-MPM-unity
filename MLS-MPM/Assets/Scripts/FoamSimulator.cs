@@ -163,7 +163,9 @@ public class FoamSimulator : MonoBehaviour
                 // If T0 = 0 and n = 1, it should reduce to a Newtonian fluid. NOTE: this does, in fact, work
 
                 // the problem with n = 0.22 like in the columbia paper -> we have negative strain values that get raised to a decimal. this produces an error -> fixing my logic now
+                // problem #2: these values from the Columbia paper assume a unit system that Niall apparently isn't using
 
+                // The true H-B values
                 //double yieldStress_T0 = 31.9;
                 //double viscosity_mu = 27.2;
                 //double flowIndex_n = 0.22;
@@ -171,7 +173,7 @@ public class FoamSimulator : MonoBehaviour
                 //double restDensity = 77.7;
                 //int eosPower = 7;
 
-                // correctly reduces to Newtonian with these values
+                // The Newtonian values
                 double yieldStress_T0 = 0;
                 // same as dynamic visc?
                 double viscosity_mu = dynamicViscosity;
@@ -180,9 +182,37 @@ public class FoamSimulator : MonoBehaviour
                 double restDensity = 4;
                 int eosPower = 4;
 
-                double2x2 herschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower);
+                // make strain positive -- abstract this out to another class
+                double smallestValue = double.MaxValue;
+                for (int k = 0; k < 2; k++)
+                {
+                    for (int l = 0; l < 2; l++)
+                    {
+                        double currentValue = strain[k][l];
+                        if (currentValue < smallestValue)
+                        {
+                            smallestValue = currentValue;
+                        }    
+                    }
+                }
+                double extraOffset = 0;
+                if (smallestValue < 0)
+                {
+                    // then we need to offset
+                    extraOffset = 0.001;
+                    smallestValue = math.abs(smallestValue);
+                    extraOffset += smallestValue;
+                    strain += extraOffset;
+                }
+                double2x2 herschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
                 Debug.Log("H-B stress: " + herschelBulkleyStress);
 
+
+                // Uncomment these if computing with normal stress, so we override what we had for H-B. 
+                eosStiffness = 10;
+                restDensity = 4;
+                eosPower = 4;
+                // End uncomment block. probably fine to keep these for H-B but I would comment them out to be safe!
 
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
                 double2x2 stress = P2G2Math.CreateStressMatrix(pressure);
@@ -190,8 +220,8 @@ public class FoamSimulator : MonoBehaviour
                 strain.c0.y = strain.c1.x = trace;
                 double2x2 viscosity = P2G2Math.ComputeViscosity(strain, dynamicViscosity);
                 stress = P2G2Math.UpdateStress(stress, viscosity);
-                Debug.Log("Normal stress: " + stress);
-                // stress vs. H-B
+                //Debug.Log("Normal stress: " + stress);
+                // Newtonian stress vs. H-B
                 //double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(stress, volume, timestep);
                 double2x2 equation16Term0 = P2G2Math.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
                 for (int nx = 0; nx < neighborDimension; nx++)

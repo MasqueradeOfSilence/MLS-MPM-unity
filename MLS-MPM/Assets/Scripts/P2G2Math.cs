@@ -127,8 +127,9 @@ public class P2G2Math : MonoBehaviour
     }
 
     public static double2x2 ComputeHerschelBulkleyStress(double yieldStress_T0, double2x2 strain_deltaVPlusDeltaVTransposed, 
-        double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower)
+        double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower, double offset=0)
     {
+        //Debug.Log("strain h-b: " + strain_deltaVPlusDeltaVTransposed);
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double2x2 pressureTimesTranspose = CreateStressMatrix(pressure);
         // viscosity often gives us NaN -- we don't want to raise negative base to a fractional power, so the math is wrong, debug this
@@ -150,7 +151,9 @@ public class P2G2Math : MonoBehaviour
         //{
         //    strain_deltaVPlusDeltaVTransposed[1][1] = Math.Abs(strain_deltaVPlusDeltaVTransposed[1][1]);
         //}
-        double2x2 viscosity = viscosity_mu * (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n)));
+        double2x2 strainRaisedToPower = (new double2x2(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n)));
+        strainRaisedToPower -= offset;
+        double2x2 viscosity = viscosity_mu * strainRaisedToPower;
         double2x2 shearStress = yieldStress_T0 + viscosity;
         //Debug.Log("Shear stress hello: " + shearStress);
         double2x2 toReturn = pressureTimesTranspose + shearStress;
