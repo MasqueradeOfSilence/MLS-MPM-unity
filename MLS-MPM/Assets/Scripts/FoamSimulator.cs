@@ -166,18 +166,18 @@ public class FoamSimulator : MonoBehaviour
                 // problem #2: these values from the Columbia paper assume a unit system that Niall apparently isn't using
 
                 // The true H-B values
-                //double yieldStress_T0 = 31.9;
-                //double viscosity_mu = 27.2;
-                //double flowIndex_n = 0.22;
+                double yieldStress_T0 = 3.19;// was 31.9;
+                double viscosity_mu = 2.72; // was 27.2
+                double flowIndex_n = 0.22;
                 //double eosStiffness = 109;
                 //double restDensity = 77.7;
                 //int eosPower = 7;
 
                 // The Newtonian values
-                double yieldStress_T0 = 0;
+                //double yieldStress_T0 = 0;
                 // same as dynamic visc?
-                double viscosity_mu = dynamicViscosity;
-                double flowIndex_n = 1;
+                //double viscosity_mu = dynamicViscosity;
+                //double flowIndex_n = 1;
                 double eosStiffness = 10;
                 double restDensity = 4;
                 int eosPower = 4;
@@ -209,9 +209,9 @@ public class FoamSimulator : MonoBehaviour
 
 
                 // Uncomment these if computing with normal stress, so we override what we had for H-B. 
-                eosStiffness = 10;
-                restDensity = 4;
-                eosPower = 4;
+                //eosStiffness = 10;
+                //restDensity = 4;
+                //eosPower = 4;
                 // End uncomment block. probably fine to keep these for H-B but I would comment them out to be safe!
 
                 double pressure = P2G2Math.ComputePressure(eosStiffness, density, restDensity, eosPower);
