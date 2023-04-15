@@ -16,10 +16,6 @@ public class FoamSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
-    private const double dynamicViscosity = 0.1;
-    private const double restDensity = 4;
-    private const double eosStiffness = 10;
-    private const double eosPower = 4;
     private const double gravity = -0.3;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
@@ -117,7 +113,6 @@ public class FoamSimulator : MonoBehaviour
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by gridResolution
-                        // I believe this should actually be the grid cell at neighbor position, NOT i, j!
                         GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
                         correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q, correspondingCell.GetVelocity()));
