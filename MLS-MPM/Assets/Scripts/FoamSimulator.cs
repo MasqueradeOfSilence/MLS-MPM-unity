@@ -164,8 +164,8 @@ public class FoamSimulator : MonoBehaviour
                 double viscosity_mu = 2.72; // was 27.2
                 double flowIndex_n = 0.22; // unchanged
                 double eosStiffness = 10.9;// was 109;
-                double restDensity = 7.77; // was 77.7;
-                int eosPower = 7; // unchanged
+                double restDensity = 3.2175; // in comparison to water //7.77; // was 77.7; I am trying a proportion with water being 1000 kg/m^3 and 4 in Niall's code. 
+                int eosPower = 4; // was 7. If restDensity is too low then anything above 4 will break the sim. 
 
                 // will abstract this mapping function out
                 double smallestValue = double.MaxValue;
