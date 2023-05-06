@@ -160,12 +160,12 @@ public class FoamSimulator : MonoBehaviour
                 // Columbia paper values and Rutgers/UPenn paper values (https://par.nsf.gov/servlets/purl/10290710) have to be scaled down to match Niall's. 
 
                 // The true H-B values
-                double yieldStress_T0 = 3.19;// was 31.9;
+                double yieldStress_T0 = 0.319;// 3.19;// was 31.9; // try 0.319;
                 double viscosity_mu = 2.72; // was 27.2
-                double flowIndex_n = 0.22; // unchanged
+                double flowIndex_n = 0.22; // unchanged -- this causes pinching. 0.8 decreased pinchnig
                 double eosStiffness = 10.9;// was 109;
-                double restDensity = 3.2175; // in comparison to water //7.77; // was 77.7; I am trying a proportion with water being 1000 kg/m^3 and 4 in Niall's code. 
-                int eosPower = 4; // was 7. If restDensity is too low then anything above 4 will break the sim. 
+                double restDensity = 3.108;//0.3108;//3.2175; // in comparison to water //7.77; // was 77.7; I am trying a proportion with water being 1000 kg/m^3 and 4 in Niall's code. 
+                int eosPower = 2; // was 7. If restDensity is too low then anything above 4 will break the sim. I tried it at 4. Experimenting still. 
 
                 // will abstract this mapping function out
                 double smallestValue = double.MaxValue;
@@ -375,13 +375,14 @@ public class FoamSimulator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (testMe == 3)
+        //if (testMe == 2)
         //{
         //    Debug.Log("stopping...");
         //}
-        //if (testMe > 3)
+        //if (testMe > 2)
         //{
         //    // test
+        //    testMe++;
         //    return;
         //}
         // Each frame, run x simulations, then update the position of each particle
