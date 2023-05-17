@@ -60,7 +60,7 @@ Density is computed in the solver, so we don't need to do any additional work th
 
 - `eosStiffness`: AKA a "pressure parameter". 
 - `restDensity`: Rest density is just a reference density, compared to the one computed dynamically. 
-- `eosPower`: The *adiabatic index*. Soap foam has [H20](https://nafta.wiki/pages/viewpage.action?pageId=38044367) at its core, but it also has [oxygen bubbles](http://www.mem50212.com/MDME/iTester/get-info/thermodynamics.html) and Niall chose a value of 4 without much explanation. 
+- `eosPower`: The *adiabatic index*. Niall uses a value of 4, which seems consistent with what we see for water [here](http://www.mem50212.com/MDME/iTester/get-info/thermodynamics.html). 
 
 Parentheses are very important. I was stuck on a weird behavioral bug in my Newtonian water solver for a really long time until I realized that my parentheses were incorrect. 
 
