@@ -48,5 +48,19 @@ But we need the total stress, which means that we include pressure as well. The 
 
 `total_stress = -pressure + shear stress`
 
-Thus, we need an equation for pressure. In NiallTL's isotropic model, he used the Tait Equation of State to calculate pressure. 
+Thus, we need an equation for pressure. In NiallTL's isotropic model, he uses the [Cole Equation of State](https://en.wikipedia.org/wiki/Cole_equation_of_state) to calculate pressure (and incorrectly refers to it as the Tait Equation of State, apparently a [common mistake](http://www.sklogwiki.org/SklogWiki/index.php/Cole_equation_of_state) that causes much confusion for us graphics programmers). We should be able to use this equation for our foam as well. 
+
+The equation of state is as follows: 
+
+`eosStiffness * (Math.Pow((density / restDensity), eosPower) - 1)`
+
+But if the result of this is less than -0.1, we clamp it to -0.1. 
+
+Density is computed in the solver, so we don't need to do any additional work there. And we can define the constant variables as follows: 
+
+- `eosStiffness`: AKA a "pressure parameter". 
+- `restDensity`: Rest density is just a reference density, compared to the one computed dynamically. 
+- `eosPower`: The *adiabatic index*. Soap foam has [H20](https://nafta.wiki/pages/viewpage.action?pageId=38044367) at its core, but it also has [oxygen bubbles](http://www.mem50212.com/MDME/iTester/get-info/thermodynamics.html) and Niall chose a value of 4 without much explanation. 
+
+Parentheses are very important. I was stuck on a weird behavioral bug in my Newtonian water solver for a really long time until I realized that my parentheses were incorrect. 
 
