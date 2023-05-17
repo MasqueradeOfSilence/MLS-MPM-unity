@@ -37,11 +37,16 @@ Herschel-Bulkley gives us the shear stress as follows:
 
 `shear_stress = yield_stress + (consistency_index * ((shear_rate)^flow_index))`
 
-We need to define these variables, so we know how to actually implement this. 
+Here are the values we can use for each variable:
+
+- `yield_stress`: From the Columbia paper, we can use a value of `31.9 Pa` for shaving cream (since we want our foam to follow a similar flow pattern), though we may need to modify that so it fits with the units used in NiallTL's simulator. We can also try `79.7 Pa` from the paper below.
+- `consistency_index`: This is a constant of proportionality. We can use a value of `19.6 [Pa s^n]`, which works for general foams as well as shaving cream, based on [this paper](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=a9e7f3a9e7f5c1382c99feddbcf1656141bbb360). 
+- `shear_rate`: In NiallTL's paper, this is saved as the `strain` variable. It is technically strain *rate*, [AKA shear rate](https://cdn.technologynetworks.com/TN/Resources/PDF/WP160620BasicIntroRheology.pdf). 
+- `flow_index`: This variable describes to what extent our material is shear-thinning, or shear-thickening. A decimal value between 0 and 1 (exclusive) models a shear-thinning material; a value over 1 models a shear-thickening material. A value of 1 combined with a yield stress of 0 means it's Newtonian, and thus neither shear-thinning nor shear-thickening. Continuing with our shaving cream model, we will be using a value of `n = 0.22`. We can also try `0.36` based on the PSU paper. 
 
 But we need the total stress, which means that we include pressure as well. The total stress can be approximated as follows: 
 
 `total_stress = -pressure + shear stress`
 
-Thus, we need an equation for pressure. 
+Thus, we need an equation for pressure. In NiallTL's isotropic model, he used the Tait Equation of State to calculate pressure. 
 
