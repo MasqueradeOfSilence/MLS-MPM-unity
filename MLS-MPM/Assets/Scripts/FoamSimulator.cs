@@ -154,6 +154,8 @@ public class FoamSimulator : MonoBehaviour
                 }
                 double volume = P2G2Math.ComputeVolume(particle.GetMass(), density);
                 double2x2 strain = P2G2Math.InitializeStrainMatrix(particle.GetAffineMomentumMatrix());
+                double trace = P2G2Math.ComputeTrace(strain);
+                strain.c0.y = strain.c1.x = trace;
                 // Herschel-Bulkley stress here. 
                 // If T0 = 0 and n = 1, it should reduce to a Newtonian fluid.
                 // with n = 0.22 like in the columbia paper -> we have negative strain values that get raised to a decimal. thus we use a mapping and reverse-mapping function to avoid the imaginary plane
