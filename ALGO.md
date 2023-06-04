@@ -58,9 +58,11 @@ But if the result of this is less than -0.1, we clamp it to -0.1.
 
 Density is computed in the solver, so we don't need to do any additional work there. And we can define the constant variables as follows: 
 
-- `eosStiffness`: AKA a "pressure parameter". 
+- `eosStiffness`: AKA a "pressure parameter". I cannot find any good information on this "pressure parameter" -- it is all vague. It seems to be a value that magnifies the degree of compressibility, and decreasing density the higher it gets. I will 
+- start with the existing value of 10 and then experiment from there. 
 - `restDensity`: Rest density is just a reference density, compared to the one computed dynamically. A bubble bath foam should be less dense than water. Niall uses a value of 4 for water. I will experiment with a much smaller value for my foam, possibly anywhere between 0.04 and 1.2. 
 - `eosPower`: The *adiabatic index*. Niall uses a value of 4, which seems consistent with what we see for water [here](http://www.mem50212.com/MDME/iTester/get-info/thermodynamics.html). For my foam, I may use a value of 1.4 for air. 
 
 Parentheses are very important. I was stuck on a weird behavioral bug in my Newtonian water solver for a really long time until I realized that my parentheses were incorrect. 
 
+The flow index, and shear-thinning fluids in general, are the next important thing for us to focus on. Implementing this incorrectly can create some weird behaviors. 
