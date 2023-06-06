@@ -189,7 +189,14 @@ public class FoamSimulator : MonoBehaviour
                     extraOffset = 0.001;
                     smallestValue = math.abs(smallestValue);
                     extraOffset += smallestValue;
-                    strain += extraOffset;
+                    //strain += extraOffset; // note: this will produce weird behavior. do not do this.
+                    for (int row = 0; row < 2; row++)
+                    {
+                        for (int col = 0; col < 2; col++)
+                        {
+                            strain[row][col] += extraOffset;
+                        }
+                    }
                 }
                 // reverse mapping is currently taken care of inside of here, will clean up
                 double2x2 herschelBulkleyStress = P2G2Math.ComputeHerschelBulkleyStress(yieldStress_T0, strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
