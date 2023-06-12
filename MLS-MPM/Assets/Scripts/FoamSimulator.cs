@@ -16,7 +16,7 @@ public class FoamSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
-    private const double gravity = -0.3;
+    private const double gravity = -0.98;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
 
@@ -164,7 +164,7 @@ public class FoamSimulator : MonoBehaviour
                 // The true H-B values
                 double yieldStress_T0 = 0.319;// 3.19;// was 31.9; // try 0.319;
                 double viscosity_mu = 2.72; // was 27.2
-                double flowIndex_n = 0.22; // unchanged -- this causes pinching. 0.8 decreased pinching
+                double flowIndex_n = 0.22; // pinching stops with correct strain add
                 double eosStiffness = 10.9;// was 109;
                 double restDensity = 3.108;//0.3108;//3.2175; // in comparison to water //7.77; // was 77.7; I am trying a proportion with water being 1000 kg/m^3 and 4 in Niall's code. 
                 int eosPower = 2; // was 7. If restDensity is too low then anything above 4 will break the sim. I tried it at 4. Experimenting still. 
