@@ -16,7 +16,7 @@ public class FoamSimulator : MonoBehaviour
     private const double timestep = 0.2;
     // should be 5 if timestep is 0.2
     private const int numSimulationsPerUpdate = (int)(1 / timestep);
-    private const double gravity = -0.98;
+    private const double gravity = -9.8;//-0.98;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
 
