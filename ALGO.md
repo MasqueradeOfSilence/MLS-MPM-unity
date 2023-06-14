@@ -67,3 +67,9 @@ Parentheses are very important. I was stuck on a weird behavioral bug in my Newt
 ### Step 3: Adapting the solver to be multiphase
 
 Up to now, the solver has only included fluid particles. We need to add gas particles in order to make it multiphase (as volume fractions will not work otherwise). 
+
+Once this is implemented, we will have the necessary groundwork complete for building volume fractions on top of MLS-MPM. 
+
+In order to make the solver multiphase, we need to create two different types of particles: Air and Fluid. Air particles will (indirectly) be used to create bubbles. An air particle may not automatically be a bubble. Instead, the ratio of air to fluid particles in the neighborhood of *any given particle* tells us whether or not a bubble should be in that vicinity. So, there isn't a 1:1 ratio of particles to bubbles, not by any means. 
+
+The only real difference between the two types of particles is the mass value. We can make them both inherit from the Particle class. 
