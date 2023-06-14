@@ -64,4 +64,6 @@ Density is computed in the solver, so we don't need to do any additional work th
 
 Parentheses are very important. I was stuck on a weird behavioral bug in my Newtonian water solver for a really long time until I realized that my parentheses were incorrect. 
 
-The flow index, and shear-thinning fluids in general, are the next important thing for us to focus on. Implementing this incorrectly can create some weird behaviors. 
+### Step 3: Adapting the solver to be multiphase
+
+Up to now, the solver has only included fluid particles. We need to add gas particles in order to make it multiphase (as volume fractions will not work otherwise). 
