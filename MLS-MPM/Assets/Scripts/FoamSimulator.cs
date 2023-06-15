@@ -348,6 +348,7 @@ public class FoamSimulator : MonoBehaviour
             {
                 Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
                 double2 initialVelocity = new(0, 0);
+                // 1 for fluid, 0.5 for air
                 double initialMass = 1;
                 double2x2 initialC = new double2x2(0, 0, 0, 0);
                 particle.InitParticle(temporaryParticlePositions[i, j], initialVelocity, initialMass, initialC);
