@@ -3,18 +3,18 @@ using UnityEngine;
 using Unity.Mathematics;
 
 [TestFixture]
-public class AirParticleTests
+public class FluidParticleTests
 {
 
     [Test]
-    public void AirParticleShouldBeInitializedWithAMassBetween0And1()
+    public void FluidParticleShouldBeInitializedWithAMassOf1()
     {
         double2 testPosition = new(0, 0);
         double2 testVelocity = new(0, 1);
         double2x2 testC = new double2x2();
-        AirParticle particle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+        FluidParticle particle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
         particle.InitParticle(testPosition, testVelocity, testC);
-        Assert.AreEqual(0.5, particle.GetMass());
+        Assert.AreEqual(1, particle.GetMass());
     }
 
     [Test]
@@ -23,7 +23,7 @@ public class AirParticleTests
         double2 testPosition = new(1, 0);
         double2 testVelocity = new(0, 1);
         double2x2 testC = new double2x2();
-        AirParticle particle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+        FluidParticle particle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
         particle.InitParticle(testPosition, testVelocity, testC);
 
         double2 computedPosition = particle.GetPosition();
