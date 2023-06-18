@@ -346,6 +346,7 @@ public class FoamSimulator : MonoBehaviour
         {
             for (int j = 0; j < tempParticleArrayResolution; j++)
             {
+                // Need to create either AirParticle or FluidParticle here.
                 Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
                 double2 initialVelocity = new(0, 0);
                 // 1 for fluid, 0.5 for air
