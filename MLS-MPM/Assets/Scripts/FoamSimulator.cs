@@ -346,7 +346,8 @@ public class FoamSimulator : MonoBehaviour
         {
             for (int j = 0; j < tempParticleArrayResolution; j++)
             {
-                // Need to create either AirParticle or FluidParticle here.
+                // Need to create either AirParticle or FluidParticle here. Probability: Consider 80-20 so we actually have some smaller bubbles. 
+                // Consider color coding by volume fraction.
                 Particle particle = ScriptableObject.CreateInstance("Particle") as Particle;
                 double2 initialVelocity = new(0, 0);
                 // 1 for fluid, 0.5 for air
