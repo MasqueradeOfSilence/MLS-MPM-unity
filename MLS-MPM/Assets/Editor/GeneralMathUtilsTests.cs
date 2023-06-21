@@ -76,4 +76,10 @@ public class GeneralMathUtilsTests
         Assert.That(expectedNeighborPosition, Is.EqualTo(actualNeighborPosition).Within(0.01));
     }
 
+    [Test]
+    public void DetermineProbabilityOfParticleBeingAirShouldRandomizeBasedOnCurrentProbability()
+    {
+
+    }
+
 }
