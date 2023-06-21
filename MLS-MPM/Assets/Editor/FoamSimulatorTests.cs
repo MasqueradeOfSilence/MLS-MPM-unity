@@ -5,6 +5,7 @@ using Unity.Mathematics;
 [TestFixture]
 public class FoamSimulatorTests
 {
+    // needs to be modified -- these are all using the FLuidSimulator lol
     [Test]
     public void InitializeFluidSimulatorShouldSetUpGridAndParticles()
     {
@@ -306,5 +307,18 @@ public class FoamSimulatorTests
         double2 expectedFinalPosition = new(16.0023630963447, 15.9903630963447);
         double2 actualFinalPosition = fluidSimulator.GetParticles()[0, 0].GetPosition();
         Assert.IsTrue(GeneralMathUtils.DeepEquals(expectedFinalPosition, actualFinalPosition));
+    }
+
+    [Test]
+    public void ShouldBeAirShouldReturnTrueDependingOnProbability()
+    {
+        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        // First tested probability: 80 air%
+        bool expectedAir = foamSimulator.ShouldBeAir(9);
+        Assert.IsTrue(expectedAir);
+        bool expectedFluid = foamSimulator.ShouldBeAir(1);
+        Assert.IsFalse(expectedFluid);
+        bool randomWithProbability = foamSimulator.ShouldBeAir();
+        Assert.IsNotNull(randomWithProbability);
     }
 }

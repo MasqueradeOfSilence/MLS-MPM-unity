@@ -77,9 +77,10 @@ public class GeneralMathUtilsTests
     }
 
     [Test]
-    public void DetermineProbabilityOfParticleBeingAirShouldRandomizeBasedOnCurrentProbability()
+    public void Random1To10ShouldComputeAnIntegerBetween1And10()
     {
-
+        int random = GeneralMathUtils.Random1To10();
+        Assert.IsTrue(random > 0 && random < 11);
     }
 
 }

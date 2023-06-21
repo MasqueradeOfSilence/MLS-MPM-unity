@@ -90,4 +90,9 @@ public class GeneralMathUtils : MonoBehaviour
     {
 		return new int[2] { int2.x, int2.y };
     }
+
+	public static int Random1To10()
+    {
+		return UnityEngine.Random.Range(1, 11);
+	}
 }
