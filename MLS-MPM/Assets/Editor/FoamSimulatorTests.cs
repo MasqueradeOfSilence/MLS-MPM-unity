@@ -29,6 +29,7 @@ public class FoamSimulatorTests
         Assert.AreEqual(fluidSimulator.GetGrid().GetSize(), expectedSize);
     }
 
+    [Test]
     public void InitializeParticlesWrapperShouldInitialize4096Particles()
     {
         FluidSimulator fluidSimulator = GameObject.Find("ExampleGeo").AddComponent<FluidSimulator>();
@@ -39,6 +40,12 @@ public class FoamSimulatorTests
         Assert.AreEqual(fluidSimulator.GetParticleCount(), expectedParticleCount);
         Particle particle = fluidSimulator.GetParticles()[0, 0];
         Assert.IsNotNull(particle);
+    }
+
+    [Test]
+    public void InitializeParticlesShouldAssignSomeParticlesToBeAirAndOthersToBeFluid()
+    {
+        // To consider: Do we want to hard-lock certain particles so the ratio is guaranteed, or do we want to use the randomizer which should still give us an approximate ratio? Does it matter?
     }
 
     [Test]
