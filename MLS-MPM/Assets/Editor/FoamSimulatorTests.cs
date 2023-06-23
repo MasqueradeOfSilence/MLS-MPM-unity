@@ -46,6 +46,11 @@ public class FoamSimulatorTests
     public void InitializeParticlesShouldAssignSomeParticlesToBeAirAndOthersToBeFluid()
     {
         // To consider: Do we want to hard-lock certain particles so the ratio is guaranteed, or do we want to use the randomizer which should still give us an approximate ratio? Does it matter?
+        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        foamSimulator.InitializeGrid();
+        foamSimulator.InitializeParticles();
+        Particle[,] particles = foamSimulator.GetParticles();
+        // consider: checking statistically for ratio 
     }
 
     [Test]
