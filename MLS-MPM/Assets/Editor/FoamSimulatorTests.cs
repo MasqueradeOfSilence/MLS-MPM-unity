@@ -51,6 +51,7 @@ public class FoamSimulatorTests
         foamSimulator.InitializeParticles();
         Particle[,] particles = foamSimulator.GetParticles();
         // consider: checking statistically for ratio 
+        Assert.IsTrue(particles[0, 0].GetMass() == 1.0 || particles[0, 0].GetMass() == 0.5);
     }
 
     [Test]
