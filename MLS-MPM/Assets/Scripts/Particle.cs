@@ -19,7 +19,7 @@ public class Particle : ScriptableObject
 
     public GameObject ConstructSphereFromParticle()
     {
-        return GeometryCreator.SpawnParticleSphere_2DVersion(position);
+        return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass);
     }
 
     public double2 GetPosition()

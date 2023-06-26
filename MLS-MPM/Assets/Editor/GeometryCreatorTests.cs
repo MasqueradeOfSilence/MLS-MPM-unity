@@ -27,8 +27,9 @@ public class GeometryCreatorTests
     [Test]
     public void SpawnParticleSphereShouldCreateANewSphere()
     {
+        double testMass = 1;
         // 2D vectors for now, which we convert to 3D, just for the system of spheres only right now. 
-        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f));
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f), testMass);
         Assert.IsNotNull(newSphere);
         Assert.AreEqual(newSphere.transform.position, new Vector3(0.1f, 0.2f, 0f));
         Assert.AreEqual(newSphere.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f));
@@ -41,7 +42,8 @@ public class GeometryCreatorTests
         GeometryCreator.ResetSphereID();
         int expectedID = 0;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
-        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f));
+        double testMass = 1;
+        GameObject newSphere = GeometryCreator.SpawnParticleSphere_2DVersion(new(0.1f, 0.2f), testMass);
         expectedID = 1;
         Assert.AreEqual(GeometryCreator.GetSphereID(), expectedID);
         GeometryCreator.ResetSphereID();
