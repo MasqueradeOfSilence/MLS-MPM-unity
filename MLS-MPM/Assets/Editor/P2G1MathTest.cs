@@ -74,6 +74,16 @@ public class P2G1MathTest
     }
 
     [Test]
+    public void ComputeMassContributionShouldCorrectlyCalculateTheMassContribution_CaseWithAirMass()
+    {
+        double expectedMassContribution = 0.08;
+        double particleMass = 0.5;
+        double weight = 0.16;
+        double actualMassContribution = P2G1Math.ComputeMassContribution(weight, particleMass);
+        Assert.That(expectedMassContribution, Is.EqualTo(actualMassContribution));
+    }
+
+    [Test]
     public void RecomputeCellMassAndReturnItShouldReturnAnUpdatedCellMass()
     {
         double initialCellMass = 1;
