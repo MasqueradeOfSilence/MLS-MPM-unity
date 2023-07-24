@@ -20,7 +20,7 @@ public class FoamSimulator : MonoBehaviour
     private int neighborDimension = 3;
     private GameInterface gameInterface;
 
-    public void InitializeFluidSimulator()
+    public void InitializeFoamSimulator()
     {
         InitializeGrid();
         InitializeParticles();
@@ -396,8 +396,8 @@ public class FoamSimulator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        print("Starting fluid simulator");
-        InitializeFluidSimulator();
+        print("Starting foam simulator");
+        InitializeFoamSimulator();
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
     }
     // test variable for stopping early -- either clean up or don't save
