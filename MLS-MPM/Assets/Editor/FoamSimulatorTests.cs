@@ -376,11 +376,54 @@ public class FoamSimulatorTests
             }
         }
         // Initialize Particles
-        // foamSimulator.ParticleToGridStep1(); // Actually, we DO want to call this, AS LONG AS we have set the particles beforehand. It won't overwrite anything
+        foamSimulator.ParticleToGridStep1(); // Actually, we DO want to call this, AS LONG AS we have set the particles beforehand. It won't overwrite anything
         // would normally call .Simulate(), but we're doing it in pieces to have manual control over one particle
         // P2G1: Must do manually, minus that one section
-        //foamSimulator.ParticleToGridStep2();
-        //foamSimulator.UpdateGrid();
-        //foamSimulator.GridToParticleStep();
+        foamSimulator.ParticleToGridStep2();
+        foamSimulator.UpdateGrid();
+        foamSimulator.GridToParticleStep();
+        Debug.Log(foamSimulator.GetParticles()[19, 24].GetPosition());
+
+        // Part 2
+        FoamSimulator foamSimulator2 = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        foamSimulator2.InitializeFoamSimulator();
+        foamSimulator2.ClearGrid();
+        bool shouldCreateAirParticle2 = true;
+        int tempParticleArrayResolution2 = 64;
+        foamSimulator2.SetParticles(new Particle[foamSimulator2.GetGrid().GetGridResolution(), foamSimulator2.GetGrid().GetGridResolution()]);
+        double2[,] temporaryParticlePositions2 = foamSimulator2.BuildGridOfTemporaryParticlePositions();
+        Particle[,] particles2 = foamSimulator2.GetParticles();
+        for (int i = 0; i < tempParticleArrayResolution2; i++)
+        {
+            for (int j = 0; j < tempParticleArrayResolution2; j++)
+            {
+                shouldCreateAirParticle2 = !shouldCreateAirParticle2; // Alternating
+                if (i == 19 && j == 24)
+                {
+                    shouldCreateAirParticle2 = false;
+                }
+                double2 initialVelocity = new(0, 0);
+                double2x2 initialC = new double2x2(0, 0, 0, 0);
+                if (shouldCreateAirParticle2)
+                {
+                    // verify that this is entered
+                    AirParticle airParticle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+                    airParticle.InitParticle(temporaryParticlePositions2[i, j], initialVelocity, initialC);
+                    particles2[i, j] = airParticle;
+                }
+                else
+                {
+                    FluidParticle fluidParticle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
+                    fluidParticle.InitParticle(temporaryParticlePositions2[i, j], initialVelocity, initialC);
+                    particles2[i, j] = fluidParticle;
+                }
+                foamSimulator2.SetParticles(particles);
+            }
+        }
+        foamSimulator2.ParticleToGridStep1();
+        foamSimulator2.ParticleToGridStep2();
+        foamSimulator2.UpdateGrid();
+        foamSimulator2.GridToParticleStep();
+        Debug.Log(foamSimulator2.GetParticles()[19, 24].GetPosition());
     }
 }
