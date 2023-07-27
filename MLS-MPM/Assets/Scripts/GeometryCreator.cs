@@ -17,7 +17,9 @@ public class GeometryCreator: MonoBehaviour
     public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass)
     {
         bool spawnRedAirSphere = false;
-        if (mass == 0.5)
+        AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+        air.InitParticle(new double2(0), new double2(0), new double2x2(0));
+        if (mass == air.GetMass())
         {
             spawnRedAirSphere = true;
         }

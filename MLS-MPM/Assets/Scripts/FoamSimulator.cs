@@ -400,17 +400,17 @@ public class FoamSimulator : MonoBehaviour
         InitializeFoamSimulator();
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
     }
-    // test variable for stopping early -- either clean up or don't save
+    // test variable for stopping early -- will need to clean up when finished
     int testMe = 0;
 
     // Update is called once per frame
     void Update()
     {
-        //if (testMe == 2)
+        //if (testMe == 1)
         //{
         //    Debug.Log("stopping...");
         //}
-        //if (testMe > 2)
+        //if (testMe > 1)
         //{
         //    // test
         //    testMe++;
