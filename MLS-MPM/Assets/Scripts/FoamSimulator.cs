@@ -389,8 +389,8 @@ public class FoamSimulator : MonoBehaviour
         {
             return ShouldBeAir(GeneralMathUtils.Random1To10());
         }
-        // 80% probability
-        return value > 2;
+        // 80% probability if < 2, 90% if < 1
+        return value > 1;
     }
 
     // Start is called before the first frame update
