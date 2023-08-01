@@ -50,7 +50,15 @@ public class FoamSimulatorTests
         foamSimulator.InitializeParticles();
         Particle[,] particles = foamSimulator.GetParticles();
         // consider: checking statistically for ratio 
-        Assert.IsTrue(particles[0, 0].GetMass() == 1.0 || particles[0, 0].GetMass() == 0.5);
+        FluidParticle fluidParticle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
+        double2 testPosition = new(1, 0);
+        double2 testVelocity = new(0, 1);
+        double2x2 testC = new double2x2();
+        fluidParticle.InitParticle(testPosition, testVelocity, testC);
+        AirParticle airParticle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+        airParticle.InitParticle(testPosition, testVelocity, testC);
+        // It's either going to be a fluid or an air particle
+        Assert.IsTrue(particles[0, 0].GetMass() == fluidParticle.GetMass() || particles[0, 0].GetMass() == airParticle.GetMass());
     }
 
     [Test]
@@ -423,5 +431,23 @@ public class FoamSimulatorTests
         foamSimulator2.GridToParticleStep();
         Debug.Log(foamSimulator2.GetParticles()[19, 24].GetPosition());
         Assert.IsFalse(GeneralMathUtils.DeepEquals(foamSimulator.GetParticles()[19, 24].GetPosition(), foamSimulator2.GetParticles()[19, 24].GetPosition()));
+    }
+
+    [Test]
+    public void InitializeParticlesWithFluidOnTopShouldInitializeFluidOnTheTopOfTheContainerOnly()
+    {
+        int tempParticleArrayRes = 64;
+        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        foamSimulator.InitializeGrid();
+        foamSimulator.InitializeParticlesWithFluidOnTop();
+        Particle[,] particles = foamSimulator.GetParticles();
+        // Not sure why it's counterintuitive in this way
+        Particle aParticleAtTheBottom = particles[0, tempParticleArrayRes - 1];
+        FluidParticle particle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
+        double2 testPosition = new(1, 0);
+        double2 testVelocity = new(0, 1);
+        double2x2 testC = new double2x2();
+        particle.InitParticle(testPosition, testVelocity, testC);
+        Assert.AreEqual(aParticleAtTheBottom.GetMass(), particle.GetMass());
     }
 }

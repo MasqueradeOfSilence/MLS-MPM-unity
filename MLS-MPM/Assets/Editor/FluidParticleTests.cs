@@ -7,14 +7,15 @@ public class FluidParticleTests
 {
 
     [Test]
-    public void FluidParticleShouldBeInitializedWithAMassOf1()
+    public void FluidParticleShouldBeInitializedWithAMassOf3()
     {
+        // experimental value -- if we change the mass, we have to change this too
         double2 testPosition = new(0, 0);
         double2 testVelocity = new(0, 1);
         double2x2 testC = new double2x2();
         FluidParticle particle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
         particle.InitParticle(testPosition, testVelocity, testC);
-        Assert.AreEqual(1, particle.GetMass());
+        Assert.AreEqual(3, particle.GetMass());
     }
 
     [Test]

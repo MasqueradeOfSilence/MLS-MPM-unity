@@ -20,6 +20,14 @@ public class FoamSimulator : MonoBehaviour
     private int neighborDimension = 3;
     private GameInterface gameInterface;
 
+    private enum whereToPutFluid
+    {
+        RANDOMLY_THROUGHOUT,
+        ON_BOTTOM,
+        ON_TOP
+    };
+    whereToPutFluid fluidPositioning = whereToPutFluid.ON_TOP;
+
     public void InitializeFoamSimulator()
     {
         InitializeGrid();
@@ -35,9 +43,23 @@ public class FoamSimulator : MonoBehaviour
 
     public void InitializeParticles()
     {
+        if (fluidPositioning == whereToPutFluid.ON_TOP)
+        {
+            InitializeParticlesWithFluidOnTop();
+        }
+        else
+        {
+            particles = new Particle[grid.GetGridResolution(), grid.GetGridResolution()];
+            double2[,] temporaryParticlePositions = BuildGridOfTemporaryParticlePositions();
+            InitializeParticles(temporaryParticlePositions);
+        }
+    }
+
+    public void InitializeParticlesWithFluidOnTop()
+    {
         particles = new Particle[grid.GetGridResolution(), grid.GetGridResolution()];
         double2[,] temporaryParticlePositions = BuildGridOfTemporaryParticlePositions();
-        InitializeParticles(temporaryParticlePositions);
+        InitializeParticlesWithFluidOnTop(temporaryParticlePositions);
     }
 
     public double2[,] BuildGridOfTemporaryParticlePositions()
@@ -337,6 +359,33 @@ public class FoamSimulator : MonoBehaviour
             updatedVelocity.y = 0;
         }
         return updatedVelocity;
+    }
+
+    private void InitializeParticlesWithFluidOnTop(double2[,] temporaryParticlePositions)
+    {
+        int tempParticleArrayResolution = 64;
+        for (int i = 0; i < tempParticleArrayResolution; i++)
+        {
+            for (int j = 0; j < tempParticleArrayResolution; j++)
+            {
+                // Bottom rows only
+                bool shouldCreateFluidParticle = (j > tempParticleArrayResolution - 3);
+                double2 initialVelocity = new(0, 0);
+                double2x2 initialC = new double2x2(0, 0, 0, 0);
+                if (shouldCreateFluidParticle)
+                {
+                    FluidParticle fluidParticle = ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
+                    fluidParticle.InitParticle(temporaryParticlePositions[i, j], initialVelocity, initialC);
+                    particles[i, j] = fluidParticle;
+                }
+                else
+                {
+                    AirParticle airParticle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+                    airParticle.InitParticle(temporaryParticlePositions[i, j], initialVelocity, initialC);
+                    particles[i, j] = airParticle;
+                }
+            }
+        }
     }
 
     private void InitializeParticles(double2[,] temporaryParticlePositions)
