@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class VolumeFractionCalculatorTests
 {
+    private Particle CreateParticleInUnity()
+    {
+        return ScriptableObject.CreateInstance("Particle") as Particle;
+    }
+
+    private Particle CreateParticleWithGivenPosition(double2 particlePosition)
+    {
+        // These need to be initialized, but their value won't affect much here 
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new double2x2(0, 0, 0, 0);
+        Particle particle = CreateParticleInUnity();
+        particle.InitParticle(particlePosition, initialVelocity, initialMass, initialC);
+        return particle;
+    }
+
     [Test]
     public void FindParticlesThatIntersectWithCellShouldFindAllParticlesWithinACell()
     {
@@ -24,13 +40,24 @@ public class VolumeFractionCalculatorTests
         double2 particlePositionOutside3 = new(2, 13);
         double2 particlePositionOutside4 = new(2, 11);
 
-        // TODO: Create particles here with the aforementioned position. Doesn't matter if Air or Fluid; do a mixture of both. 
+        Particle insideParticle1 = CreateParticleWithGivenPosition(particlePositionInside1);
+        Particle insideParticle2 = CreateParticleWithGivenPosition(particlePositionInside2);
+        Particle insideParticle3 = CreateParticleWithGivenPosition(particlePositionInside3);
+        Particle insideParticle4 = CreateParticleWithGivenPosition(particlePositionInside4);
+        Particle insideParticle5 = CreateParticleWithGivenPosition(particlePositionInside5);
+        Particle insideParticle6 = CreateParticleWithGivenPosition(particlePositionInside6);
+        Particle insideParticle7 = CreateParticleWithGivenPosition(particlePositionInside7);
+        Particle outsideParticle1 = CreateParticleWithGivenPosition(particlePositionOutside1);
+        Particle outsideParticle2 = CreateParticleWithGivenPosition(particlePositionOutside2);
+        Particle outsideParticle3 = CreateParticleWithGivenPosition(particlePositionOutside3);
+        Particle outsideParticle4 = CreateParticleWithGivenPosition(particlePositionOutside4);
 
-        // GridCell creation
-        GridCell cell = ScriptableObject.CreateInstance("GridCell") as GridCell;
-        double2 initialVelocity = new(0, 0);
-        double initialMass = 0;
-        cell.InitGridCell(initialVelocity, initialMass);
-        // TODO: Return a list of particles from that method, see if particles with that position exist
+        // It's not necessary to init a grid cell, since IsParticleInsideCell only needs a position, and we are not currently storing that as a data member within the cell.
+
+        // Calculating booleans
+        bool insideParticle1ShouldBeInsideTheCell = VolumeFractionCalculator.IsParticleInsideCell(insideParticle1, gridCellPosition);
+
+        // Assertions
+        Assert.IsTrue(insideParticle1ShouldBeInsideTheCell);
     }
 }
