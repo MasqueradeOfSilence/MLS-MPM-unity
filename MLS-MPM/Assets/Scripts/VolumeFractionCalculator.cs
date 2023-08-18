@@ -53,4 +53,39 @@ public class VolumeFractionCalculator : MonoBehaviour
         }
         return neighbors;
     }
+
+    public static double ComputeWeightAtParticle(Particle i, Particle j)
+    {
+        double distance = math.distance(i.GetPosition(), j.GetPosition());
+        return 1 / distance;
+    }
+
+    public static int ComputeNumberOfParticlesInCell(Particle[,] particles, int2 gridCellPosition)
+    {
+        int numberOfParticlesInCell = 0;
+        foreach (Particle p in particles)
+        {
+            int2 cellPosition = new(p.GetPosition());
+            if (GeneralMathUtils.DeepEquals(cellPosition, gridCellPosition))
+            {
+                numberOfParticlesInCell++;
+            }
+        }
+        return numberOfParticlesInCell;
+    }
+
+    public static int ComputeNumberOfAirParticlesInCell(Particle[,] particles, int2 gridCellPosition)
+    {
+        int numberOfAirParticlesInCell = 0;
+        foreach (Particle p in particles)
+        {
+            int2 cellPosition = new(p.GetPosition());
+            if (GeneralMathUtils.DeepEquals(cellPosition, gridCellPosition)
+                && p.GetType().ToString().Contains("Air"))
+            {
+                numberOfAirParticlesInCell++;
+            }
+        }
+        return numberOfAirParticlesInCell;
+    }
 }

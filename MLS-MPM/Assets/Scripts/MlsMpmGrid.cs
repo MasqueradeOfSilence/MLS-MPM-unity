@@ -48,6 +48,11 @@ public class MlsMpmGrid : ScriptableObject
         return At(position[0], position[1]);
     }
 
+    public GridCell At(int2 position)
+    {
+        return At(position[0], position[1]);
+    }
+
     public void UpdateCellAt(int x, int y, GridCell updated)
     {
         if (grid == null)

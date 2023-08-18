@@ -10,6 +10,11 @@ public class VolumeFractionCalculatorTests
         return ScriptableObject.CreateInstance("Particle") as Particle;
     }
 
+    private AirParticle CreateAirParticleInUnity()
+    {
+        return ScriptableObject.CreateInstance("AirParticle") as AirParticle;
+    }
+
     private Particle CreateParticleWithGivenPosition(double2 particlePosition)
     {
         // These need to be initialized, but their value won't affect much here 
@@ -17,6 +22,16 @@ public class VolumeFractionCalculatorTests
         double initialMass = 1;
         double2x2 initialC = new double2x2(0, 0, 0, 0);
         Particle particle = CreateParticleInUnity();
+        particle.InitParticle(particlePosition, initialVelocity, initialMass, initialC);
+        return particle;
+    }
+
+    private Particle CreateAirParticleWithGivenPosition(double2 particlePosition)
+    {
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new double2x2(0, 0, 0, 0);
+        AirParticle particle = CreateAirParticleInUnity();
         particle.InitParticle(particlePosition, initialVelocity, initialMass, initialC);
         return particle;
     }
@@ -268,5 +283,69 @@ public class VolumeFractionCalculatorTests
 
         Assert.IsTrue(allNeighborsContained);
         Assert.IsFalse(nonNeighborsContained);
+    }
+
+    [Test]
+    public void ComputeWeightAtParticleShouldComputeAWeightBasedOnTheDistanceBetweenTwoParticles()
+    {
+        // This is effectively our smoothing kernel. Reciprocal of distance.
+        double2 point1 = new(2, 12);
+        double2 point2 = new(1, 11);
+        double expectedWeight = 1 / math.sqrt(2);
+        Particle particle1 = CreateParticleWithGivenPosition(point1);
+        Particle particle2 = CreateParticleWithGivenPosition(point2);
+        double weight = VolumeFractionCalculator.ComputeWeightAtParticle(particle1, particle2);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual((float)weight, (float)expectedWeight);
+    }
+
+    // For gas volume, we are doing a simple approach where it's calculated based on the cell
+    // So first, find the cell the particle is in, and then compute the gas volume of that cell.
+    // No it's not crazy accurate but it is a good enough start.
+
+    [Test]
+    public void ComputeNumberOfParticlesInCellShouldCountTheNumberOfParticlesWithinACell()
+    {
+        int2 gridCellPosition = new(2, 12);
+        double2 particlePosition1 = new(2.1, 12);
+        double2 particlePosition2 = new(2, 12);
+        double2 particlePosition3 = new(2.9, 12);
+        double2 particlePosition4 = new(3, 12);
+        double2 particlePosition5 = new(2, 12.1);
+        double2 particlePosition6 = new(2, 12.9);
+
+        int expectedNumberOfParticlesWithinCell = 5;
+
+        Particle p1 = CreateParticleWithGivenPosition(particlePosition1);
+        Particle p2 = CreateParticleWithGivenPosition(particlePosition2);
+        Particle p3 = CreateParticleWithGivenPosition(particlePosition3);
+        Particle p4 = CreateParticleWithGivenPosition(particlePosition4);
+        Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
+        Particle p6 = CreateParticleWithGivenPosition(particlePosition6);
+        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6 } };
+        int actualNumberOfParticlesWithinCell = VolumeFractionCalculator.ComputeNumberOfParticlesInCell(particles, gridCellPosition);
+        Assert.AreEqual(expectedNumberOfParticlesWithinCell, actualNumberOfParticlesWithinCell);
+    }
+
+    [Test]
+    public void ComputeNumberOfGasParticlesInCellShouldCountTheNumberOfAirParticlesWithinACell()
+    {
+        int2 gridCellPosition = new(2, 12);
+        double2 particlePosition1 = new(2.1, 12);
+        double2 particlePosition2 = new(2, 12);
+        double2 particlePosition3 = new(2.9, 12);
+        double2 particlePosition4 = new(3, 12);
+        double2 particlePosition5 = new(2, 12.1);
+        double2 particlePosition6 = new(2, 12.9);
+        // p4 isn't in there, so expect 2
+        Particle p1 = CreateAirParticleWithGivenPosition(particlePosition1);
+        Particle p2 = CreateParticleWithGivenPosition(particlePosition2);
+        Particle p3 = CreateParticleWithGivenPosition(particlePosition3);
+        Particle p4 = CreateAirParticleWithGivenPosition(particlePosition4);
+        Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
+        Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
+        int expectedNumberOfGasParticlesInCell = 2;
+        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6 } };
+        int actualNumberOfGasParticlesInCell = VolumeFractionCalculator.ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
+        Assert.AreEqual(expectedNumberOfGasParticlesInCell, actualNumberOfGasParticlesInCell);
     }
 }
