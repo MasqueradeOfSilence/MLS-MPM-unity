@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class VolumeFractionCalculatorTests
 {
@@ -347,5 +348,63 @@ public class VolumeFractionCalculatorTests
         Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6 } };
         int actualNumberOfGasParticlesInCell = VolumeFractionCalculator.ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
         Assert.AreEqual(expectedNumberOfGasParticlesInCell, actualNumberOfGasParticlesInCell);
+    }
+
+    [Test]
+    public void ComputeGasVolumeOfParticleShouldDivideTheNumberOfGasParticlesInTheCorrespondingCellByTheTotalNumberOfParticlesInTheCorrespondingCell()
+    {
+        double expectedGasVolume = 2.0 / 6.0;
+        double2 mySampleParticlePosition = new(2.9, 12.3);
+        Particle mySampleParticle = CreateParticleWithGivenPosition(mySampleParticlePosition);
+        double2 particlePosition1 = new(2.1, 12);
+        double2 particlePosition2 = new(2, 12);
+        double2 particlePosition3 = new(2.9, 12);
+        double2 particlePosition4 = new(3, 12);
+        double2 particlePosition5 = new(2, 12.1);
+        double2 particlePosition6 = new(2, 12.9);
+        Particle p1 = CreateAirParticleWithGivenPosition(particlePosition1);
+        Particle p2 = CreateParticleWithGivenPosition(particlePosition2);
+        Particle p3 = CreateParticleWithGivenPosition(particlePosition3);
+        Particle p4 = CreateAirParticleWithGivenPosition(particlePosition4);
+        Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
+        Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
+        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6, mySampleParticle } };
+        double actualGasVolume = VolumeFractionCalculator.ComputeGasVolumeOfParticle(particles, mySampleParticle);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual((float)expectedGasVolume, (float)actualGasVolume);
+    }
+
+    [Test]
+
+    public void ComputeVolumeFractionContributionForParticleShouldMultiplyWeightByGasVolume()
+    {
+        double2 mySampleParticlePosition = new(2.9, 12.3);
+        Particle mySampleParticle = CreateParticleWithGivenPosition(mySampleParticlePosition);
+        double2 particlePosition1 = new(2.1, 12);
+        double2 particlePosition2 = new(2, 12);
+        double2 particlePosition3 = new(2.9, 12);
+        double2 particlePosition4 = new(3, 12);
+        double2 particlePosition5 = new(2, 12.1);
+        double2 particlePosition6 = new(2, 12.9);
+        Particle p1 = CreateAirParticleWithGivenPosition(particlePosition1);
+        Particle p2 = CreateParticleWithGivenPosition(particlePosition2);
+        Particle p3 = CreateParticleWithGivenPosition(particlePosition3);
+        Particle p4 = CreateAirParticleWithGivenPosition(particlePosition4);
+        Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
+        Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
+        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6, mySampleParticle } };
+        // distance between mySampleParticle and p5 is 0.921954
+        // So let's use p5. particle i, particle j.
+        // Expected: (0.3333) * (1 / 0.921954)
+        double expectedVolumeFractionContribution = (1.0 / 3.0) * (1.0 / math.distance(mySampleParticlePosition, particlePosition5));
+        double actualVolumeFractionContribution = VolumeFractionCalculator.ComputeVolumeFractionContributionForParticle(mySampleParticle, p5, particles);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual((float)expectedVolumeFractionContribution, (float)actualVolumeFractionContribution);
+        // sanity check
+        UnityEngine.Assertions.Assert.AreNotApproximatelyEqual((float)0.7, (float)0.8);
+    }
+
+    [Test]
+    public void CalculateVolumeFractionForParticleShouldComputeContributionForAll9NeighborsAndSumThemUp()
+    {
+        // Will need to write this by hand. 
     }
 }

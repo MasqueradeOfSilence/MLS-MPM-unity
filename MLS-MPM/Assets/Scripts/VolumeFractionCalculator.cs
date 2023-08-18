@@ -88,4 +88,24 @@ public class VolumeFractionCalculator : MonoBehaviour
         }
         return numberOfAirParticlesInCell;
     }
+
+    public static double ComputeGasVolumeOfParticle(Particle[,] particles, Particle particle)
+    {
+        int2 correspondingGridCellPosition = CalculateGridCellForParticle(particle);
+        double numberOfGasParticlesInCell = ComputeNumberOfAirParticlesInCell(particles, correspondingGridCellPosition);
+        double totalNumberOfParticlesInCell = ComputeNumberOfParticlesInCell(particles, correspondingGridCellPosition);
+        if (totalNumberOfParticlesInCell == 0)
+        {
+            return 0;
+        }
+        return numberOfGasParticlesInCell / totalNumberOfParticlesInCell;
+    }
+
+    // Then, all the neighbor values will get summed up!
+    public static double ComputeVolumeFractionContributionForParticle(Particle i, Particle j, Particle[,] particles)
+    {
+        double weight = ComputeWeightAtParticle(i, j);
+        double gasVolume = ComputeGasVolumeOfParticle(particles, j);
+        return gasVolume * weight;
+    }
 }
