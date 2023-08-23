@@ -201,14 +201,14 @@ public class VolumeFractionCalculatorTests
         bool hasNeighbor8 = false;
         bool hasNeighbor9 = false;
 
-        bool allNeighborsContained = false;
+        bool allNeighborsContained;
 
         // Non-neighbors:
         double2 nonNeighbor1Position = new(3, 14);
         double2 nonNeighbor2Position = new(1, 10.45);
         bool hasNonNeighbor1 = false;
         bool hasNonNeighbor2 = false;
-        bool nonNeighborsContained = false;
+        bool nonNeighborsContained;
         Particle neighborParticle1 = CreateParticleWithGivenPosition(neighbor1Position);
         Particle neighborParticle2 = CreateParticleWithGivenPosition(neighbor2Position);
         Particle neighborParticle3 = CreateParticleWithGivenPosition(neighbor3Position);
@@ -405,6 +405,6 @@ public class VolumeFractionCalculatorTests
     [Test]
     public void CalculateVolumeFractionForParticleShouldComputeContributionForAll9NeighborsAndSumThemUp()
     {
-        // Will need to write this by hand. 
+        // Will need to write this by hand first. 
     }
 }
