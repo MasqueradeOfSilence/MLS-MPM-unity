@@ -108,4 +108,18 @@ public class VolumeFractionCalculator : MonoBehaviour
         double gasVolume = ComputeGasVolumeOfParticle(particles, j);
         return gasVolume * weight;
     }
+
+    public static double CalculateGasVolume(Particle[,] particles, int2 gridCellPosition)
+    {
+        int numAirParticlesInCell = ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
+        int numTotalParticlesInCell = ComputeNumberOfParticlesInCell(particles, gridCellPosition);
+        Debug.Log("Air particles: " + numAirParticlesInCell);
+        Debug.Log("Total particles: " + numTotalParticlesInCell);
+        if (numTotalParticlesInCell == 0)
+        {
+            // can't divide by 0
+            return 0;
+        }
+        return numAirParticlesInCell / numTotalParticlesInCell;
+    }
 }

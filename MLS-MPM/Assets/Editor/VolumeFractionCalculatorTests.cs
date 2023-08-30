@@ -16,6 +16,11 @@ public class VolumeFractionCalculatorTests
         return ScriptableObject.CreateInstance("AirParticle") as AirParticle;
     }
 
+    private FluidParticle CreateFluidParticleInUnity()
+    {
+        return ScriptableObject.CreateInstance("FluidParticle") as FluidParticle;
+    }
+
     private Particle CreateParticleWithGivenPosition(double2 particlePosition)
     {
         // These need to be initialized, but their value won't affect much here 
@@ -30,11 +35,68 @@ public class VolumeFractionCalculatorTests
     private Particle CreateAirParticleWithGivenPosition(double2 particlePosition)
     {
         double2 initialVelocity = new(0, 0);
-        double initialMass = 1;
+        double initialMass = 0.5;
         double2x2 initialC = new double2x2(0, 0, 0, 0);
         AirParticle particle = CreateAirParticleInUnity();
         particle.InitParticle(particlePosition, initialVelocity, initialMass, initialC);
         return particle;
+    }
+
+    private Particle CreateFluidParticleWithGivenPosition(double2 particlePosition)
+    {
+        double2 initialVelocity = new(0, 0);
+        double initialMass = 1;
+        double2x2 initialC = new double2x2(0, 0, 0, 0);
+        FluidParticle particle = CreateFluidParticleInUnity();
+        particle.InitParticle(particlePosition, initialVelocity, initialMass, initialC);
+        return particle;
+    }
+
+    private Particle[,] CreateParticleListFor9x9GridTest()
+    {
+        // Cell 1 at (1, 11)
+        Particle p1 = CreateAirParticleWithGivenPosition(new double2(1, 11.1));
+
+        // Cell 2 at (1, 12)
+        // NONE: EMPTY CELL
+
+        // Cell 3 at (1, 13)
+        Particle p2 = CreateFluidParticleWithGivenPosition(new double2(1.1, 13.2));
+        Particle p3 = CreateFluidParticleWithGivenPosition(new double2(1.2, 13.3));
+        Particle p4 = CreateAirParticleWithGivenPosition(new double2(1.7, 13.7));
+
+        // Cell 4 at (2, 11)
+        Particle p5 = CreateFluidParticleWithGivenPosition(new double2(2, 11.7));
+        Particle p6 = CreateAirParticleWithGivenPosition(new double2(2, 11.5));
+        Particle p7 = CreateAirParticleWithGivenPosition(new double2(2.6, 11.1));
+        Particle p8 = CreateAirParticleWithGivenPosition(new double2(2.3, 11));
+
+        // Cell 5 at (2, 12). The exact particle we are looking at is also at (2, 12), in the center of our 9x9 neighborhood. 
+        Particle p9 = CreateFluidParticleWithGivenPosition(new double2(2.7, 12.9));
+        Particle p10 = CreateAirParticleWithGivenPosition(new double2(2.1, 12));
+        Particle p11 = CreateFluidParticleWithGivenPosition(new double2(2, 12.1));
+        Particle p12 = CreateAirParticleWithGivenPosition(new double2(2, 12.9));
+        Particle p13_andParticleInQuestion = CreateFluidParticleWithGivenPosition(new double2(2, 12));
+        Particle p14 = CreateFluidParticleWithGivenPosition(new double2(2.9, 12));
+
+        // Cell 6 at (2, 13)
+        Particle p15 = CreateAirParticleWithGivenPosition(new double2(2.6, 13.8));
+        Particle p16 = CreateFluidParticleWithGivenPosition(new double2(2, 13.1));
+
+        // Cell 7 at (3, 11)
+        Particle p17 = CreateAirParticleWithGivenPosition(new double2(3.5, 11.7));
+
+        // Cell 8 at (3, 12)
+        Particle p18 = CreateAirParticleWithGivenPosition(new double2(3, 12));
+
+        // Cell 9 at (3, 13)
+        Particle p19 = CreateFluidParticleWithGivenPosition(new double2(3.6, 13.1));
+
+        // List creation
+        Particle[,] allParticles = new Particle[,] 
+            { { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13_andParticleInQuestion, p14, p15, p16, p17, p18, p19 } };
+
+        return allParticles;
     }
 
     [Test]
@@ -403,8 +465,20 @@ public class VolumeFractionCalculatorTests
     }
 
     [Test]
+    public void CalculateGasVolumeShouldDivideTheNumberOfGasParticlesInTheCellByTheTotalNumberOfParticlesInTheCell()
+    {
+        // NOTE: It is not immediately intuitive that we are calculating cell values but the GridCell class itself does not store position. This may need to be amended...
+        int2 cell1Position = new(1, 11);
+        double expectedGasVolume = 1;
+        Particle[,] particles = CreateParticleListFor9x9GridTest();
+        double actualGasVolume = VolumeFractionCalculator.CalculateGasVolume(particles, cell1Position);
+        Assert.AreEqual(expectedGasVolume, actualGasVolume);
+    }
+
+    [Test]
     public void CalculateVolumeFractionForParticleShouldComputeContributionForAll9NeighborsAndSumThemUp()
     {
-        // Will need to write this by hand first. 
+        // Done by hand in my notebook and transcribed here. 
+
     }
 }
