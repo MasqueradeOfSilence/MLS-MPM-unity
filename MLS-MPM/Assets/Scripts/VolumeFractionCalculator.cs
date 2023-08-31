@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -113,13 +114,12 @@ public class VolumeFractionCalculator : MonoBehaviour
     {
         int numAirParticlesInCell = ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
         int numTotalParticlesInCell = ComputeNumberOfParticlesInCell(particles, gridCellPosition);
-        Debug.Log("Air particles: " + numAirParticlesInCell);
-        Debug.Log("Total particles: " + numTotalParticlesInCell);
         if (numTotalParticlesInCell == 0)
         {
             // can't divide by 0
             return 0;
         }
-        return numAirParticlesInCell / numTotalParticlesInCell;
+        // C# by itself will round to an integer if you do (int / int), so you have to convert them to doubles before dividing. 
+        return (Convert.ToDouble(numAirParticlesInCell) / Convert.ToDouble(numTotalParticlesInCell));
     }
 }

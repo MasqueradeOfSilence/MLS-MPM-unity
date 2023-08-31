@@ -28,6 +28,12 @@ public class GeneralMathUtils : MonoBehaviour
             math.abs(a[2] - b[2]) < threshold;
 	}
 
+	public static bool ApproximatelyEquals(double a, double b)
+	{
+        double threshold = 0.01;
+		return math.abs(a - b) < threshold;
+    }
+
 	public static int[] ParticlePositionToCellPosition(double[] particlePosition)
     {
 		return Array.ConvertAll(particlePosition, x => (int)x);

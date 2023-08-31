@@ -29,6 +29,16 @@ public class GeneralMathUtilsTests
     }
 
     [Test]
+    public void ApproximatelyEqualsShouldCompareDoublesForApproximateEquality()
+    {
+        double a = 0.6;
+        double b = 0.595;
+        double c = 0.7;
+        Assert.IsTrue(GeneralMathUtils.ApproximatelyEquals(a, b));
+        Assert.IsFalse(GeneralMathUtils.ApproximatelyEquals(a, c));
+    }
+
+    [Test]
     public void ParticlePositionToCellPositionShouldCorrectlyConvert()
     {
         double[] particlePosition = { 3.2, 6 };

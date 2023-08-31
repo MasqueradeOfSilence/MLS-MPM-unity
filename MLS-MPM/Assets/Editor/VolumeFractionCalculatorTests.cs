@@ -467,18 +467,60 @@ public class VolumeFractionCalculatorTests
     [Test]
     public void CalculateGasVolumeShouldDivideTheNumberOfGasParticlesInTheCellByTheTotalNumberOfParticlesInTheCell()
     {
+        Particle[,] particles = CreateParticleListFor9x9GridTest();
+
         // NOTE: It is not immediately intuitive that we are calculating cell values but the GridCell class itself does not store position. This may need to be amended...
         int2 cell1Position = new(1, 11);
-        double expectedGasVolume = 1;
-        Particle[,] particles = CreateParticleListFor9x9GridTest();
-        double actualGasVolume = VolumeFractionCalculator.CalculateGasVolume(particles, cell1Position);
-        Assert.AreEqual(expectedGasVolume, actualGasVolume);
+        double expectedGasVolume1 = 1;
+        double actualGasVolume1 = VolumeFractionCalculator.CalculateGasVolume(particles, cell1Position);
+        Assert.AreEqual(expectedGasVolume1, actualGasVolume1);
+
+        int2 cell2Position = new(1, 12);
+        double expectedGasVolume2 = 0;
+        double actualGasVolume2 = VolumeFractionCalculator.CalculateGasVolume(particles, cell2Position);
+        Assert.AreEqual(expectedGasVolume2, actualGasVolume2);
+
+        int2 cell3Position = new(1, 13);
+        double expectedGasVolume3 = 0.33;
+        double actualGasVolume3 = VolumeFractionCalculator.CalculateGasVolume(particles, cell3Position);
+        Assert.IsTrue(GeneralMathUtils.ApproximatelyEquals(expectedGasVolume3, actualGasVolume3));
+
+        int2 cell4Position = new(2, 11);
+        double expectedGasVolume4 = 0.75;
+        double actualGasVolume4 = VolumeFractionCalculator.CalculateGasVolume(particles, cell4Position);
+        Assert.AreEqual(expectedGasVolume4, actualGasVolume4);
+
+        int2 cell5Position = new(2, 12);
+        double expectedGasVolume5 = 0.33;
+        double actualGasVolume5 = VolumeFractionCalculator.CalculateGasVolume(particles, cell5Position);
+        Assert.IsTrue(GeneralMathUtils.ApproximatelyEquals(expectedGasVolume5, actualGasVolume5));
+
+        int2 cell6Position = new(2, 13);
+        double expectedGasVolume6 = 0.5;
+        double actualGasVolume6 = VolumeFractionCalculator.CalculateGasVolume(particles, cell6Position);
+        Assert.AreEqual(expectedGasVolume6, actualGasVolume6);
+
+        int2 cell7Position = new(3, 11);
+        double expectedGasVolume7 = 1;
+        double actualGasVolume7 = VolumeFractionCalculator.CalculateGasVolume(particles, cell7Position);
+        Assert.AreEqual(expectedGasVolume7, actualGasVolume7);
+
+        int2 cell8Position = new(3, 12);
+        double expectedGasVolume8 = 1;
+        double actualGasVolume8 = VolumeFractionCalculator.CalculateGasVolume(particles, cell8Position);
+        Assert.AreEqual(expectedGasVolume8, actualGasVolume8);
+
+        int2 cell9Position = new(3, 13);
+        double expectedGasVolume9 = 0;
+        double actualGasVolume9 = VolumeFractionCalculator.CalculateGasVolume(particles, cell9Position);
+        Assert.AreEqual(expectedGasVolume9, actualGasVolume9);
+
     }
 
     [Test]
     public void CalculateVolumeFractionForParticleShouldComputeContributionForAll9NeighborsAndSumThemUp()
     {
         // Done by hand in my notebook and transcribed here. 
-
+        Particle[,] particles = CreateParticleListFor9x9GridTest();
     }
 }
