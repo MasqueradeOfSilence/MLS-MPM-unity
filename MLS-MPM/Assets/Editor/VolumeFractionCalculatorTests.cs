@@ -522,5 +522,8 @@ public class VolumeFractionCalculatorTests
     {
         // Done by hand in my notebook and transcribed here. 
         Particle[,] particles = CreateParticleListFor9x9GridTest();
+        // TODO convert particles into a List<Particle> or even change its initial definition, and pass it into the function instead of new List<Particle>()
+        Particle p13 = particles[0, 12]; // may not need this exact thing
+        double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(new int2(2, 12), new List<Particle>(), p13);
     }
 }

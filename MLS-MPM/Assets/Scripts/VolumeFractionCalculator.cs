@@ -122,4 +122,11 @@ public class VolumeFractionCalculator : MonoBehaviour
         // C# by itself will round to an integer if you do (int / int), so you have to convert them to doubles before dividing. 
         return (Convert.ToDouble(numAirParticlesInCell) / Convert.ToDouble(numTotalParticlesInCell));
     }
+
+    public static double CalculateVolumeFractionForParticleAtPosition(int2 particlePosition, List<Particle> particles, Particle particle)
+    {
+        // TODO 
+        List<Particle> neighborsOfParticle = FindNeighborsOfParticle(particle, particles);
+        return -1;
+    }
 }
