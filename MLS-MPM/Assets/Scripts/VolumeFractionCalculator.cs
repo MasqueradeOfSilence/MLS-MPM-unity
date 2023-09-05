@@ -127,6 +127,13 @@ public class VolumeFractionCalculator : MonoBehaviour
     {
         // TODO 
         List<Particle> neighborsOfParticle = FindNeighborsOfParticle(particle, particles);
+        double volumeFraction = 0;
+        foreach (Particle neighbor in neighborsOfParticle)
+        {
+            // Compute its conbribution and sum them all up. 
+            // NOTE: We have computed neigbhorsOfParticle as a Particle[,] and it needs to be a list...in pretty much all instances
+            //volumeFraction += ComputeVolumeFractionContributionForParticle(particle, neighbor, neighborsOfParticle);
+        }
         return -1;
     }
 }
