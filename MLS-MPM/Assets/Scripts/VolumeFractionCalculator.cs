@@ -131,7 +131,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         foreach (Particle neighbor in neighborsOfParticle)
         {
             // Compute its conbribution and sum them all up. 
-            // NOTE: We have computed neigbhorsOfParticle as a Particle[,] and it needs to be a list...in pretty much all instances
+            // NOTE: We have computed neighborsOfParticle as a Particle[,] and it needs to be a list...in pretty much all instances. why would this even need to be a multidimensional array? does not make sense at all.
             //volumeFraction += ComputeVolumeFractionContributionForParticle(particle, neighbor, neighborsOfParticle);
         }
         return -1;
