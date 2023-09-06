@@ -58,10 +58,15 @@ public class VolumeFractionCalculator : MonoBehaviour
     public static double ComputeWeightAtParticle(Particle i, Particle j)
     {
         double distance = math.distance(i.GetPosition(), j.GetPosition());
+        if (distance == 0)
+        {
+            // Weighting particle very strongly if at same position (likely the same particle)
+            return 100;
+        }
         return 1 / distance;
     }
 
-    public static int ComputeNumberOfParticlesInCell(Particle[,] particles, int2 gridCellPosition)
+    public static int ComputeNumberOfParticlesInCell(List<Particle> particles, int2 gridCellPosition)
     {
         int numberOfParticlesInCell = 0;
         foreach (Particle p in particles)
@@ -75,7 +80,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         return numberOfParticlesInCell;
     }
 
-    public static int ComputeNumberOfAirParticlesInCell(Particle[,] particles, int2 gridCellPosition)
+    public static int ComputeNumberOfAirParticlesInCell(List<Particle> particles, int2 gridCellPosition)
     {
         int numberOfAirParticlesInCell = 0;
         foreach (Particle p in particles)
@@ -90,7 +95,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         return numberOfAirParticlesInCell;
     }
 
-    public static double ComputeGasVolumeOfParticle(Particle[,] particles, Particle particle)
+    public static double ComputeGasVolumeOfParticle(List<Particle> particles, Particle particle)
     {
         int2 correspondingGridCellPosition = CalculateGridCellForParticle(particle);
         double numberOfGasParticlesInCell = ComputeNumberOfAirParticlesInCell(particles, correspondingGridCellPosition);
@@ -103,14 +108,14 @@ public class VolumeFractionCalculator : MonoBehaviour
     }
 
     // Then, all the neighbor values will get summed up!
-    public static double ComputeVolumeFractionContributionForParticle(Particle i, Particle j, Particle[,] particles)
+    public static double ComputeVolumeFractionContributionForParticle(Particle i, Particle j, List<Particle> particles)
     {
         double weight = ComputeWeightAtParticle(i, j);
         double gasVolume = ComputeGasVolumeOfParticle(particles, j);
         return gasVolume * weight;
     }
 
-    public static double CalculateGasVolume(Particle[,] particles, int2 gridCellPosition)
+    public static double CalculateGasVolume(List<Particle> particles, int2 gridCellPosition)
     {
         int numAirParticlesInCell = ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
         int numTotalParticlesInCell = ComputeNumberOfParticlesInCell(particles, gridCellPosition);
@@ -123,17 +128,15 @@ public class VolumeFractionCalculator : MonoBehaviour
         return (Convert.ToDouble(numAirParticlesInCell) / Convert.ToDouble(numTotalParticlesInCell));
     }
 
-    public static double CalculateVolumeFractionForParticleAtPosition(int2 particlePosition, List<Particle> particles, Particle particle)
+    public static double CalculateVolumeFractionForParticleAtPosition(List<Particle> particles, Particle particle)
     {
-        // TODO 
         List<Particle> neighborsOfParticle = FindNeighborsOfParticle(particle, particles);
         double volumeFraction = 0;
         foreach (Particle neighbor in neighborsOfParticle)
         {
             // Compute its conbribution and sum them all up. 
-            // NOTE: We have computed neighborsOfParticle as a Particle[,] and it needs to be a list...in pretty much all instances. why would this even need to be a multidimensional array? does not make sense at all.
-            //volumeFraction += ComputeVolumeFractionContributionForParticle(particle, neighbor, neighborsOfParticle);
+            volumeFraction += ComputeVolumeFractionContributionForParticle(particle, neighbor, neighborsOfParticle);
         }
-        return -1;
+        return volumeFraction;
     }
 }

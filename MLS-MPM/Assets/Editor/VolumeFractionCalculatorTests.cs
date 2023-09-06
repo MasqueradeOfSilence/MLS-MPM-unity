@@ -52,7 +52,7 @@ public class VolumeFractionCalculatorTests
         return particle;
     }
 
-    private Particle[,] CreateParticleListFor9x9GridTest()
+    private List<Particle> CreateParticleListFor9x9GridTest()
     {
         // Cell 1 at (1, 11)
         Particle p1 = CreateAirParticleWithGivenPosition(new double2(1, 11.1));
@@ -93,8 +93,8 @@ public class VolumeFractionCalculatorTests
         Particle p19 = CreateFluidParticleWithGivenPosition(new double2(3.6, 13.1));
 
         // List creation
-        Particle[,] allParticles = new Particle[,] 
-            { { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13_andParticleInQuestion, p14, p15, p16, p17, p18, p19 } };
+        List<Particle> allParticles = new List<Particle>
+            { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13_andParticleInQuestion, p14, p15, p16, p17, p18, p19 };
 
         return allParticles;
     }
@@ -384,7 +384,7 @@ public class VolumeFractionCalculatorTests
         Particle p4 = CreateParticleWithGivenPosition(particlePosition4);
         Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
         Particle p6 = CreateParticleWithGivenPosition(particlePosition6);
-        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6 } };
+        List<Particle> particles = new List<Particle> { p1, p2, p3, p4, p5, p6 };
         int actualNumberOfParticlesWithinCell = VolumeFractionCalculator.ComputeNumberOfParticlesInCell(particles, gridCellPosition);
         Assert.AreEqual(expectedNumberOfParticlesWithinCell, actualNumberOfParticlesWithinCell);
     }
@@ -407,7 +407,7 @@ public class VolumeFractionCalculatorTests
         Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
         Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
         int expectedNumberOfGasParticlesInCell = 2;
-        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6 } };
+        List<Particle> particles = new List<Particle> { p1, p2, p3, p4, p5, p6 };
         int actualNumberOfGasParticlesInCell = VolumeFractionCalculator.ComputeNumberOfAirParticlesInCell(particles, gridCellPosition);
         Assert.AreEqual(expectedNumberOfGasParticlesInCell, actualNumberOfGasParticlesInCell);
     }
@@ -430,7 +430,7 @@ public class VolumeFractionCalculatorTests
         Particle p4 = CreateAirParticleWithGivenPosition(particlePosition4);
         Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
         Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
-        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6, mySampleParticle } };
+        List<Particle> particles = new List<Particle> { p1, p2, p3, p4, p5, p6, mySampleParticle };
         double actualGasVolume = VolumeFractionCalculator.ComputeGasVolumeOfParticle(particles, mySampleParticle);
         UnityEngine.Assertions.Assert.AreApproximatelyEqual((float)expectedGasVolume, (float)actualGasVolume);
     }
@@ -453,7 +453,7 @@ public class VolumeFractionCalculatorTests
         Particle p4 = CreateAirParticleWithGivenPosition(particlePosition4);
         Particle p5 = CreateParticleWithGivenPosition(particlePosition5);
         Particle p6 = CreateAirParticleWithGivenPosition(particlePosition6);
-        Particle[,] particles = new Particle[,] { { p1, p2, p3, p4, p5, p6, mySampleParticle } };
+        List<Particle> particles = new List<Particle> { p1, p2, p3, p4, p5, p6, mySampleParticle };
         // distance between mySampleParticle and p5 is 0.921954
         // So let's use p5. particle i, particle j.
         // Expected: (0.3333) * (1 / 0.921954)
@@ -467,7 +467,7 @@ public class VolumeFractionCalculatorTests
     [Test]
     public void CalculateGasVolumeShouldDivideTheNumberOfGasParticlesInTheCellByTheTotalNumberOfParticlesInTheCell()
     {
-        Particle[,] particles = CreateParticleListFor9x9GridTest();
+        List<Particle> particles = CreateParticleListFor9x9GridTest();
 
         // NOTE: It is not immediately intuitive that we are calculating cell values but the GridCell class itself does not store position. This may need to be amended...
         int2 cell1Position = new(1, 11);
@@ -521,9 +521,13 @@ public class VolumeFractionCalculatorTests
     public void CalculateVolumeFractionForParticleShouldComputeContributionForAll9NeighborsAndSumThemUp()
     {
         // Done by hand in my notebook and transcribed here. 
-        Particle[,] particles = CreateParticleListFor9x9GridTest();
-        // TODO convert particles into a List<Particle> or even change its initial definition, and pass it into the function instead of new List<Particle>()
-        Particle p13 = particles[0, 12]; // may not need this exact thing
-        double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(new int2(2, 12), new List<Particle>(), p13);
+        List<Particle> particles = CreateParticleListFor9x9GridTest();
+        Particle p13 = particles[12];
+        double expectedVolumeFraction = 49.242;
+        double actualVolumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particles, p13);
+        // Using a big threshold of 1 because I rounded a ton in my manual calculations. 
+        Assert.IsTrue(GeneralMathUtils.ApproximatelyEquals(expectedVolumeFraction, actualVolumeFraction, 1));
     }
+
+    // NEXT: Threshold determination (make it a variable you can pass and experiment with for now, the equivalent in a 3D art program would be a sliding scale)
 }
