@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Mathematics;
+using System.Collections.Generic;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -19,6 +20,7 @@ public class FoamSimulator : MonoBehaviour
     private const double gravity = -9.8;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
+    int iteration = 0;
 
     public enum WhereToPutFluid
     {
@@ -317,6 +319,21 @@ public class FoamSimulator : MonoBehaviour
         }
     }
 
+    public void DetermineBubbleSizes()
+    {
+        List<Particle> particlesList = new List<Particle>();
+        foreach (Particle p in particles)
+        {
+            particlesList.Add(p);
+        }
+
+        foreach (Particle p in particles)
+        {
+            double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
+            Debug.Log("VOLUME FRACTION: " + volumeFraction);
+        }
+    }
+
     public void Simulate()
     {
         print("RUNNING FOAM SIMULATOR");
@@ -325,6 +342,12 @@ public class FoamSimulator : MonoBehaviour
         ParticleToGridStep2();
         UpdateGrid();
         GridToParticleStep();
+        // Putting after first computations for now
+        if (iteration == 0)
+        {
+            DetermineBubbleSizes();
+        }
+        iteration++;
     }
 
     public double2 UpdateParticleVelocityWithEnforcedBoundaryConditions(Particle particle)
