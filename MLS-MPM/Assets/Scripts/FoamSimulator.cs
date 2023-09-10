@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 using System.Collections.Generic;
+using System.IO;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -326,11 +327,12 @@ public class FoamSimulator : MonoBehaviour
         {
             particlesList.Add(p);
         }
-
+        using StreamWriter sw = File.AppendText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.txt");
         foreach (Particle p in particles)
         {
             double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
-            Debug.Log("VOLUME FRACTION: " + volumeFraction);
+            //Debug.Log("VOLUME FRACTION: " + volumeFraction);
+            sw.WriteLine(volumeFraction);
         }
     }
 
