@@ -327,7 +327,9 @@ public class FoamSimulator : MonoBehaviour
         {
             particlesList.Add(p);
         }
-        using StreamWriter sw = File.AppendText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.txt");
+        // .txt and .csv both work, but I like .csv for visualizing the points on a scatterplot and sorting by value.
+        // Values compute to the range of 0 to 143.627564224666. 
+        using StreamWriter sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.csv");
         foreach (Particle p in particles)
         {
             double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
