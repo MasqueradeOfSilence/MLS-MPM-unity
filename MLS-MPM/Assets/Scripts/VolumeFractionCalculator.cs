@@ -30,7 +30,7 @@ public class VolumeFractionCalculator : MonoBehaviour
          *  2b) Add all of those to the neighbors list.
          */
         List<Particle> neighbors = new List<Particle> { };
-        NineNeighborhood nineNeighborhood = new NineNeighborhood(particle);
+        NineNeighborhood nineNeighborhood = new(particle);
         int2 upperLeft = nineNeighborhood.GetUpperLeft();
         int2 upper = nineNeighborhood.GetUpper();
         int2 upperRight = nineNeighborhood.GetUpperRight();
