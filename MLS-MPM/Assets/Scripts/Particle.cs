@@ -8,6 +8,8 @@ public class Particle : ScriptableObject
     private double mass;
     // The affine momentum matrix C
     private double2x2 affineMomentumMatrix;
+    private Bubble bubble;
+
 
     public void InitParticle(double2 position, double2 velocity, double mass, double2x2 affineMomentumMatrix)
     {
@@ -35,6 +37,15 @@ public class Particle : ScriptableObject
     public double GetMass()
     {
         return mass;
+    }
+
+    public Bubble GetBubble()
+    {
+        if (bubble != null)
+        {
+            return bubble;
+        }
+        return null;
     }
 
     public double2x2 GetAffineMomentumMatrix()
@@ -67,13 +78,18 @@ public class Particle : ScriptableObject
         affineMomentumMatrix = C;
     }
 
+    public void SetBubbleWithSize(double volumeFraction)
+    {
+        bubble = new Bubble(volumeFraction);
+    }
+
     public void UpdateVelocityX(double velocityX)
     {
-        this.velocity.x = velocityX;
+        velocity.x = velocityX;
     }
 
     public void UpdateVelocityY(double velocityY)
     {
-        this.velocity.y = velocityY;
+        velocity.y = velocityY;
     }
 }

@@ -335,6 +335,7 @@ public class FoamSimulator : MonoBehaviour
             double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
             //Debug.Log("VOLUME FRACTION: " + volumeFraction);
             sw.WriteLine(volumeFraction);
+            p.SetBubbleWithSize(volumeFraction);
         }
     }
 
