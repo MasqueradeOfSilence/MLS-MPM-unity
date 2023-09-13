@@ -8,7 +8,7 @@ public class Particle : ScriptableObject
     private double mass;
     // The affine momentum matrix C
     private double2x2 affineMomentumMatrix;
-    private Bubble bubble;
+    private Bubble bubble = null;
 
 
     public void InitParticle(double2 position, double2 velocity, double mass, double2x2 affineMomentumMatrix)
@@ -21,6 +21,11 @@ public class Particle : ScriptableObject
 
     public GameObject ConstructSphereFromParticle()
     {
+        if (bubble != null)
+        {
+            float unitySphereRadius = bubble.ComputeUnitySphereRadius();
+            return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass, unitySphereRadius);
+        }
         return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass);
     }
 
@@ -80,7 +85,8 @@ public class Particle : ScriptableObject
 
     public void SetBubbleWithSize(double volumeFraction)
     {
-        bubble = new Bubble(volumeFraction);
+        bubble = CreateInstance<Bubble>();
+        bubble.InstantiateBubble(volumeFraction);
     }
 
     public void UpdateVelocityX(double velocityX)

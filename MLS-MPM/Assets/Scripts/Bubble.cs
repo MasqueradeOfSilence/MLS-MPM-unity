@@ -19,32 +19,45 @@ public class Bubble : ScriptableObject
 
     public Bubble()
     {
-
+        // Can't call this directly due to it being a ScriptableObject
     }
 
-    public Bubble(double volumeFraction)
+    public void InstantiateBubble(double volumeFraction)
     {
         if (volumeFraction <= maxMicroscopicSize)
         {
+            Debug.Log("Micro");
             bubbleSize = BubbleSize.MICROSCOPIC;
         }
         else if (volumeFraction <= maxSmallSize)
         {
+            Debug.Log("Sm");
             bubbleSize = BubbleSize.SMALL;
         }
         else if (volumeFraction <= maxMediumSize)
         {
+            Debug.Log("Med");
             bubbleSize = BubbleSize.MEDIUM;
         }
         else
         {
+            Debug.Log("Lg");
             bubbleSize = BubbleSize.LARGE;
         }
     }
 
-    public Bubble(BubbleSize bubbleSize)
+    public float ComputeUnitySphereRadius()
     {
-        this.bubbleSize = bubbleSize;
+        // TODO for some reason the spheres are still created with 0.1f on everything despite different bubble sizes. 
+        // Med should actually be 0.5 and large should be 0.8, but I am going bigger because I need to see some sort of results.
+        return bubbleSize switch
+        {
+            BubbleSize.MICROSCOPIC => 0.1f,
+            BubbleSize.SMALL => 0.3f,
+            BubbleSize.MEDIUM => 10f,
+            BubbleSize.LARGE => 15f,
+            _ => 0.1f,
+        };
     }
 
     public void SetBubbleSize(BubbleSize bubbleSize) 

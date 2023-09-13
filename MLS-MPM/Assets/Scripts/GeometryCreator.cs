@@ -14,8 +14,9 @@ public class GeometryCreator: MonoBehaviour
      * Currently a Vector3 with a 0 for z, but will be extended to a full Vector3 in the 3D Version (to be coded).
      * Need to have another function that uses Particles on top
      */
-    public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass)
+    public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f)
     {
+        Debug.Log("Sphere size: " + sphereSize);
         bool spawnRedAirSphere = false;
         AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
         air.InitParticle(new double2(0), new double2(0), new double2x2(0));
@@ -25,8 +26,8 @@ public class GeometryCreator: MonoBehaviour
         }
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, 0);
-        // Fix Z at 0 for now
-        sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        // Fix Z-position at 0 for now
+        sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material materialForSphere = Resources.Load("FluidTest", typeof(Material)) as Material;
         if (spawnRedAirSphere)
         {
