@@ -49,6 +49,11 @@ public class GameInterface: MonoBehaviour
             GameObject currentParticleSphere = listOfParticleSpheres[i];
             Particle currentParticle = particles[i];
             currentParticleSphere.transform.position = new Vector3((float)currentParticle.GetPosition().x, (float)currentParticle.GetPosition().y, 0);
+            if (currentParticle.GetBubble() != null)
+            {
+                float radius = currentParticle.GetBubble().ComputeUnitySphereRadius();
+                currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
+            }
         }
     }
 
