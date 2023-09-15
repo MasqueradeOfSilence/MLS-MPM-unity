@@ -31,7 +31,8 @@ public class GeometryCreator: MonoBehaviour
         Material materialForSphere = Resources.Load("FluidTest", typeof(Material)) as Material;
         if (spawnRedAirSphere)
         {
-            materialForSphere = Resources.Load("AirTest", typeof(Material)) as Material;
+            //materialForSphere = Resources.Load("AirTest", typeof(Material)) as Material;
+            materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
         }
         sphere.GetComponent<MeshRenderer>().material = materialForSphere;
         sphere.GetComponent<Renderer>().material = materialForSphere;
