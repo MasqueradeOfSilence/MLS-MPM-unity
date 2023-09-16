@@ -16,23 +16,27 @@ public class GeometryCreator: MonoBehaviour
      */
     public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f)
     {
-        Debug.Log("Sphere size: " + sphereSize);
-        bool spawnRedAirSphere = false;
+        bool spawnClearBubbleSphere = false;
         AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
         air.InitParticle(new double2(0), new double2(0), new double2x2(0));
-        if (mass == air.GetMass())
+        bool isMacroscopic = sphereSize > 0.11f; // TODO not working yet, non-micro bubbles are still blue
+        if (mass == air.GetMass() || isMacroscopic)
         {
-            spawnRedAirSphere = true;
+            spawnClearBubbleSphere = true;
         }
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, 0);
         // Fix Z-position at 0 for now
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
-        Material materialForSphere = Resources.Load("FluidTest", typeof(Material)) as Material;
-        if (spawnRedAirSphere)
+        Material materialForSphere;
+        if (spawnClearBubbleSphere)
         {
             //materialForSphere = Resources.Load("AirTest", typeof(Material)) as Material;
             materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+        }
+        else
+        {
+            materialForSphere = Resources.Load("FluidTest", typeof(Material)) as Material;
         }
         sphere.GetComponent<MeshRenderer>().material = materialForSphere;
         sphere.GetComponent<Renderer>().material = materialForSphere;

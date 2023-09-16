@@ -344,7 +344,6 @@ public class FoamSimulator : MonoBehaviour
 
     public void Simulate()
     {
-        print("RUNNING FOAM SIMULATOR");
         ClearGrid();
         ParticleToGridStep1();
         ParticleToGridStep2();
@@ -353,6 +352,7 @@ public class FoamSimulator : MonoBehaviour
         // Putting after first computations for now
         if (iteration == 0)
         {
+            print("RUNNING FOAM SIMULATOR");
             DetermineBubbleSizes();
         }
         iteration++;

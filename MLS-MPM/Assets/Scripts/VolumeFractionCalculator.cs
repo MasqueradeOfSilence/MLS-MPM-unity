@@ -103,7 +103,9 @@ public class VolumeFractionCalculator : MonoBehaviour
         if (totalNumberOfParticlesInCell == 0)
         {
             // Guarding against divide-by-zero
-            return 0;
+            // NOTE: A value of 1 means it's pure AIR, assumed. A value of 0 would assume pure WATER. 
+            // I will need to fix the corresponding unit tests that expect that to be 0
+            return 1;
         }
         return numberOfGasParticlesInCell / totalNumberOfParticlesInCell;
     }
