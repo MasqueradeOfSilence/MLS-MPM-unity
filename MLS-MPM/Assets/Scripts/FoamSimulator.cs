@@ -322,7 +322,7 @@ public class FoamSimulator : MonoBehaviour
 
     public void DetermineBubbleSizes()
     {
-        List<Particle> particlesList = new List<Particle>();
+        List<Particle> particlesList = new();
         foreach (Particle p in particles)
         {
             particlesList.Add(p);
@@ -334,6 +334,9 @@ public class FoamSimulator : MonoBehaviour
         {
             double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
             //Debug.Log("VOLUME FRACTION: " + volumeFraction);
+            // Bubbles at top won't necessarily have a nice big volume fraction because there are no particles above them. 
+            // This is why the bottom bubbles appear as the largest. 
+            // Also, might be easier to not have any hardcoded values for different bubble sizes, and just use a pure scaling factor based on volume fraction -- TBD. 
             sw.WriteLine(volumeFraction);
             p.SetBubbleWithSize(volumeFraction);
         }

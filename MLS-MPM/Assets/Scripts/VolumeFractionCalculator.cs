@@ -102,6 +102,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         double totalNumberOfParticlesInCell = ComputeNumberOfParticlesInCell(particles, correspondingGridCellPosition);
         if (totalNumberOfParticlesInCell == 0)
         {
+            // Guarding against divide-by-zero
             return 0;
         }
         return numberOfGasParticlesInCell / totalNumberOfParticlesInCell;
