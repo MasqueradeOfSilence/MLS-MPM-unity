@@ -20,6 +20,7 @@ public class GeometryCreator: MonoBehaviour
         AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
         air.InitParticle(new double2(0), new double2(0), new double2x2(0));
         bool isMacroscopic = sphereSize > 0.11f; // TODO not working yet, non-micro bubbles are still blue
+        // Consider rendering as particle system: https://stackoverflow.com/questions/66468212/unityis-there-a-way-to-set-the-position-of-every-particle-in-a-particle-system 
         if (mass == air.GetMass() || isMacroscopic)
         {
             spawnClearBubbleSphere = true;
