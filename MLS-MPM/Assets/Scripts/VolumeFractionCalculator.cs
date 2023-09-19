@@ -61,6 +61,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         if (distance == 0)
         {
             // Weighting particle very strongly if at same position (likely the same particle)
+            // And avoiding a divide-by-zero error
             return 100;
         }
         return 1 / distance;
