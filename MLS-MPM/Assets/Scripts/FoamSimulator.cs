@@ -329,16 +329,24 @@ public class FoamSimulator : MonoBehaviour
         }
         // .txt and .csv both work, but I like .csv for visualizing the points on a scatterplot and sorting by value.
         // Values compute to the range of 0 to 143.627564224666. 
+
+        // NOTE: I tried changing this from a foreach to a double for and it did NOT fix the issue, so I can go back
         using StreamWriter sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.csv");
-        foreach (Particle p in particles)
+        for (int i = 0; i < particles.GetLength(0); i++)
         {
-            double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
-            //Debug.Log("VOLUME FRACTION: " + volumeFraction);
-            // Bubbles at top won't necessarily have a nice big volume fraction because there are no particles above them. 
-            // This is why the bottom bubbles appear as the largest. 
-            // Also, might be easier to not have any hardcoded values for different bubble sizes, and just use a pure scaling factor based on volume fraction -- TBD. 
-            sw.WriteLine(volumeFraction);
-            p.SetBubbleWithSize(volumeFraction);
+            for (int j = 0; j < particles.GetLength(1); j++)
+            {
+                Particle p = particles[i, j];
+                double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
+                //Debug.Log("VOLUME FRACTION: " + volumeFraction);
+                // Bubbles at top won't necessarily have a nice big volume fraction because there are no particles above them. 
+                // This is why the bottom bubbles appear as the largest. 
+                // Also, might be easier to not have any hardcoded values for different bubble sizes, and just use a pure scaling factor based on volume fraction -- TBD. 
+                sw.WriteLine(volumeFraction);
+                p.SetBubbleWithSize(volumeFraction);
+                particles[i, j] = p;
+            }
+
         }
     }
 
@@ -350,7 +358,7 @@ public class FoamSimulator : MonoBehaviour
         UpdateGrid();
         GridToParticleStep();
         // Putting after first computations for now
-        if (iteration == 0)
+        if (iteration == 1)
         {
             print("RUNNING FOAM SIMULATOR");
             DetermineBubbleSizes();

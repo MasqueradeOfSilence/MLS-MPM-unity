@@ -52,6 +52,13 @@ public class GameInterface: MonoBehaviour
             if (currentParticle.GetBubble() != null)
             {
                 float radius = currentParticle.GetBubble().ComputeUnitySphereRadius();
+                double macroscopicThreshold = 0.8;
+                if (radius >= macroscopicThreshold)
+                {
+                    Material materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+                    currentParticleSphere.GetComponent<MeshRenderer>().material = materialForSphere;
+                    currentParticleSphere.GetComponent<Renderer>().material = materialForSphere;
+                }
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }
         }

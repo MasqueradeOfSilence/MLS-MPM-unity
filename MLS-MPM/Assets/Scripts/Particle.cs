@@ -87,6 +87,7 @@ public class Particle : ScriptableObject
     {
         bubble = CreateInstance<Bubble>();
         bubble.InstantiateBubble(volumeFraction);
+        // bug: I think bubble is instantiated after the unity object is spawned?
     }
 
     public void UpdateVelocityX(double velocityX)

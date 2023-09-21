@@ -16,13 +16,14 @@ public class GeometryCreator: MonoBehaviour
      */
     public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f)
     {
+        // BUG: sphereSize isn't doing anything!
         bool spawnClearBubbleSphere = false;
         AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
         air.InitParticle(new double2(0), new double2(0), new double2x2(0));
-        bool isMacroscopic = sphereSize > 0.11f; // TODO not working yet, non-micro bubbles are still blue
+        // A "fluid" particle can still be macroscopic -- rendering it with a bubble attached for now. it's not an exact correlation. 
         // Consider rendering as particle system: https://stackoverflow.com/questions/66468212/unityis-there-a-way-to-set-the-position-of-every-particle-in-a-particle-system 
         // Particle system as fluid: https://oxgamestudio.wordpress.com/2014/12/18/use-particles-to-create-flowing-liquid-in-unity/
-        if (mass == air.GetMass() || isMacroscopic)
+        if (mass == air.GetMass())
         {
             spawnClearBubbleSphere = true;
         }
