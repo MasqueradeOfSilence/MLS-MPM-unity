@@ -350,6 +350,9 @@ public class FoamSimulator : MonoBehaviour
             }
 
         }
+        // TODO this is rendering as a straight line, not correct
+        FluidSurfacer fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
+        fluidSurfacer.InitializeFluidSurface(particles);
     }
 
     public void Simulate()
