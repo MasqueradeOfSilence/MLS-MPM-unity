@@ -30,10 +30,9 @@ public class FluidSurfacer : MonoBehaviour
                 if (fluidOnly && particle.GetMass() != 3)
                 {
                     // skip; we only want fluid particles here
-                    continue; // TODO: Even when I remove this continue, it still renders nothing but a straight line.
+                    continue;
                 }
                 double2 position = particle.GetPosition();
-                //Debug.Log(position); // Not sure if casting this is losing too much accuracy
                 polygon.Add(new Vertex((float)position[0], (float)position[1]));
             }
         }
@@ -59,8 +58,8 @@ public class FluidSurfacer : MonoBehaviour
         {
             Vertex v0 = fluidSurface.Vertices.ElementAt(edge.P0);
             Vertex v1 = fluidSurface.Vertices.ElementAt(edge.P1);
-            Vector3 p0 = new Vector3((float)v0[0], 0.0f, (float)v0[1]);
-            Vector3 p1 = new Vector3((float)v1[0], 0.0f, (float)v1[1]);
+            Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
+            Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
             Gizmos.DrawLine(p0, p1);
         }
     }

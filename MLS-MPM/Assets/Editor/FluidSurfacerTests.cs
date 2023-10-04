@@ -32,4 +32,10 @@ public class FluidSurfacerTests
         // Should be quite a few more edges than particles, but not sure if this is the optimal test
         Assert.IsTrue(mesh.NumberOfEdges > numParticles * 2);
     }
+
+    [Test]
+    public void InstantiateMeshInUnityShouldCreateGameObjectsToDisplayMesh()
+    {
+        // this will include the actual game object instantation, so we will be able to see a thin layer of fluid underneath the bubbles
+    }
 }

@@ -347,8 +347,7 @@ public class FoamSimulator : MonoBehaviour
                 sw.WriteLine(volumeFraction);
                 p.SetBubbleWithSize(volumeFraction);
                 particles[i, j] = p;
-                // water part: https://unitycoder.com/blog/2013/04/12/water-particles-unity/ and https://forum.unity.com/threads/water-physics-visualisation-confusion.193801/ 
-                // just kidding. actual water part: https://straypixels.net/delaunay-triangulation-terrain/ 
+                // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
             }
 
         }
