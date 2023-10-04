@@ -27,14 +27,13 @@ public class FluidSurfacer : MonoBehaviour
             {
                 Particle particle = particles[i, j];
                 // 3 is fluid mass, need utility function for isFluid
-                float radius = particle.GetBubble().ComputeUnitySphereRadius();
-                double macroscopicThreshold = 0.8;
-                if (fluidOnly && (particle.GetMass() != 3) || radius >= macroscopicThreshold)
+                if (fluidOnly && particle.GetMass() != 3)
                 {
-                    // skip
-                    continue;
+                    // skip; we only want fluid particles here
+                    continue; // TODO: Even when I remove this continue, it still renders nothing but a straight line.
                 }
                 double2 position = particle.GetPosition();
+                //Debug.Log(position); // Not sure if casting this is losing too much accuracy
                 polygon.Add(new Vertex((float)position[0], (float)position[1]));
             }
         }

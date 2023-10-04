@@ -21,6 +21,7 @@ public class FoamSimulator : MonoBehaviour
     private const double gravity = -9.8;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
+    private FluidSurfacer fluidSurfacer;
     int iteration = 0;
 
     public enum WhereToPutFluid
@@ -36,6 +37,7 @@ public class FoamSimulator : MonoBehaviour
         InitializeGrid();
         InitializeParticles();
         gameInterface = GameObject.Find("CreatorDestroyer").AddComponent<GameInterface>();
+        fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
     }
 
     public void InitializeGrid()
@@ -350,9 +352,6 @@ public class FoamSimulator : MonoBehaviour
             }
 
         }
-        // TODO this is rendering as a straight line, not correct
-        FluidSurfacer fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
-        fluidSurfacer.InitializeFluidSurface(particles);
     }
 
     public void Simulate()
@@ -367,6 +366,10 @@ public class FoamSimulator : MonoBehaviour
         {
             print("RUNNING FOAM SIMULATOR");
             DetermineBubbleSizes();
+        }
+        if (fluidSurfacer != null)
+        {
+            fluidSurfacer.InitializeFluidSurface(particles);
         }
         iteration++;
     }
