@@ -47,6 +47,18 @@ public class FluidSurfacer : MonoBehaviour
         return mesh;
     }
 
+    public void MakeMesh(TriangleNet.TriangleNetMesh mesh)
+    {
+        // I bet we can do this in one chunk since our fluid surface is so small for our main test case
+        // esp. considering our focus on low amounts of actual water in the bath foam
+        int trianglesInChunk = 20000; // https://github.com/Chaosed0/DelaunayUnity/blob/master/Assets/DelaunayTerrain.cs
+        IEnumerator<TriangleNet.Topology.Triangle> triangleEnumerator = mesh.Triangles.GetEnumerator();
+        for (int chunkStart = 0; chunkStart < mesh.Triangles.Count; chunkStart += trianglesInChunk)
+        {
+
+        }
+    }
+
     public void OnDrawGizmos()
     {
         if (fluidSurface == null)
