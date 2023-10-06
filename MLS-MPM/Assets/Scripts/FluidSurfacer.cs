@@ -57,6 +57,11 @@ public class FluidSurfacer : MonoBehaviour
         {
 
         }
+        // Alternate loop (TBD)
+        foreach (var Triangle in mesh.Triangles)
+        {
+
+        }
     }
 
     public void OnDrawGizmos()
