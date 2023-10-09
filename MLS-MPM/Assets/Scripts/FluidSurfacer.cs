@@ -58,10 +58,17 @@ public class FluidSurfacer : MonoBehaviour
 
         }
         // Alternate loop (TBD)
-        foreach (var Triangle in mesh.Triangles)
+        foreach (var triangle in mesh.Triangles)
         {
-
+            Vector3 v0 = Get3DPoint(triangle.GetVertex(2).ID, mesh);
         }
+    }
+
+    private Vector3 Get3DPoint(int index, TriangleNet.TriangleNetMesh mesh)
+    {
+        Vertex vertex = mesh.Vertices.ElementAt(index);
+        // most likely 0 for now in 2D
+        return new Vector3(vertex.X, vertex.Y, 0);
     }
 
     public void OnDrawGizmos()
