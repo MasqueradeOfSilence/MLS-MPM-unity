@@ -56,48 +56,45 @@ public class FluidSurfacer : MonoBehaviour
         //{
 
         //}
+        List<int> triangles = new List<int>();
+        List<Vector3> vertices = new List<Vector3>();
+        List<Vector3> normals = new List<Vector3>();
+        List<Vector2> UVs = new List<Vector2>();
         // Alternate loop (TBD)
         foreach (var triangle in mesh.Triangles)
         {
             Vector3 v0 = Get3DPoint(triangle.GetVertex(2).ID, mesh);
+            Vector3 v1 = Get3DPoint(triangle.GetVertex(1).ID, mesh);
+            Vector3 v2 = Get3DPoint(triangle.GetVertex(0).ID, mesh);
+            triangles.Add(vertices.Count);
+            triangles.Add(vertices.Count + 1);
+            triangles.Add(vertices.Count + 2);
+            vertices.Add(v0);
+            vertices.Add(v1);
+            vertices.Add(v2);
+            Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
+            normals.Add(normal);
+            normals.Add(normal);
+            normals.Add(normal);
+            UVs.Add(new Vector2(0.0f, 0.0f));
+            UVs.Add(new Vector2(0.0f, 0.0f));
+            UVs.Add(new Vector2(0.0f, 0.0f));
         }
-        // Mac doesn't have Triangle.Net installed yet on Mac. TODO Fix
-        // List<int> triangles = new List<int>();
-        // List<Vector3> vertices = new List<Vector3>();
-        // List<Vector3> normals = new List<Vector3>();
-        // List<Vector2> UVs = new List<Vector2>();
-        // foreach (var triangle in mesh.Triangles)
-        // {
-        //     // TODO haven't run this yet, may be incorrect syntax
-        //     Vector3 v0 = triangle.vertices[2];
-        //     Vector3 v1 = triangle.vertices[1];
-        //     Vector3 v2 = triangle.vertices[0];
-        //     triangles.Add(vertices.Count);
-        //     triangles.Add(vertices.Count + 1);
-        //     triangles.Add(vertices.Count + 2);
-        //     vertices.Add(v0);
-        //     vertices.Add(v1);
-        //     vertices.Add(v2);
-        //     Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
-        //     normals.Add(normal);
-        //     normals.Add(normal);
-        //     normals.Add(normal);
-        //     UVs.Add(new Vector2(0.0f, 0.0f));
-        //     UVs.Add(new Vector2(0.0f, 0.0f));
-        //     UVs.Add(new Vector2(0.0f, 0.0f));
-        // }
 
-        // Mesh meshForUnity = new Mesh();
-        // meshForUnity.vertices = vertices.ToArray();
-        // meshForUnity.uv = UVs.ToArray();
-        // meshForUnity.triangles = triangles.ToArray();
-        // meshForUnity.normals = normals.ToArray();
+        Mesh meshForUnity = new Mesh();
+        meshForUnity.vertices = vertices.ToArray();
+        meshForUnity.uv = UVs.ToArray();
+        meshForUnity.triangles = triangles.ToArray();
+        meshForUnity.normals = normals.ToArray();
 
         // TODO create chunkPrefab and uncomment this
         //Transform gameObject = Instantiate<Transform>(chunkPrefab, transform.position, transform.rotation);
         //gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
         //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
         //gameObject.transform.parent = transform;
+
+        // we need to call this function at the correct time to surface the water
+
     }
 
     private Vector3 Get3DPoint(int index, TriangleNet.TriangleNetMesh mesh)
