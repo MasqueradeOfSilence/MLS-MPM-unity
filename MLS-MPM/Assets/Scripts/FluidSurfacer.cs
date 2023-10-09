@@ -49,19 +49,55 @@ public class FluidSurfacer : MonoBehaviour
 
     public void MakeMesh(TriangleNet.TriangleNetMesh mesh)
     {
-        // I bet we can do this in one chunk since our fluid surface is so small for our main test case
-        // esp. considering our focus on low amounts of actual water in the bath foam
-        int trianglesInChunk = 20000; // https://github.com/Chaosed0/DelaunayUnity/blob/master/Assets/DelaunayTerrain.cs
-        IEnumerator<TriangleNet.Topology.Triangle> triangleEnumerator = mesh.Triangles.GetEnumerator();
-        for (int chunkStart = 0; chunkStart < mesh.Triangles.Count; chunkStart += trianglesInChunk)
-        {
+        // Only use this if we need a speed-up
+        //int trianglesInChunk = 20000; // https://github.com/Chaosed0/DelaunayUnity/blob/master/Assets/DelaunayTerrain.cs
+        //IEnumerator<TriangleNet.Topology.Triangle> triangleEnumerator = mesh.Triangles.GetEnumerator();
+        //for (int chunkStart = 0; chunkStart < mesh.Triangles.Count; chunkStart += trianglesInChunk)
+        //{
 
-        }
+        //}
         // Alternate loop (TBD)
         foreach (var triangle in mesh.Triangles)
         {
             Vector3 v0 = Get3DPoint(triangle.GetVertex(2).ID, mesh);
         }
+        // Mac doesn't have Triangle.Net installed yet on Mac. TODO Fix
+        // List<int> triangles = new List<int>();
+        // List<Vector3> vertices = new List<Vector3>();
+        // List<Vector3> normals = new List<Vector3>();
+        // List<Vector2> UVs = new List<Vector2>();
+        // foreach (var triangle in mesh.Triangles)
+        // {
+        //     // TODO haven't run this yet, may be incorrect syntax
+        //     Vector3 v0 = triangle.vertices[2];
+        //     Vector3 v1 = triangle.vertices[1];
+        //     Vector3 v2 = triangle.vertices[0];
+        //     triangles.Add(vertices.Count);
+        //     triangles.Add(vertices.Count + 1);
+        //     triangles.Add(vertices.Count + 2);
+        //     vertices.Add(v0);
+        //     vertices.Add(v1);
+        //     vertices.Add(v2);
+        //     Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
+        //     normals.Add(normal);
+        //     normals.Add(normal);
+        //     normals.Add(normal);
+        //     UVs.Add(new Vector2(0.0f, 0.0f));
+        //     UVs.Add(new Vector2(0.0f, 0.0f));
+        //     UVs.Add(new Vector2(0.0f, 0.0f));
+        // }
+
+        // Mesh meshForUnity = new Mesh();
+        // meshForUnity.vertices = vertices.ToArray();
+        // meshForUnity.uv = UVs.ToArray();
+        // meshForUnity.triangles = triangles.ToArray();
+        // meshForUnity.normals = normals.ToArray();
+
+        // TODO create chunkPrefab and uncomment this
+        //Transform gameObject = Instantiate<Transform>(chunkPrefab, transform.position, transform.rotation);
+        //gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
+        //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+        //gameObject.transform.parent = transform;
     }
 
     private Vector3 Get3DPoint(int index, TriangleNet.TriangleNetMesh mesh)
