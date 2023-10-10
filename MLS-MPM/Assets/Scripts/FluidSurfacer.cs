@@ -12,15 +12,17 @@ using UnityEngine;
 public class FluidSurfacer : MonoBehaviour
 {
     private TriangleNet.TriangleNetMesh fluidSurface = null;
+    public GameObject fluidPrefab = null;
     public void InitializeFluidSurface(Particle[,] particles)
     {
         Polygon polygon = InitializePolygon(particles, true);
         fluidSurface = CreateMesh(polygon);
+        MakeMesh(fluidSurface);
     }
 
     public Polygon InitializePolygon(Particle[,] particles, bool fluidOnly = false)
     {
-        Polygon polygon = new Polygon();
+        Polygon polygon = new();
         for (int i = 0; i < particles.GetLength(0); i++)
         {
             for (int j = 0; j < particles.GetLength(1); j++)
@@ -81,19 +83,21 @@ public class FluidSurfacer : MonoBehaviour
             UVs.Add(new Vector2(0.0f, 0.0f));
         }
 
-        Mesh meshForUnity = new Mesh();
-        meshForUnity.vertices = vertices.ToArray();
-        meshForUnity.uv = UVs.ToArray();
-        meshForUnity.triangles = triangles.ToArray();
-        meshForUnity.normals = normals.ToArray();
+        Mesh meshForUnity = new()
+        {
+            vertices = vertices.ToArray(),
+            uv = UVs.ToArray(),
+            triangles = triangles.ToArray(),
+            normals = normals.ToArray()
+        };
 
-        // TODO create chunkPrefab and uncomment this
-        //Transform gameObject = Instantiate<Transform>(chunkPrefab, transform.position, transform.rotation);
-        //gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
-        //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        //gameObject.transform.parent = transform;
-
-        // we need to call this function at the correct time to surface the water
+        fluidPrefab = Resources.Load("Prefabs/FluidPrefab") as GameObject;
+        GameObject gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
+        gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
+        gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+        gameObject.transform.parent = transform;
+        fluidPrefab.transform.position = new(1, 1);
+        // something is wrong here, it's not moving...
 
     }
 
