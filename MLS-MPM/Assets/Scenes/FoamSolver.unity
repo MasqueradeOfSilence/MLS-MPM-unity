@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 7e398d47bfa30fb4eb7c3aadf2d6a281, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -589,5 +589,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: FluidSurfPlane
       objectReference: {fileID: 0}
+    - target: {fileID: 5549075984305360096, guid: 761a59de5077d0a41a328e4e1a5bad9f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3c02bc1a03ab75f48b414bd38c9f2e90, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 761a59de5077d0a41a328e4e1a5bad9f, type: 3}

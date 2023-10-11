@@ -92,11 +92,13 @@ public class FluidSurfacer : MonoBehaviour
         };
 
         fluidPrefab = Resources.Load("Prefabs/FluidPrefab") as GameObject;
-        GameObject gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
+        // maybe the below doesn't need to be run every time?
+        // I bet the transform.position is what should be changed
+        Transform gameObject = Instantiate(fluidPrefab.transform, transform.position, transform.rotation);
         gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
         gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
         gameObject.transform.parent = transform;
-        fluidPrefab.transform.position = new(1, 1);
+        fluidPrefab.transform.position = new(1, -1);
         // something is wrong here, it's not moving...
 
     }
