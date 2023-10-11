@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,16 @@ using UnityEngine;
 public class FluidSurfacer : MonoBehaviour
 {
     private TriangleNet.TriangleNetMesh fluidSurface = null;
-    public GameObject fluidPrefab = null;
+    public Transform fluidPrefab;
+    private GameObject plane;
+    private bool planeInstantiated = false;
+
+    void Start()
+    {
+        fluidPrefab = Resources.Load("Prefabs/FluidPrefab", typeof(Transform)) as Transform;
+        plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+    }
+
     public void InitializeFluidSurface(Particle[,] particles)
     {
         Polygon polygon = InitializePolygon(particles, true);
@@ -58,10 +68,10 @@ public class FluidSurfacer : MonoBehaviour
         //{
 
         //}
-        List<int> triangles = new List<int>();
-        List<Vector3> vertices = new List<Vector3>();
-        List<Vector3> normals = new List<Vector3>();
-        List<Vector2> UVs = new List<Vector2>();
+        List<int> triangles = new();
+        List<Vector3> vertices = new();
+        List<Vector3> normals = new();
+        List<Vector2> UVs = new();
         // Alternate loop (TBD)
         foreach (var triangle in mesh.Triangles)
         {
@@ -91,14 +101,26 @@ public class FluidSurfacer : MonoBehaviour
             normals = normals.ToArray()
         };
 
-        fluidPrefab = Resources.Load("Prefabs/FluidPrefab") as GameObject;
-        // maybe the below doesn't need to be run every time?
-        // I bet the transform.position is what should be changed
-        Transform gameObject = Instantiate(fluidPrefab.transform, transform.position, transform.rotation);
+        // it isn't instantiating
+        Transform gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
         gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
         gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
         gameObject.transform.parent = transform;
-        fluidPrefab.transform.position = new(1, -1);
+
+        plane.GetComponent<MeshFilter>().mesh = meshForUnity;
+        plane.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+        plane.transform.parent = transform;
+        if (!planeInstantiated)
+        {
+            Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+            plane.GetComponent<MeshRenderer>().material = planeMaterial;
+            plane.GetComponent<Renderer>().material = planeMaterial;
+            // not sure about instantiating every time. it's in the wrong location also, and despite the material it's invisible
+            // once this works we may be able to delete the prefab
+            Instantiate(plane, transform.position, transform.rotation);
+            planeInstantiated = true;
+        }
+        //gameObject.transform.position = new(0, 10, 0);
         // something is wrong here, it's not moving...
 
     }
