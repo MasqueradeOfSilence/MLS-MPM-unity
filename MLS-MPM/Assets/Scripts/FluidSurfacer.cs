@@ -26,7 +26,7 @@ public class FluidSurfacer : MonoBehaviour
         plane.GetComponent<Renderer>().material = planeMaterial;
         plane.AddComponent<MeshFilter>();
         plane.AddComponent<MeshCollider>();
-        plane.transform.position = new Vector3(0, 0, 0); // it is not getting created for some reason
+        plane.transform.position = new Vector3(0, 0, 1); // it is now created, but is stuck here
         //plane = Instantiate(plane, transform.position, transform.rotation); // it doesn't seem to like this but it won't show up without it
     }
 
