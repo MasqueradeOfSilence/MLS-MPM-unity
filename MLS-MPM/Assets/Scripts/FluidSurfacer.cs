@@ -21,6 +21,13 @@ public class FluidSurfacer : MonoBehaviour
     {
         fluidPrefab = Resources.Load("Prefabs/FluidPrefab", typeof(Transform)) as Transform;
         plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+        plane.GetComponent<MeshRenderer>().material = planeMaterial;
+        plane.GetComponent<Renderer>().material = planeMaterial;
+        plane.AddComponent<MeshFilter>();
+        plane.AddComponent<MeshCollider>();
+        plane.transform.position = new Vector3(0, 0, 0); // it is not getting created for some reason
+        //plane = Instantiate(plane, transform.position, transform.rotation); // it doesn't seem to like this but it won't show up without it
     }
 
     public void InitializeFluidSurface(Particle[,] particles)
@@ -102,24 +109,26 @@ public class FluidSurfacer : MonoBehaviour
         };
 
         // it isn't instantiating
-        Transform gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
-        gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
-        gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        gameObject.transform.parent = transform;
+        //Transform gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
+        //gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
+        //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+        //gameObject.transform.parent = transform;
 
         plane.GetComponent<MeshFilter>().mesh = meshForUnity;
         plane.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
         plane.transform.parent = transform;
-        if (!planeInstantiated)
-        {
-            Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
-            plane.GetComponent<MeshRenderer>().material = planeMaterial;
-            plane.GetComponent<Renderer>().material = planeMaterial;
-            // not sure about instantiating every time. it's in the wrong location also, and despite the material it's invisible
-            // once this works we may be able to delete the prefab
-            Instantiate(plane, transform.position, transform.rotation);
-            planeInstantiated = true;
-        }
+        plane.transform.position = transform.position;
+        plane.transform.rotation = transform.rotation;
+        //if (!planeInstantiated)
+        //{
+        //    Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+        //    plane.GetComponent<MeshRenderer>().material = planeMaterial;
+        //    plane.GetComponent<Renderer>().material = planeMaterial;
+        //    // not sure about instantiating every time. it's in the wrong location also, and despite the material it's invisible
+        //    // once this works we may be able to delete the prefab
+        //    //Instantiate(plane, transform.position, transform.rotation);
+        //    planeInstantiated = true;
+        //}
         //gameObject.transform.position = new(0, 10, 0);
         // something is wrong here, it's not moving...
 
