@@ -119,6 +119,9 @@ public class FluidSurfacer : MonoBehaviour
         plane.transform.parent = transform;
         plane.transform.position = transform.position;
         plane.transform.rotation = transform.rotation;
+        //Destroy(GameObject.Find(plane.name + "(Clone)"));
+        //Destroy(GameObject.Find(plane.name)); // it gets a ton of clones appended
+        //plane = Instantiate(plane, transform.position, transform.rotation);
         //if (!planeInstantiated)
         //{
         //    Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
