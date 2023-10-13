@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TriangleNet;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
 using Unity.Mathematics;
@@ -16,17 +17,19 @@ public class FluidSurfacer : MonoBehaviour
     public Transform fluidPrefab;
     private GameObject plane;
     private bool planeInstantiated = false;
+    Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
 
     void Start()
     {
         fluidPrefab = Resources.Load("Prefabs/FluidPrefab", typeof(Transform)) as Transform;
         plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+        plane.name = "WaterPlane";
+        planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
         plane.GetComponent<MeshRenderer>().material = planeMaterial;
         plane.GetComponent<Renderer>().material = planeMaterial;
-        plane.AddComponent<MeshFilter>();
-        plane.AddComponent<MeshCollider>();
-        plane.transform.position = new Vector3(0, 0, 1); // it is now created, but is stuck here
+        //plane.AddComponent<MeshFilter>();
+        //plane.AddComponent<MeshCollider>();
+        //plane.transform.position = new Vector3(0, 0, 1); // it is now created, but is stuck here
         //plane = Instantiate(plane, transform.position, transform.rotation); // it doesn't seem to like this but it won't show up without it
     }
 
@@ -114,11 +117,23 @@ public class FluidSurfacer : MonoBehaviour
         //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
         //gameObject.transform.parent = transform;
 
+        Debug.Log("Updating plane");
         plane.GetComponent<MeshFilter>().mesh = meshForUnity;
         plane.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        plane.transform.parent = transform;
-        plane.transform.position = transform.position;
-        plane.transform.rotation = transform.rotation;
+        // possibly already assigned
+        plane.GetComponent<MeshRenderer>().material = planeMaterial;
+        plane.GetComponent<Renderer>().material = planeMaterial;
+        // I wonder if not setting the transform will do it. I'm not sure what we would set it to, though. default transform does not work
+
+        //Mesh mesh2 = mesh.GenerateUnityMesh();
+        //plane.GetComponent<MeshFilter>().mesh = mesh2;
+        //plane.GetComponent<MeshCollider>().sharedMesh = mesh2;
+
+        //plane.transform.parent = transform;
+        //Debug.Log(plane.transform.position); // always 0, 0, 0, do not use
+
+        //plane.transform.position = transform.position;
+        //plane.transform.rotation = transform.rotation;
         //Destroy(GameObject.Find(plane.name + "(Clone)"));
         //Destroy(GameObject.Find(plane.name)); // it gets a ton of clones appended
         //plane = Instantiate(plane, transform.position, transform.rotation);
