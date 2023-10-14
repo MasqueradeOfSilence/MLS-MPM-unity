@@ -7,7 +7,6 @@ using TriangleNet.Geometry;
 using TriangleNet.Meshing;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 /**
  * A class for surfacing fluid particles by transforming them into a mesh, because Unity doesn't have built-in water particle surfacing for some weird reason.
  */
@@ -25,10 +24,6 @@ public class FluidSurfacer : MonoBehaviour
         plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.name = "WaterPlane";
         planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
-        // I dislike doing this greatly. It needs to be matching
-        plane.transform.position = new Vector3(plane.transform.position.x, 3, plane.transform.position.z);
-        // for some reason it instantiates the plane backwards without this
-        plane.transform.rotation = Quaternion.Euler(180, 0, 0);
         plane.GetComponent<MeshRenderer>().material = planeMaterial;
         plane.GetComponent<Renderer>().material = planeMaterial;
     }
@@ -65,19 +60,12 @@ public class FluidSurfacer : MonoBehaviour
     {
         // Note: must verify that this bool should actually be true in our case, if not, don't need options
         ConstraintOptions options = new() { ConformingDelaunay = true };
-        TriangleNet.TriangleNetMesh mesh = (TriangleNetMesh)polygon.Triangulate(options);
+        TriangleNetMesh mesh = (TriangleNetMesh)polygon.Triangulate(options);
         return mesh;
     }
 
     public void MakeMesh(TriangleNetMesh mesh)
     {
-        // Only use this if we need a speed-up
-        //int trianglesInChunk = 20000; // https://github.com/Chaosed0/DelaunayUnity/blob/master/Assets/DelaunayTerrain.cs
-        //IEnumerator<TriangleNet.Topology.Triangle> triangleEnumerator = mesh.Triangles.GetEnumerator();
-        //for (int chunkStart = 0; chunkStart < mesh.Triangles.Count; chunkStart += trianglesInChunk)
-        //{
-
-        //}
         List<int> triangles = new();
         List<Vector3> vertices = new();
         List<Vector3> normals = new();
@@ -85,9 +73,9 @@ public class FluidSurfacer : MonoBehaviour
         // Alternate loop (TBD)
         foreach (var triangle in mesh.Triangles)
         {
-            Vector3 v0 = Get3DPoint(triangle.GetVertex(2).ID, mesh);
+            Vector3 v0 = Get3DPoint(triangle.GetVertex(0).ID, mesh);
             Vector3 v1 = Get3DPoint(triangle.GetVertex(1).ID, mesh);
-            Vector3 v2 = Get3DPoint(triangle.GetVertex(0).ID, mesh);
+            Vector3 v2 = Get3DPoint(triangle.GetVertex(2).ID, mesh);
             triangles.Add(vertices.Count);
             triangles.Add(vertices.Count + 1);
             triangles.Add(vertices.Count + 2);
