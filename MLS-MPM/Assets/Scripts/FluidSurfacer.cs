@@ -7,17 +7,17 @@ using TriangleNet.Geometry;
 using TriangleNet.Meshing;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 /**
  * A class for surfacing fluid particles by transforming them into a mesh, because Unity doesn't have built-in water particle surfacing for some weird reason.
  */
 
 public class FluidSurfacer : MonoBehaviour
 {
-    private TriangleNet.TriangleNetMesh fluidSurface = null;
+    private TriangleNetMesh fluidSurface = null;
     public Transform fluidPrefab;
     private GameObject plane;
-    private bool planeInstantiated = false;
-    Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+    private Material planeMaterial;
 
     void Start()
     {
@@ -25,12 +25,12 @@ public class FluidSurfacer : MonoBehaviour
         plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.name = "WaterPlane";
         planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+        // I dislike doing this greatly. It needs to be matching
+        plane.transform.position = new Vector3(plane.transform.position.x, 3, plane.transform.position.z);
+        // for some reason it instantiates the plane backwards without this
+        plane.transform.rotation = Quaternion.Euler(180, 0, 0);
         plane.GetComponent<MeshRenderer>().material = planeMaterial;
         plane.GetComponent<Renderer>().material = planeMaterial;
-        //plane.AddComponent<MeshFilter>();
-        //plane.AddComponent<MeshCollider>();
-        //plane.transform.position = new Vector3(0, 0, 1); // it is now created, but is stuck here
-        //plane = Instantiate(plane, transform.position, transform.rotation); // it doesn't seem to like this but it won't show up without it
     }
 
     public void InitializeFluidSurface(Particle[,] particles)
@@ -61,15 +61,15 @@ public class FluidSurfacer : MonoBehaviour
         return polygon;
     }
 
-    public TriangleNet.TriangleNetMesh CreateMesh(Polygon polygon)
+    public TriangleNetMesh CreateMesh(Polygon polygon)
     {
         // Note: must verify that this bool should actually be true in our case, if not, don't need options
         ConstraintOptions options = new() { ConformingDelaunay = true };
-        TriangleNet.TriangleNetMesh mesh = (TriangleNet.TriangleNetMesh)polygon.Triangulate(options);
+        TriangleNet.TriangleNetMesh mesh = (TriangleNetMesh)polygon.Triangulate(options);
         return mesh;
     }
 
-    public void MakeMesh(TriangleNet.TriangleNetMesh mesh)
+    public void MakeMesh(TriangleNetMesh mesh)
     {
         // Only use this if we need a speed-up
         //int trianglesInChunk = 20000; // https://github.com/Chaosed0/DelaunayUnity/blob/master/Assets/DelaunayTerrain.cs
@@ -111,48 +111,11 @@ public class FluidSurfacer : MonoBehaviour
             normals = normals.ToArray()
         };
 
-        // it isn't instantiating
-        //Transform gameObject = Instantiate(fluidPrefab, transform.position, transform.rotation);
-        //gameObject.GetComponent<MeshFilter>().mesh = meshForUnity;
-        //gameObject.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        //gameObject.transform.parent = transform;
-
-        Debug.Log("Updating plane");
         plane.GetComponent<MeshFilter>().mesh = meshForUnity;
         plane.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        // possibly already assigned
-        plane.GetComponent<MeshRenderer>().material = planeMaterial;
-        plane.GetComponent<Renderer>().material = planeMaterial;
-        // I wonder if not setting the transform will do it. I'm not sure what we would set it to, though. default transform does not work
-
-        //Mesh mesh2 = mesh.GenerateUnityMesh();
-        //plane.GetComponent<MeshFilter>().mesh = mesh2;
-        //plane.GetComponent<MeshCollider>().sharedMesh = mesh2;
-
-        //plane.transform.parent = transform;
-        //Debug.Log(plane.transform.position); // always 0, 0, 0, do not use
-
-        //plane.transform.position = transform.position;
-        //plane.transform.rotation = transform.rotation;
-        //Destroy(GameObject.Find(plane.name + "(Clone)"));
-        //Destroy(GameObject.Find(plane.name)); // it gets a ton of clones appended
-        //plane = Instantiate(plane, transform.position, transform.rotation);
-        //if (!planeInstantiated)
-        //{
-        //    Material planeMaterial = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
-        //    plane.GetComponent<MeshRenderer>().material = planeMaterial;
-        //    plane.GetComponent<Renderer>().material = planeMaterial;
-        //    // not sure about instantiating every time. it's in the wrong location also, and despite the material it's invisible
-        //    // once this works we may be able to delete the prefab
-        //    //Instantiate(plane, transform.position, transform.rotation);
-        //    planeInstantiated = true;
-        //}
-        //gameObject.transform.position = new(0, 10, 0);
-        // something is wrong here, it's not moving...
-
     }
 
-    private Vector3 Get3DPoint(int index, TriangleNet.TriangleNetMesh mesh)
+    private Vector3 Get3DPoint(int index, TriangleNetMesh mesh)
     {
         Vertex vertex = mesh.Vertices.ElementAt(index);
         // most likely 0 for now in 2D
