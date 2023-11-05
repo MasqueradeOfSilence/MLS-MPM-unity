@@ -96,7 +96,6 @@ public class FluidSurfacer : MonoBehaviour
         List<Vector3> vertices = new();
         List<Vector3> normals = new();
         List<Vector2> UVs = new();
-        // Alternate loop (TBD)
         foreach (var triangle in mesh.Triangles)
         {
             Vector3 v0 = Get3DPoint(triangle.GetVertex(0).ID, mesh);
