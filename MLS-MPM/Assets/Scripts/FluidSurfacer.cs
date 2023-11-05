@@ -14,6 +14,7 @@ using UnityEngine;
 public class FluidSurfacer : MonoBehaviour
 {
     private TriangleNetMesh fluidSurface = null;
+    private TriangleNetMesh foamSurface = null;
     public Transform fluidPrefab;
     private GameObject plane;
     private Material planeMaterial;
@@ -28,11 +29,36 @@ public class FluidSurfacer : MonoBehaviour
         plane.GetComponent<Renderer>().material = planeMaterial;
     }
 
+    private void EnableGizmoToViewFoamDelaunay(Particle[,] particles)
+    {
+        Polygon polygon = new();
+        for (int i = 0; i < particles.GetLength(0); i++)
+        {
+            for (int j = 0; j < particles.GetLength(1); j++)
+            {
+                Particle particle = particles[i, j];
+                // if particle is NOT a fluid, TODO write isFluid
+                if (particle.GetMass() != 3)
+                {
+                    double2 position = particle.GetPosition();
+                    polygon.Add(new Vertex((float)position[0], (float)position[1]));
+                }
+            }
+        }
+        foamSurface = CreateMesh(polygon);
+    }
+
     public void InitializeFluidSurface(Particle[,] particles)
     {
         Polygon polygon = InitializePolygon(particles, true);
         fluidSurface = CreateMesh(polygon);
         MakeMesh(fluidSurface);
+        // Can flip bool for visualization. It will appear in the viewport, not in the gameplay or rendered view.
+        bool viewDelaunayTriangulationForFoamSurface = true;
+        if (viewDelaunayTriangulationForFoamSurface)
+        {
+            EnableGizmoToViewFoamDelaunay(particles);
+        }
     }
 
     public Polygon InitializePolygon(Particle[,] particles, bool fluidOnly = false)
@@ -60,7 +86,7 @@ public class FluidSurfacer : MonoBehaviour
     {
         // Note: must verify that this bool should actually be true in our case, if not, don't need options
         ConstraintOptions options = new() { ConformingDelaunay = true };
-        TriangleNetMesh mesh = (TriangleNetMesh)polygon.Triangulate(options);
+        TriangleNetMesh mesh = (TriangleNetMesh) polygon.Triangulate(options);
         return mesh;
     }
 
@@ -112,6 +138,18 @@ public class FluidSurfacer : MonoBehaviour
 
     public void OnDrawGizmos()
     {
+        if (foamSurface != null)
+        {
+            Gizmos.color = Color.blue;
+            foreach (Edge edge in foamSurface.Edges)
+            {
+                Vertex v0 = foamSurface.Vertices.ElementAt(edge.P0);
+                Vertex v1 = foamSurface.Vertices.ElementAt(edge.P1);
+                Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
+                Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
+                Gizmos.DrawLine(p0, p1);
+            }
+        }
         if (fluidSurface == null)
         {
             return;
