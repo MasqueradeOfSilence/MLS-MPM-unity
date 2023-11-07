@@ -370,6 +370,8 @@ public class FoamSimulator : MonoBehaviour
         {
             fluidSurfacer.InitializeFluidSurface(particles);
         }
+        // Next: Voronoi diagram to update bubble shapes
+        // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master 
         iteration++;
     }
 
