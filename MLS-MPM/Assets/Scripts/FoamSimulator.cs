@@ -488,7 +488,6 @@ public class FoamSimulator : MonoBehaviour
                 double2x2 initialC = new double2x2(0, 0, 0, 0);
                 if (shouldCreateAirParticle)
                 {
-                    // verify that this is entered
                     AirParticle airParticle = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
                     airParticle.InitParticle(temporaryParticlePositions[i, j], initialVelocity, initialC);
                     particles[i, j] = airParticle;

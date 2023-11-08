@@ -48,13 +48,12 @@ public class FluidSurfacer : MonoBehaviour
         foamSurface = CreateMesh(polygon);
     }
 
-    public void InitializeFluidSurface(Particle[,] particles)
+    public void InitializeFluidSurface(Particle[,] particles, bool fluidOnly = true, bool viewDelaunayTriangulationForFoamSurface = true)
     {
-        Polygon polygon = InitializePolygon(particles, true);
+        Polygon polygon = InitializePolygon(particles, fluidOnly);
         fluidSurface = CreateMesh(polygon);
         MakeMesh(fluidSurface);
-        // Can flip bool for visualization. It will appear in the viewport, not in the gameplay or rendered view.
-        bool viewDelaunayTriangulationForFoamSurface = true;
+        // Can flip this bool for visualization. It will appear in the viewport, not in the gameplay or rendered view.
         if (viewDelaunayTriangulationForFoamSurface)
         {
             EnableGizmoToViewFoamDelaunay(particles);
@@ -86,11 +85,12 @@ public class FluidSurfacer : MonoBehaviour
     {
         // Note: must verify that this bool should actually be true in our case, if not, don't need options
         ConstraintOptions options = new() { ConformingDelaunay = true };
+        Debug.Log(polygon);
         TriangleNetMesh mesh = (TriangleNetMesh) polygon.Triangulate(options);
         return mesh;
     }
 
-    public void MakeMesh(TriangleNetMesh mesh)
+    private void MakeMesh(TriangleNetMesh mesh)
     {
         List<int> triangles = new();
         List<Vector3> vertices = new();
@@ -162,5 +162,15 @@ public class FluidSurfacer : MonoBehaviour
             Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
             Gizmos.DrawLine(p0, p1);
         }
+    }
+
+    public void SetPlane(GameObject plane)
+    {
+        this.plane = plane;
+    }
+
+    public TriangleNetMesh GetFluidSurface()
+    {
+        return fluidSurface;
     }
 }
