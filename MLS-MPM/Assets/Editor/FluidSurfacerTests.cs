@@ -2,7 +2,6 @@ using NUnit.Framework;
 using TriangleNet.Geometry;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 [TestFixture]
 public class FluidSurfacerTests
