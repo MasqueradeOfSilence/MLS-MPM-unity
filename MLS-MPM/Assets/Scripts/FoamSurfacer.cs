@@ -1,3 +1,4 @@
+using PixelsForGlory.VoronoiDiagram;
 using UnityEngine;
 
 /**
@@ -25,9 +26,9 @@ public class FoamSurfacer : MonoBehaviour
     }
 
     // For preliminary testing purposes
-    public void CreateUnweightedVoronoiDiagram()
+    public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles)
     {
-
+        return null;
     }
 
     public void CreatePowerDiagram()
