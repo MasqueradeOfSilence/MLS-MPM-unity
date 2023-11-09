@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TriangleNet;
@@ -71,7 +69,7 @@ public class FluidSurfacer : MonoBehaviour
                 // 3 is fluid mass, need utility function for isFluid
                 if (fluidOnly && particle.GetMass() != 3)
                 {
-                    // skip; we only want fluid particles here
+                    // skip; we only want fluid particles here -- This polygon will represent a 2D fluid surface
                     continue;
                 }
                 double2 position = particle.GetPosition();
