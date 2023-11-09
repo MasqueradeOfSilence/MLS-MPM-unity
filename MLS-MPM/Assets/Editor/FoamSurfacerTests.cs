@@ -19,6 +19,7 @@ public class FoamSurfacerTests
 
         VoronoiDiagram<Color> unweightedVoronoiDiagram = foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
         Assert.IsNotNull(unweightedVoronoiDiagram);
+        // TODO Also assert that it has vertices
     }
 
     [Test]

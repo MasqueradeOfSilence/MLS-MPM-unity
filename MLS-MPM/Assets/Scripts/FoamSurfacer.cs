@@ -28,7 +28,8 @@ public class FoamSurfacer : MonoBehaviour
     // For preliminary testing purposes
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles)
     {
-        return null;
+        var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, particles.GetLength(0), particles.GetLength(1)));
+        return voronoiDiagram;
     }
 
     public void CreatePowerDiagram()
