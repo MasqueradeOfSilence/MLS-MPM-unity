@@ -1,4 +1,5 @@
 using PixelsForGlory.VoronoiDiagram;
+using System.Collections.Generic;
 using UnityEngine;
 
 /**
@@ -29,6 +30,15 @@ public class FoamSurfacer : MonoBehaviour
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles)
     {
         var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, particles.GetLength(0), particles.GetLength(1)));
+        var points = new List<VoronoiDiagramSite<Color>>();
+        foreach (Particle p in particles)
+        {
+            // add to points array
+        }
+        // README says the call is AddPoints, but it is AddSites.
+        voronoiDiagram.AddSites(points);
+        int lloydRelaxationParameter = 2;
+        voronoiDiagram.GenerateSites(lloydRelaxationParameter);
         return voronoiDiagram;
     }
 
