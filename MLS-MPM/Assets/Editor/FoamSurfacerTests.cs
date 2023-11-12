@@ -16,8 +16,8 @@ public class FoamSurfacerTests
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         Particle[,] particles = foamSimulator.GetParticles();
-
-        VoronoiDiagram<Color> unweightedVoronoiDiagram = foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
+        // grid resolution of 64, TODO do not hardcode me
+        VoronoiDiagram<Color> unweightedVoronoiDiagram = foamSurfacer.CreateUnweightedVoronoiDiagram(particles, 64);
         Assert.IsNotNull(unweightedVoronoiDiagram);
         // TODO Also assert that it has vertices
     }
