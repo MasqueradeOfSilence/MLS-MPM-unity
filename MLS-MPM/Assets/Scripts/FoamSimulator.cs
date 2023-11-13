@@ -22,6 +22,7 @@ public class FoamSimulator : MonoBehaviour
     private int neighborDimension = 3;
     private GameInterface gameInterface;
     private FluidSurfacer fluidSurfacer;
+    private FoamSurfacer foamSurfacer;
     int iteration = 0;
 
     public enum WhereToPutFluid
@@ -38,6 +39,7 @@ public class FoamSimulator : MonoBehaviour
         InitializeParticles();
         gameInterface = GameObject.Find("CreatorDestroyer").AddComponent<GameInterface>();
         fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
+        foamSurfacer = GameObject.Find("ExampleGeo").AddComponent<FoamSurfacer>();
     }
 
     public void InitializeGrid()
@@ -371,7 +373,11 @@ public class FoamSimulator : MonoBehaviour
             fluidSurfacer.InitializeFluidSurface(particles);
         }
         // Next: Voronoi diagram to update bubble shapes
-        // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master 
+        // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master
+        if (foamSurfacer != null)
+        {
+            foamSurfacer.CreateUnweightedVoronoiDiagram(particles, gridResolution);
+        }
         iteration++;
     }
 
