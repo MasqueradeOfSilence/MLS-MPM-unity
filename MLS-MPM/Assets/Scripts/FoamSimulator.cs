@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -334,8 +335,21 @@ public class FoamSimulator : MonoBehaviour
         // .txt and .csv both work, but I like .csv for visualizing the points on a scatterplot and sorting by value.
         // Values compute to the range of 0 to 143.627564224666. 
 
-        // NOTE: I tried changing this from a foreach to a double for and it did NOT fix the issue, so I can go back
-        using StreamWriter sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.csv");
+        StreamWriter sw;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions.csv");
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            // hardcoding :/ the whitespace actually works though
+            sw = File.CreateText(@"/Users/Alex/Documents/Alex's Crap/Escuela/MS/Winter_2023/MLS-MPM-unity/MLS-MPM/Assets/Resources/volumeFractions.csv");
+        }
+        else
+        {
+            // Linux case not handled right now, yeeting it to the desktop
+            sw = File.CreateText(@"~/Desktop/volumeFractions.csv");
+        }
         for (int i = 0; i < particles.GetLength(0); i++)
         {
             for (int j = 0; j < particles.GetLength(1); j++)
