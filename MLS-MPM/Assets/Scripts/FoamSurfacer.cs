@@ -40,7 +40,7 @@ public class FoamSurfacer : MonoBehaviour
     // For preliminary testing purposes
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles, int dimension)
     {
-        // TODO position may be off, or at least it isn't calculating the cells on the edge properly
+        // TODO top of the rectangle needs to be the top of the sim, not just hardcoded to 0f!
         var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, dimension, dimension));
         var points = new List<VoronoiDiagramSite<Color>>();
 
@@ -49,7 +49,7 @@ public class FoamSurfacer : MonoBehaviour
             // add to points array
             if (p.GetMass() == 3)
             {
-                // skip if fluid, need to clean this up so we stop hardcoding that magic number 3
+                // TODO skip if fluid, need to clean this up so we stop hardcoding that magic number 3
                 continue;
             }
             // It does not like decimals for some reason (will cause NaN issues in determinant calculation), so cast to integers.
@@ -62,7 +62,7 @@ public class FoamSurfacer : MonoBehaviour
         }
         // README says the call is AddPoints, but it is AddSites.
         bool success = voronoiDiagram.AddSites(points);
-        // TODO adjust me
+        // This cannot be zero.
         int lloydRelaxationParameter = 1;
         voronoiDiagram.GenerateSites(lloydRelaxationParameter);
         this.voronoiDiagram = voronoiDiagram;
