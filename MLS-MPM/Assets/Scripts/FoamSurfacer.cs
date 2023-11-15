@@ -41,7 +41,25 @@ public class FoamSurfacer : MonoBehaviour
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles, int dimension)
     {
         // TODO top of the rectangle needs to be the top of the sim, not just hardcoded to 0f!
-        var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, dimension, dimension));
+
+        double lowestX = int.MaxValue;
+        double highestY = int.MinValue;
+        foreach (Particle p in particles)
+        {
+            double x = p.GetPosition().x;
+            double y = p.GetPosition().y;
+            if (x < lowestX)
+            {
+                lowestX = x;
+            }
+            if (y > highestY)
+            {
+                highestY = y;
+            }
+        }
+        Debug.Log("lowest x: " + lowestX);
+        Debug.Log("highest y: " + highestY);
+        var voronoiDiagram = new VoronoiDiagram<Color>(new Rect((float)lowestX, (float)highestY, particles.GetLength(0), particles.GetLength(1))); // not working, need correct bounds computation
         var points = new List<VoronoiDiagramSite<Color>>();
 
         foreach (Particle p in particles)
@@ -57,6 +75,7 @@ public class FoamSurfacer : MonoBehaviour
 
             if (!points.Any(item => item.Coordinate == position))
             {
+                // Randomizing the color right now, but not really needed, since we are visualizing with gizmos
                 points.Add(new VoronoiDiagramSite<Color>(position, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f))));
             }
         }
