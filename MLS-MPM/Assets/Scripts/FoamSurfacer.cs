@@ -62,6 +62,13 @@ public class FoamSurfacer : MonoBehaviour
          * error is coming from https://github.com/PixelsForGlory/VoronoiDiagram/blob/e9deee94641bb2f07c4988a7923386a589bfeeb1/Runtime/VoronoiDiagram.cs#L77 
          * 
          * but I am not sure where that is called from? gross.
+         * 
+         * it seems that it really wants to use the original box area for some reason.
+         * 
+         * possible courses of action:
+         * - generate with max bounding box such that nothing is OOB, then cull the OOB stuff in the Gizmo render. we will also need to cull it in our intersection computation. 
+         * - look closer into the sites computed as OOB and see how close they are to the actual bounds. maybe they are close enough to where we can just expand it a bit. 
+         * --> it's also possible that they are getting generated all the way to the top of the original box
          */
 
         double lowestX = double.MaxValue;
