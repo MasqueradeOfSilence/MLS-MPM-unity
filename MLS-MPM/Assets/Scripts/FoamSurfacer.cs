@@ -13,6 +13,7 @@ using UnityEngine.UIElements;
 public class FoamSurfacer : MonoBehaviour
 {
     private VoronoiDiagram<Color> voronoiDiagram;
+    Rect rect;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +28,7 @@ public class FoamSurfacer : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in this.voronoiDiagram.GeneratedSites)
+        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in voronoiDiagram.GeneratedSites)
         {
             foreach(VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
             {
@@ -37,6 +38,11 @@ public class FoamSurfacer : MonoBehaviour
                 Gizmos.DrawLine(p0, p1);
             }
         }
+        if (rect != null)
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
+        }
     }
 
     // For preliminary testing purposes
@@ -44,6 +50,19 @@ public class FoamSurfacer : MonoBehaviour
     {
         // TODO top of the rectangle needs to be the top of the sim, not just hardcoded to 0f!
         // and it seems to dislike that due to the relaxation parameters...I now am not sure if I can use this library
+        // not using dim currently. tbd
+
+        /**
+         * NOTE:
+         * so, the bounds might actually be fine based on what we have. I drew the Rect to the screen as a Gizmo and it didn't seem off. 
+         * it also moved with the sim at each timestep as expected. 
+         * 
+         * so now I'm wondering if the cells are getting generated too high up or something. lloyd relaxation should not be causing this issue, but can't rule it out yet.
+         * 
+         * error is coming from https://github.com/PixelsForGlory/VoronoiDiagram/blob/e9deee94641bb2f07c4988a7923386a589bfeeb1/Runtime/VoronoiDiagram.cs#L77 
+         * 
+         * but I am not sure where that is called from? gross.
+         */
 
         double lowestX = double.MaxValue;
         double highestX = double.MinValue;
@@ -76,7 +95,8 @@ public class FoamSurfacer : MonoBehaviour
         Debug.Log("Y len: " + (int)Math.Round(height));
         Debug.Log("X len: " + (int)Math.Round(width));
 
-        var voronoiDiagram = new VoronoiDiagram<Color>(new Rect((float)lowestX - 1f, (float)lowestY - 1f, width + 1f, height + 1f)); // not working, need correct bounds computation
+        rect = new Rect((float)lowestX, (float)lowestY, width, height);
+        var voronoiDiagram = new VoronoiDiagram<Color>(rect); // not working yet
         var points = new List<VoronoiDiagramSite<Color>>();
 
         foreach (Particle p in particles)
@@ -98,7 +118,7 @@ public class FoamSurfacer : MonoBehaviour
         }
         // README says the call is AddPoints, but it is AddSites.
         bool success = voronoiDiagram.AddSites(points);
-        // This cannot be zero.
+        // This cannot be zero it seems.
         int lloydRelaxationParameter = 1;
         voronoiDiagram.GenerateSites(lloydRelaxationParameter);
         this.voronoiDiagram = voronoiDiagram;
