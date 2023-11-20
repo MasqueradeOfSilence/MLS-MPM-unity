@@ -54,21 +54,25 @@ public class FoamSurfacer : MonoBehaviour
 
         /**
          * NOTE:
-         * so, the bounds might actually be fine based on what we have. I drew the Rect to the screen as a Gizmo and it didn't seem off. 
-         * it also moved with the sim at each timestep as expected. 
          * 
-         * so now I'm wondering if the cells are getting generated too high up or something. lloyd relaxation should not be causing this issue, but can't rule it out yet.
+         * (n/a)
          * 
-         * error is coming from https://github.com/PixelsForGlory/VoronoiDiagram/blob/e9deee94641bb2f07c4988a7923386a589bfeeb1/Runtime/VoronoiDiagram.cs#L77 
+         * HERE MIGHT BE THE PROBLEM:
+         * public void GenerateClippedEndPoints(Rect bounds)
+         * permalink: https://github.com/PixelsForGlory/VoronoiDiagram/blob/e9deee94641bb2f07c4988a7923386a589bfeeb1/Runtime/VoronoiDiagramEdge.cs#L107 
          * 
-         * but I am not sure where that is called from? gross.
          * 
-         * it seems that it really wants to use the original box area for some reason.
+         * This function inside of PixelsForGlory sets a ZERO VECTOR as the LOWER BOUND,
+         *  and overwrites values as Float.MinValue if it's less than that. This could be a problem. 
+         *  
+         * This function also sets the Rect bounds as the UPPER BOUND, but then it would rewrite as 
+         *  Float.MinValue anyway for some reason. 
+         *  
+         * I am not yet sure which of the zillion IF statements is screwing it up. 
          * 
-         * possible courses of action:
-         * - generate with max bounding box such that nothing is OOB, then cull the OOB stuff in the Gizmo render. we will also need to cull it in our intersection computation. 
-         * - look closer into the sites computed as OOB and see how close they are to the actual bounds. maybe they are close enough to where we can just expand it a bit. 
-         * --> it's also possible that they are getting generated all the way to the top of the original box
+         * Almost certainly this is the issue. 
+         * 
+         * In reality, the minimum values we want will be dynamically adjusting at each timestep. 
          */
 
         double lowestX = double.MaxValue;
@@ -95,14 +99,20 @@ public class FoamSurfacer : MonoBehaviour
         float width = Mathf.Abs((float)(highestX - lowestX));
         float height = Mathf.Abs((float)(highestY - lowestY));
 
-        Debug.Log("lowest x: " + lowestX);
-        Debug.Log("highest y: " + highestY);
-        Debug.Log("highest x: " + highestX);
-        Debug.Log("lowest y: " + lowestY);
-        Debug.Log("Y len: " + (int)Math.Round(height));
-        Debug.Log("X len: " + (int)Math.Round(width));
+        //Debug.Log("lowest x: " + lowestX);
+        //Debug.Log("highest y: " + highestY);
+        //Debug.Log("highest x: " + highestX);
+        //Debug.Log("lowest y: " + lowestY);
+        //Debug.Log("Y len: " + (int)Math.Round(height));
+        //Debug.Log("X len: " + (int)Math.Round(width));
+        Debug.Log("Lowest x for rect: " + lowestX);
+        Debug.Log("Lowest y for rect: " + lowestY);
+        Debug.Log("width: " + width);
+        Debug.Log("height: " + height);
 
-        rect = new Rect((float)lowestX, (float)lowestY, width, height);
+        // adding 0.01f will stop the OOB issues, but not the whole bug
+        // well, some OOB issues must still be remaining
+        rect = new Rect((float)lowestX, (float)lowestY, width + 0.01f, height + 0.01f);
         var voronoiDiagram = new VoronoiDiagram<Color>(rect); // not working yet
         var points = new List<VoronoiDiagramSite<Color>>();
 
@@ -114,8 +124,13 @@ public class FoamSurfacer : MonoBehaviour
                 // TODO skip if fluid, need to clean this up so we stop hardcoding that magic number 3
                 continue;
             }
-            // It does not like decimals for some reason (will cause NaN issues in determinant calculation), so cast to integers.
-            Vector2 position = new((int)p.GetPosition()[0], (int)p.GetPosition()[1]);
+            // In the past I got NaN issues with determinant calculation using doubles, but integer casts will screw it up too
+            Vector2 position = new((float)p.GetPosition().x, (float)p.GetPosition().y);
+            if (!rect.Contains(position))
+            {
+                Debug.LogError("Oops! Rect " + rect + " does not contain " + position);
+                // no longer entered
+            }
 
             if (!points.Any(item => item.Coordinate == position))
             {
