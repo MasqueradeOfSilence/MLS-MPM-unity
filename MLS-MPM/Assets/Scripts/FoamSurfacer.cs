@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /**
  * Class for ensuring that bubbles contact each other in a physically realistic manner, instead of overlapping. 
@@ -51,14 +50,39 @@ public class FoamSurfacer : MonoBehaviour
     {
         // start with complete unweighted
 
-        int width = 4096;
-        int height = 4096;
+        int width = 100;
+        int height = 100;
 
-        Rect rect = new Rect(0f, 0f, width, height);
+        Rect rect = new Rect(2f, 2f, width, height);
         var voronoiDiagram = new VoronoiDiagram<Color>(rect);
         this.rect = rect;
 
         var points = new List<VoronoiDiagramSite<Color>>();
+        // nope. PixelsForGlory does NOT handle rects generated anywhere other than the origin.
+        // maybe try TriangleNET again 
+        // well, like 1f, 1f will work. 
+        //foreach (Particle p in particles)
+        //{
+        //    if (p.GetMass() == 3)
+        //    {
+        //        // TODO skip if fluid, need to clean this up so we stop hardcoding that magic number 3
+        //        continue;
+        //    }
+        //    // In the past I got NaN issues with determinant calculation using doubles, but integer casts will screw it up too
+        //    Vector2 position = new((int)p.GetPosition().x, (int)p.GetPosition().y);
+        //    if (!rect.Contains(position))
+        //    {
+        //        Debug.LogError("Oops! Rect " + rect + " does not contain " + position);
+        //        // no longer entered
+        //        continue;
+        //    }
+
+        //    if (!points.Any(item => item.Coordinate == position))
+        //    {
+        //        // Randomizing the color right now, but not really needed, since we are visualizing with gizmos
+        //        points.Add(new VoronoiDiagramSite<Color>(position, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f))));
+        //    }
+        //}
         while (points.Count < 1000)
         {
             int randX = UnityEngine.Random.Range(0, width - 1);
