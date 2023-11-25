@@ -48,14 +48,21 @@ public class FoamSurfacer : MonoBehaviour
     // For preliminary testing purposes
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles, int dimension)
     {
+
+        // NEW plan: Compute rect normally, make sure it looks good...then translate up everything.
+        // So it can start at 0f, 0f for the computation.
+        // Then, translate it back. 
+
+
+
         // start with complete unweighted
 
-        int width = 100;
-        int height = 100;
+        //int width = 100;
+        //int height = 100;
 
-        Rect rect = new Rect(2f, 2f, width, height);
-        var voronoiDiagram = new VoronoiDiagram<Color>(rect);
-        this.rect = rect;
+        //Rect rect = new Rect(2f, 2f, width, height);
+        //var voronoiDiagram = new VoronoiDiagram<Color>(rect);
+        //this.rect = rect;
 
         var points = new List<VoronoiDiagramSite<Color>>();
         // nope. PixelsForGlory does NOT handle rects generated anywhere other than the origin.
@@ -83,21 +90,21 @@ public class FoamSurfacer : MonoBehaviour
         //        points.Add(new VoronoiDiagramSite<Color>(position, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f))));
         //    }
         //}
-        while (points.Count < 1000)
-        {
-            int randX = UnityEngine.Random.Range(0, width - 1);
-            int randY = UnityEngine.Random.Range(0, height - 1);
+        //while (points.Count < 1000)
+        //{
+        //    int randX = UnityEngine.Random.Range(0, width - 1);
+        //    int randY = UnityEngine.Random.Range(0, height - 1);
 
-            var point = new Vector2(randX, randY);
-            if (!points.Any(item => item.Coordinate == point))
-            {
-                points.Add(new VoronoiDiagramSite<Color>(point, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f))));
-            }
-        }
+        //    var point = new Vector2(randX, randY);
+        //    if (!points.Any(item => item.Coordinate == point))
+        //    {
+        //        points.Add(new VoronoiDiagramSite<Color>(point, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f))));
+        //    }
+        //}
 
         voronoiDiagram.AddSites(points);
         voronoiDiagram.GenerateSites(2);
-        this.voronoiDiagram = voronoiDiagram;
+        //this.voronoiDiagram = voronoiDiagram;
         return voronoiDiagram;
 
         // TODO top of the rectangle needs to be the top of the sim, not just hardcoded to 0f!
