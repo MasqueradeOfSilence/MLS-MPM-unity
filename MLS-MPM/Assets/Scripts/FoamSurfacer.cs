@@ -2,6 +2,7 @@ using PixelsForGlory.VoronoiDiagram;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 /**
@@ -12,6 +13,7 @@ using UnityEngine;
 public class FoamSurfacer : MonoBehaviour
 {
     private VoronoiDiagram<Color> voronoiDiagram;
+    private double2 translatedPosition;
     Rect rect;
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,13 @@ public class FoamSurfacer : MonoBehaviour
                 Vector3 p0 = new(edge.LeftEndPoint[0], edge.LeftEndPoint[1], 0.0f);
                 Vector3 p1 = new(edge.RightEndPoint[0], edge.RightEndPoint[1], 0.0f);
                 Gizmos.DrawLine(p0, p1);
+
+                // Other version with reverse translation applied
+                Gizmos.color = Color.green;
+                Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)translatedPosition.x, edge.LeftEndPoint[1] + (float)translatedPosition.y, 0.0f);
+                Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)translatedPosition.x, edge.RightEndPoint[1] + (float)translatedPosition.y, 0.0f);
+                Gizmos.DrawLine(p0_2, p1_2);
+
             }
         }
         if (rect != null)
@@ -48,6 +57,61 @@ public class FoamSurfacer : MonoBehaviour
     // For preliminary testing purposes
     public VoronoiDiagram<Color> CreateUnweightedVoronoiDiagram(Particle[,] particles, int dimension)
     {
+
+        double lowestX = double.MaxValue;
+        double highestX = double.MinValue;
+        double lowestY = double.MaxValue;
+        double highestY = double.MinValue;
+
+        foreach (Particle p in particles)
+        {
+            double x = p.GetPosition().x;
+            double y = p.GetPosition().y;
+
+            lowestX = Math.Min(lowestX, x);
+            highestX = Math.Max(highestX, x);
+            lowestY = Math.Min(lowestY, y);
+            highestY = Math.Max(highestY, y);
+        }
+
+        float width = Mathf.Abs((float)(highestX - lowestX));
+        float height = Mathf.Abs((float)(highestY - lowestY));
+
+        double untranslatedX = lowestX;
+        double untranslatedY = lowestY;
+
+        Rect rect = new Rect(0f, 0f, width, height);
+        var voronoiDiagram = new VoronoiDiagram<Color>(rect);
+        this.rect = rect;
+        var points = new List<VoronoiDiagramSite<Color>>();
+        double2 distance = new(-untranslatedX, -untranslatedY);
+        // Color doesn't matter if we are visualizing as Gizmo
+        Color defaultColor = new(0f, 0f, 0f);
+        foreach (Particle p in particles)
+        {
+            if (p.GetMass() == 3) // TODO change to p.isFluid()
+            {
+                continue;
+            }
+            double2 position = p.GetPosition();
+            double2 translatedPosition = position + distance;
+            // I think, since the scale is so small, casting to int doesn't work very well (?)
+            // but if I cast it to a float, it doesn't appear to render anything?
+            // note that even before translation is applied, it's too far to the right
+            // this vs. just casting ints doesn't appear to make a difference
+            // is there a way we can avoid casting to an int? This makes it go off to the side. 
+            Vector2 translatedPositionFormatted = new(Mathf.RoundToInt((float)translatedPosition.x), Mathf.RoundToInt((float)translatedPosition.y));
+            this.translatedPosition = translatedPosition; // could possibly just set directly
+            if (!points.Any(item => item.Coordinate == translatedPositionFormatted)) // TODO change to !points.ContainsPosition()
+            {
+                points.Add(new VoronoiDiagramSite<Color>(translatedPositionFormatted, defaultColor));
+            }
+        }
+        voronoiDiagram.AddSites(points);
+        voronoiDiagram.GenerateSites(2);
+        this.voronoiDiagram = voronoiDiagram;
+        return voronoiDiagram;
+
 
         // NEW plan: Compute rect normally, make sure it looks good...then translate up everything.
         // So it can start at 0f, 0f for the computation.
@@ -64,7 +128,7 @@ public class FoamSurfacer : MonoBehaviour
         //var voronoiDiagram = new VoronoiDiagram<Color>(rect);
         //this.rect = rect;
 
-        var points = new List<VoronoiDiagramSite<Color>>();
+        //var points = new List<VoronoiDiagramSite<Color>>();
         // nope. PixelsForGlory does NOT handle rects generated anywhere other than the origin.
         // maybe try TriangleNET again 
         // well, like 1f, 1f will work. 
@@ -102,10 +166,10 @@ public class FoamSurfacer : MonoBehaviour
         //    }
         //}
 
-        voronoiDiagram.AddSites(points);
-        voronoiDiagram.GenerateSites(2);
-        //this.voronoiDiagram = voronoiDiagram;
-        return voronoiDiagram;
+        //voronoiDiagram.AddSites(points);
+        //voronoiDiagram.GenerateSites(2);
+        ////this.voronoiDiagram = voronoiDiagram;
+        //return voronoiDiagram;
 
         // TODO top of the rectangle needs to be the top of the sim, not just hardcoded to 0f!
         // and it seems to dislike that due to the relaxation parameters...I now am not sure if I can use this library
