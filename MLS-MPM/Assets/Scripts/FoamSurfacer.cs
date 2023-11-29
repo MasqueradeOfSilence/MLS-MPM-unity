@@ -13,7 +13,7 @@ using UnityEngine;
 public class FoamSurfacer : MonoBehaviour
 {
     private VoronoiDiagram<Color> voronoiDiagram;
-    private double2 translatedPosition;
+    private double2 translatedPosition = new(-100, -100);
     Rect rect;
     // Start is called before the first frame update
     void Start()
@@ -40,6 +40,10 @@ public class FoamSurfacer : MonoBehaviour
                 Gizmos.DrawLine(p0, p1);
 
                 // Other version with reverse translation applied
+                if (translatedPosition.x == -100 && translatedPosition.y == -100)
+                {
+                    return;
+                }
                 Gizmos.color = Color.green;
                 Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)translatedPosition.x, edge.LeftEndPoint[1] + (float)translatedPosition.y, 0.0f);
                 Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)translatedPosition.x, edge.RightEndPoint[1] + (float)translatedPosition.y, 0.0f);
@@ -74,8 +78,10 @@ public class FoamSurfacer : MonoBehaviour
             highestY = Math.Max(highestY, y);
         }
 
-        float width = Mathf.Abs((float)(highestX - lowestX));
-        float height = Mathf.Abs((float)(highestY - lowestY));
+        // it computes as OOB without the + 0.01f, but the 0.01f breaks it all by giving NaN...TODO fixing
+        // as float anyway. it works as int, but then doesn't have the correct precision -- too much lost
+        float width = Mathf.Abs((float)(highestX - lowestX)) + 0.01f;
+        float height = Mathf.Abs((float)(highestY - lowestY)) + 0.01f;
 
         double untranslatedX = lowestX;
         double untranslatedY = lowestY;
@@ -100,7 +106,7 @@ public class FoamSurfacer : MonoBehaviour
             // note that even before translation is applied, it's too far to the right
             // this vs. just casting ints doesn't appear to make a difference
             // is there a way we can avoid casting to an int? This makes it go off to the side. 
-            Vector2 translatedPositionFormatted = new(Mathf.RoundToInt((float)translatedPosition.x), Mathf.RoundToInt((float)translatedPosition.y));
+            Vector2 translatedPositionFormatted = new((float)translatedPosition.x, (float)translatedPosition.y);
             this.translatedPosition = translatedPosition; // could possibly just set directly
             if (!points.Any(item => item.Coordinate == translatedPositionFormatted)) // TODO change to !points.ContainsPosition()
             {
