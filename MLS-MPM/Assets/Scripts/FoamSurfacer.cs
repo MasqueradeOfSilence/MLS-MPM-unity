@@ -14,7 +14,9 @@ public class FoamSurfacer : MonoBehaviour
 {
     private VoronoiDiagram<Color> voronoiDiagram;
     private double2 translatedPosition = new(-100, -100);
-    Rect rect;
+    private Vector2 translatedPositionFormatted = new(-100, -100);
+    private Rect rect;
+    private Rect adjustedRect;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +31,12 @@ public class FoamSurfacer : MonoBehaviour
 
     public void OnDrawGizmos()
     {
+        double distX = Math.Abs(rect.center.x - adjustedRect.center.x);
+        double distY = Math.Abs(rect.center.y - adjustedRect.center.y);
         foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in voronoiDiagram.GeneratedSites)
         {
-            foreach(VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
+            Color randomizedColor = new(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+            foreach (VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
             {
                 // NOTE: I am not sure if we want to render it for ALL of them, double check on this
                 Gizmos.color = Color.cyan;
@@ -42,11 +47,13 @@ public class FoamSurfacer : MonoBehaviour
                 // Other version with reverse translation applied
                 if (translatedPosition.x == -100 && translatedPosition.y == -100)
                 {
+                    // not initialized yet
                     return;
                 }
                 Gizmos.color = Color.green;
-                Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)translatedPosition.x, edge.LeftEndPoint[1] + (float)translatedPosition.y, 0.0f);
-                Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)translatedPosition.x, edge.RightEndPoint[1] + (float)translatedPosition.y, 0.0f);
+                // NOTE: Instead of adding to the edge points, which will not be fully accurate, it may be better to add the edge points to another object, translate it, then display that.
+                Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)distX, edge.LeftEndPoint[1] + (float)distY, 0.0f);
+                Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)distX, edge.RightEndPoint[1] + (float)distY, 0.0f);
                 Gizmos.DrawLine(p0_2, p1_2);
 
             }
@@ -56,6 +63,15 @@ public class FoamSurfacer : MonoBehaviour
             Gizmos.color = Color.black;
             Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
         }
+        if (adjustedRect != null) 
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireCube(new Vector3(adjustedRect.center.x, adjustedRect.center.y, 0.01f), new Vector3(adjustedRect.size.x, adjustedRect.size.y, 0.01f));
+        }
+        double dist = Vector2.Distance(rect.center, adjustedRect.center);
+        Debug.Log("Dist: " + dist);
+        Debug.Log("DistX: " + distX);
+        Debug.Log("DistY: " + distY);
     }
 
     // For preliminary testing purposes
@@ -87,12 +103,18 @@ public class FoamSurfacer : MonoBehaviour
         double untranslatedY = lowestY;
 
         Rect rect = new Rect(0f, 0f, width, height);
+        adjustedRect = new Rect((float)lowestX, (float)lowestY, width, height);
         var voronoiDiagram = new VoronoiDiagram<Color>(rect);
         this.rect = rect;
         var points = new List<VoronoiDiagramSite<Color>>();
         double2 distance = new(-untranslatedX, -untranslatedY);
         // Color doesn't matter if we are visualizing as Gizmo
         Color defaultColor = new(0f, 0f, 0f);
+        double2 lowerRHCornerPosition = new(lowestX, lowestY);
+
+        // it ain't quite right
+        translatedPosition = lowerRHCornerPosition - distance;
+
         foreach (Particle p in particles)
         {
             if (p.GetMass() == 3) // TODO change to p.isFluid()
@@ -106,8 +128,16 @@ public class FoamSurfacer : MonoBehaviour
             // note that even before translation is applied, it's too far to the right
             // this vs. just casting ints doesn't appear to make a difference
             // is there a way we can avoid casting to an int? This makes it go off to the side. 
-            Vector2 translatedPositionFormatted = new((float)translatedPosition.x, (float)translatedPosition.y);
-            this.translatedPosition = translatedPosition; // could possibly just set directly
+
+            /*
+             * Why the floats mess with it: I think it's because some particles touch the edge of the box exactly. 
+             * But when I try to make the Rect *slightly* bigger, it doesn't work
+             * actually idk if the int stuff matters since it's just a translation! so might be fine to keep it...
+             */
+            // don't get confused w/global translatedPosition
+            Vector2 translatedPositionFormatted = new((int)translatedPosition.x, (int)translatedPosition.y);
+            //this.translatedPosition = translatedPosition; // could possibly just set directly
+            this.translatedPositionFormatted = translatedPositionFormatted;
             if (!points.Any(item => item.Coordinate == translatedPositionFormatted)) // TODO change to !points.ContainsPosition()
             {
                 points.Add(new VoronoiDiagramSite<Color>(translatedPositionFormatted, defaultColor));
