@@ -390,7 +390,7 @@ public class FoamSimulator : MonoBehaviour
         // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master
         if (foamSurfacer != null)
         {
-            foamSurfacer.CreateUnweightedVoronoiDiagram(particles, gridResolution);
+            foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
         }
         iteration++;
     }
