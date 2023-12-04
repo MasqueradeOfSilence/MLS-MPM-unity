@@ -122,8 +122,8 @@ public class FoamSurfacer : MonoBehaviour
     /*
      * A power diagram is a weighted Voronoi diagram based on the sizes of the bubbles
      */
-    public void CreatePowerDiagram()
+    public VoronoiDiagram<Color> CreatePowerDiagram(Particle[,] particles)
     {
-
+        return null;
     }
 }
