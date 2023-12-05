@@ -32,7 +32,7 @@ public class FoamSurfacerTests
     }
 
     [Test]
-    public void CreatePowerDiagramShouldBuildAnAdditivelyWeightedVoronoiDiagram()
+    public void CreateWeightedVoronoiDiagramShouldBuildAnAdditivelyWeightedVoronoiDiagram()
     {
         FoamSurfacer foamSurfacer = GameObject.Find("ExampleGeo").AddComponent<FoamSurfacer>();
 
@@ -41,8 +41,8 @@ public class FoamSurfacerTests
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         Particle[,] particles = foamSimulator.GetParticles();
-        VoronoiDiagram<Color> powerDiagram = foamSurfacer.CreatePowerDiagram(particles);
-        Assert.IsNotNull(powerDiagram);
+        VoronoiDiagram<Color> weightedVD = foamSurfacer.CreateWeightedVoronoiDiagram(particles);
+        Assert.IsNotNull(weightedVD);
         // TODO assert it has vertices and is not equivalent to unweighted
     }
 }

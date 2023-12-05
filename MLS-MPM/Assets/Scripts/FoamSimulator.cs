@@ -391,6 +391,7 @@ public class FoamSimulator : MonoBehaviour
         if (foamSurfacer != null)
         {
             foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
+            foamSurfacer.CreateWeightedVoronoiDiagram(particles);
         }
         iteration++;
     }

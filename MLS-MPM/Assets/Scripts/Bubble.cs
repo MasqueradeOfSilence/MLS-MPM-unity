@@ -69,4 +69,9 @@ public class Bubble : ScriptableObject
     {
         return bubbleSize;
     }
+
+    public double GetVolumeFraction()
+    {
+        return volumeFraction;
+    }
 }
