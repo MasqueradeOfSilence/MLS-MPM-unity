@@ -144,6 +144,8 @@ public class FoamSurfacer : MonoBehaviour
         double highestX = double.MinValue;
         double lowestY = double.MaxValue;
         double highestY = double.MinValue;
+        Particle particleWithLowestX = particles[0, 0];
+        Particle particleWithLowestY = particles[0, 0];
 
         foreach (Particle p in particles)
         {
@@ -160,7 +162,25 @@ public class FoamSurfacer : MonoBehaviour
             highestX = Math.Max(highestX, x);
             lowestY = Math.Min(lowestY, y);
             highestY = Math.Max(highestY, y);
+            if (lowestX == x)
+            {
+                particleWithLowestX = p;
+            }
+            if (lowestY == y)
+            {
+                particleWithLowestY = p;
+            }
         }
+        lowestX -= 0.42;
+        lowestY -= 0.42;
+        highestX += 0.42;
+        highestY += 0.42;
+        // my guess - these haven't been computed yet
+        // let's hypothesize on paper...
+        //if (particleWithLowestX.GetBubble() != null && particleWithLowestX.GetBubble().GetVolumeFraction() != 0)
+        //    lowestX -= particleWithLowestX.GetBubble().ComputeUnitySphereRadius();
+        //if (particleWithLowestY.GetBubble() != null && particleWithLowestY.GetBubble().GetVolumeFraction() != 0)
+        //    lowestY -= particleWithLowestY.GetBubble().ComputeUnitySphereRadius();
         float width = Mathf.Abs((float)(highestX - lowestX)) + 0.01f;
         float height = Mathf.Abs((float)(highestY - lowestY)) + 0.01f;
 
@@ -184,8 +204,10 @@ public class FoamSurfacer : MonoBehaviour
                 continue;
             }
             double2 position = p.GetPosition();
+            // commenting this out now just to see the bigger rectangle
             //if (p.GetBubble() != null && p.GetBubble().GetVolumeFraction() != 0)
             //{
+            //    // But, we have to do this without overstepping the bounds of the rectangle, or else it won't work -- so adjust initial Rect generation. 0.41 is the biggest it can get
             //    position -= p.GetBubble().ComputeUnitySphereRadius();
             //}
             double2 translatedPosition = position + distance;
