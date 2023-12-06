@@ -108,7 +108,7 @@ public class FoamSurfacer : MonoBehaviour
         Rect rect = new(0f, 0f, width, height);
         adjustedRectForCurrentPosition = new Rect((float)lowestX, (float)lowestY, width, height);
         var voronoiDiagram = new VoronoiDiagram<Color>(rect);
-        this.rectAtZero = rect;
+        rectAtZero = rect;
         var points = new List<VoronoiDiagramSite<Color>>();
         double2 distance = new(-untranslatedX, -untranslatedY);
         // Color doesn't matter if we are visualizing as Gizmo
@@ -135,26 +135,36 @@ public class FoamSurfacer : MonoBehaviour
         return voronoiDiagram;
     }
 
+
+    private double ComputeWeightOfParticle(Particle p)
+    {
+        if (p.GetBubble() != null && p.GetBubble().GetVolumeFraction() != 0)
+        {
+            return p.GetBubble().ComputeUnitySphereRadius();
+        }
+        return 0;
+    }
     /*
      * A power diagram is a weighted Voronoi diagram based on the sizes of the bubbles
      */
     public VoronoiDiagram<Color> CreateWeightedVoronoiDiagram(Particle[,] particles)
     {
+        double scalingFactor = 0.02;
+        foreach (Particle p in particles)
+        {
+            if (p.GetBubble() != null && p.GetBubble().GetVolumeFraction() != 0)
+            {
+                p.SetPosition(p.GetPosition() - (ComputeWeightOfParticle(p) * scalingFactor));
+            }
+        }
+
         double lowestX = double.MaxValue;
         double highestX = double.MinValue;
         double lowestY = double.MaxValue;
         double highestY = double.MinValue;
-        Particle particleWithLowestX = particles[0, 0];
-        Particle particleWithLowestY = particles[0, 0];
 
         foreach (Particle p in particles)
         {
-            // to adjust based on weight, we will need to work with the translation, and I'm still not sure if that will even work
-            //if (p.GetBubble() != null && p.GetBubble().GetVolumeFraction() != 0)
-            //{
-            //    double2 position = p.GetPosition() - p.GetBubble().ComputeUnitySphereRadius();
-            //    p.SetPosition(position);
-            //}
             double x = p.GetPosition().x;
             double y = p.GetPosition().y;
 
@@ -162,28 +172,10 @@ public class FoamSurfacer : MonoBehaviour
             highestX = Math.Max(highestX, x);
             lowestY = Math.Min(lowestY, y);
             highestY = Math.Max(highestY, y);
-            if (lowestX == x)
-            {
-                particleWithLowestX = p;
-            }
-            if (lowestY == y)
-            {
-                particleWithLowestY = p;
-            }
         }
-        lowestX -= 0.42;
-        lowestY -= 0.42;
-        highestX += 0.42;
-        highestY += 0.42;
-        // my guess - these haven't been computed yet
-        // let's hypothesize on paper...
-        //if (particleWithLowestX.GetBubble() != null && particleWithLowestX.GetBubble().GetVolumeFraction() != 0)
-        //    lowestX -= particleWithLowestX.GetBubble().ComputeUnitySphereRadius();
-        //if (particleWithLowestY.GetBubble() != null && particleWithLowestY.GetBubble().GetVolumeFraction() != 0)
-        //    lowestY -= particleWithLowestY.GetBubble().ComputeUnitySphereRadius();
-        float width = Mathf.Abs((float)(highestX - lowestX)) + 0.01f;
-        float height = Mathf.Abs((float)(highestY - lowestY)) + 0.01f;
 
+        float width = Mathf.Abs((float)(highestX - lowestX)) + (float)(0.41 * scalingFactor);
+        float height = Mathf.Abs((float)(highestY - lowestY)) + (float)(0.41 * scalingFactor);
         double untranslatedX = lowestX;
         double untranslatedY = lowestY;
 
@@ -204,12 +196,6 @@ public class FoamSurfacer : MonoBehaviour
                 continue;
             }
             double2 position = p.GetPosition();
-            // commenting this out now just to see the bigger rectangle
-            //if (p.GetBubble() != null && p.GetBubble().GetVolumeFraction() != 0)
-            //{
-            //    // But, we have to do this without overstepping the bounds of the rectangle, or else it won't work -- so adjust initial Rect generation. 0.41 is the biggest it can get
-            //    position -= p.GetBubble().ComputeUnitySphereRadius();
-            //}
             double2 translatedPosition = position + distance;
             Vector2 translatedPositionFormatted = new((int)translatedPosition.x, (int)translatedPosition.y);
             if (!points.Any(item => item.Coordinate == translatedPositionFormatted)) // TODO change to !points.ContainsPosition()
