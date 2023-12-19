@@ -50,20 +50,12 @@ Shader "Custom/TestShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            // Albedo comes from a texture tinted by color
-
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-
             // Testing
             int length = 4;
+            // Hardcoded test spheres
             half3 points[4] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
                 half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998)};
             // scaling: 0.9, 1.1, 1, 0.7
-            //half radii[4] = {4.5, 5.5, 5, 3.5};
-            //half radii[4] = {0.9, 1.1, 1, 0.7};
-
             half radiusOfCollider = 0.5;
             half radius1 = 0.9 * radiusOfCollider; // 0.45
             half radius2 = 1.1 * radiusOfCollider; // 0.55
@@ -87,10 +79,14 @@ Shader "Custom/TestShader"
             }
 
             fixed4 c2;
+            bool invisibleTest = false;
             if (minI == 0)
             {
+                if (invisibleTest)
+                {
+                    return;
+                }
                 c2 = tex2D (_TexRed, IN.uv_MainTex) * colors[minI];
-                c2.a += 0.1; // not using atm, something is weird with the transparency calc
             }
             else if (minI == 1)
             {
@@ -110,6 +106,9 @@ Shader "Custom/TestShader"
             }
             o.Albedo = c2.rgb;
             o.Alpha = 0.9;
+            o.Metallic = _Metallic;
+            o.Smoothness = _Glossiness;
+            // To avoid any processing: https://forum.unity.com/threads/cheapest-invisible-shader.148950/ 
         }
         ENDCG
     }
