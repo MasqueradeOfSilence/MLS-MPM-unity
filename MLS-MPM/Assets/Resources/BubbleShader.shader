@@ -84,7 +84,6 @@ Shader "Custom/TestShader"
             {
                 if (invisibleTest)
                 {
-                    o.Alpha = 0;
                     // Discard will make it invisible
                     discard;
                 }
