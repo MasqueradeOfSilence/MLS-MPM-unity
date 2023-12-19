@@ -63,15 +63,22 @@ Shader "Custom/TestShader"
             // scaling: 0.9, 1.1, 1, 0.7
             //half radii[4] = {4.5, 5.5, 5, 3.5};
             //half radii[4] = {0.9, 1.1, 1, 0.7};
-            // NOTE: These are not quite correct it seems
-            half radii[4] = {0.00045, 0.00055, 0.0005, 0.00035};
+
+            half radiusOfCollider = 0.5;
+            half radius1 = 0.9 * radiusOfCollider; // 0.45
+            half radius2 = 1.1 * radiusOfCollider; // 0.55
+            half radius3 = 1 * radiusOfCollider; // 0.5
+            half radius4 = 0.7 * radiusOfCollider; // 0.35
+
+            // radii as weights
+            half radii[4] = {radius1, radius2, radius3, radius4};
             half4 colors[4] = {half4(1.0f, 0.0f, 0.0f, 1.0f), half4(0.0f, 1.0f, 0.0f, 1.0f), half4(0.0f, 0.0f, 1.0f, 1.0f), half4(1.0f, 1.0f, 0.0f, 1.0f)};
             half minDist = 10000;
             int minI = 0;
 
             for (int i = 0; i < length; i++)
             {
-                half dist = distance(IN.worldPos, points[i].xyz) + radii[i];
+                half dist = distance(IN.worldPos, points[i].xyz) - radii[i];
                 if (dist < minDist)
                 {
                     minDist = dist;
