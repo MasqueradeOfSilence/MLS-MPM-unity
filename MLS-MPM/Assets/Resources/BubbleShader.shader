@@ -78,6 +78,29 @@ Shader "Custom/TestShader"
                 }
             }
 
+            // Determine which sphere we're on
+
+            bool onSphere0 = distance(points[0].xyz, IN.worldPos) <= radii[0];
+            bool onSphere1 = distance(points[1].xyz, IN.worldPos) <= radii[1];
+            bool onSphere2 = distance(points[2].xyz, IN.worldPos) <= radii[2];
+            bool onSphere3 = distance(points[3].xyz, IN.worldPos) <= radii[3];
+            if (onSphere0 && minI != 0)
+            {
+                discard;
+            }
+            if (onSphere1 && minI != 1)
+            {
+                discard;
+            }
+            if (onSphere2 && minI != 2)
+            {
+                discard;
+            }
+            if (onSphere3 && minI != 3)
+            {
+                discard;
+            }
+
             fixed4 c2;
             bool invisibleTest = false;
             if (minI == 0)
@@ -105,8 +128,10 @@ Shader "Custom/TestShader"
             {
                 c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             }
+            c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c2.rgb;
-            o.Alpha = 0.9;
+            //o.Alpha = 0.9;
+            o.Alpha = 0;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
         }
