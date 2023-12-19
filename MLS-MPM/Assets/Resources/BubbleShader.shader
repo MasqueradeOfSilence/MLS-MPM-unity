@@ -84,6 +84,8 @@ Shader "Custom/TestShader"
             {
                 if (invisibleTest)
                 {
+                    o.Alpha = 0;
+                    discard;
                     return;
                 }
                 c2 = tex2D (_TexRed, IN.uv_MainTex) * colors[minI];
