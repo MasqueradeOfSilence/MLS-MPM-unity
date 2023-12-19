@@ -85,8 +85,8 @@ Shader "Custom/TestShader"
                 if (invisibleTest)
                 {
                     o.Alpha = 0;
+                    // Discard will make it invisible
                     discard;
-                    return;
                 }
                 c2 = tex2D (_TexRed, IN.uv_MainTex) * colors[minI];
             }
@@ -110,7 +110,6 @@ Shader "Custom/TestShader"
             o.Alpha = 0.9;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            // To avoid any processing: https://forum.unity.com/threads/cheapest-invisible-shader.148950/ 
         }
         ENDCG
     }
