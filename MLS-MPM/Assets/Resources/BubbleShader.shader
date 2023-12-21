@@ -30,6 +30,9 @@ Shader "Custom/TestShader"
         sampler2D _TexGreen;
         sampler2D _TexBlue;
         sampler2D _TexYellow;
+        // TODO not working yet
+        float bonusSphereCenter[3];
+        float bonusSphereRadius;
 
         struct Input
         {
@@ -51,10 +54,10 @@ Shader "Custom/TestShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             // Testing
-            int length = 4;
+            int length = 5;
             // Hardcoded test spheres
-            half3 points[4] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
-                half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998)};
+            half3 points[5] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
+                half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998), half3(bonusSphereCenter[0], bonusSphereCenter[1], bonusSphereCenter[2])};
             // scaling: 0.9, 1.1, 1, 0.7
             half radiusOfCollider = 0.5;
             half radius1 = 0.9 * radiusOfCollider; // 0.45
@@ -63,8 +66,9 @@ Shader "Custom/TestShader"
             half radius4 = 0.7 * radiusOfCollider; // 0.35
 
             // radii as weights
-            half radii[4] = {radius1, radius2, radius3, radius4};
-            half4 colors[4] = {half4(1.0f, 0.0f, 0.0f, 1.0f), half4(0.0f, 1.0f, 0.0f, 1.0f), half4(0.0f, 0.0f, 1.0f, 1.0f), half4(1.0f, 1.0f, 0.0f, 1.0f)};
+            half radii[5] = {radius1, radius2, radius3, radius4, bonusSphereRadius};
+            half4 colors[5] = {half4(1.0f, 0.0f, 0.0f, 1.0f), half4(0.0f, 1.0f, 0.0f, 1.0f), half4(0.0f, 0.0f, 1.0f, 1.0f), half4(1.0f, 1.0f, 0.0f, 1.0f),
+                half4(1.0f, 1.0f, 1.0f, 1.0f)};
             half minDist = 10000;
             int minI = 0;
 
@@ -84,6 +88,7 @@ Shader "Custom/TestShader"
             bool onSphere1 = distance(points[1].xyz, IN.worldPos) <= radii[1];
             bool onSphere2 = distance(points[2].xyz, IN.worldPos) <= radii[2];
             bool onSphere3 = distance(points[3].xyz, IN.worldPos) <= radii[3];
+            bool onSphere4 = distance(points[4].xyz, IN.worldPos) <= radii[4];
             if (onSphere0 && minI != 0)
             {
                 discard;
@@ -100,35 +105,12 @@ Shader "Custom/TestShader"
             {
                 discard;
             }
+            if (onSphere4 && minI != 4)
+            {
+                discard;
+            }
 
-            fixed4 c2;
-            bool invisibleTest = false;
-            if (minI == 0)
-            {
-                if (invisibleTest)
-                {
-                    // Discard will make it invisible
-                    discard;
-                }
-                c2 = tex2D (_TexRed, IN.uv_MainTex) * colors[minI];
-            }
-            else if (minI == 1)
-            {
-                c2 = tex2D (_TexGreen, IN.uv_MainTex) * colors[minI];
-            }
-            else if (minI == 2)
-            {
-                c2 = tex2D (_TexBlue, IN.uv_MainTex) * colors[minI];
-            }
-            else if (minI == 3)
-            {
-                c2 = tex2D (_TexYellow, IN.uv_MainTex) * colors[minI];
-            }
-            else
-            {
-                c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            }
-            c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+            fixed4 c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c2.rgb;
             //o.Alpha = 0.9;
             o.Alpha = 0;
