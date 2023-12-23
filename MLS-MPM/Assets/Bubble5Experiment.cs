@@ -22,14 +22,9 @@ public class Bubble5Experiment : MonoBehaviour
     void Update()
     {
         bubble5 = GameObject.Find("Bubble5");
-        Material material = bubble5.GetComponent<Material>();
+        Material material = bubble5.GetComponent<Renderer>().material;
         Vector3 position = bubble5.GetComponent<Transform>().position;
-        Vector4 arr = new(position.x, position.y, position.z, 1.0f);
-        List<Vector4> list = new List<Vector4>
-        {
-            arr
-        };
-        material.SetVectorArray("bonusSphereCenter", list);
+        material.SetVector("bonusSphereCenter", position);
         material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
     }
 }

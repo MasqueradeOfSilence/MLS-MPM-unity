@@ -6,10 +6,6 @@ Shader "Custom/TestShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        _TexRed ("Albedo (RGB)", 2D) = "red" {}
-        _TexGreen ("Albedo (RGB)", 2D) = "green" {}
-        _TexBlue ("Albedo (RGB)", 2D) = "blue" {}
-        _TexYellow ("Albedo (RGB)", 2D) = "yellow" {}
     }
     SubShader
     {
@@ -26,18 +22,20 @@ Shader "Custom/TestShader"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        sampler2D _TexRed;
-        sampler2D _TexGreen;
-        sampler2D _TexBlue;
-        sampler2D _TexYellow;
         // TODO not working yet
         float bonusSphereCenter[3];
         float bonusSphereRadius;
+        // {39.4640007,9.28899956,-0.60799998};
+        // 0.37;
+        // I think the issue is not with data passing but rather formatting
+        // or, where these are located?
 
         struct Input
         {
             float2 uv_MainTex;
             float3 worldPos;
+            float bonusSphereCenter[3];
+            float bonusSphereRadius;
         };
 
         half _Glossiness;
@@ -57,7 +55,9 @@ Shader "Custom/TestShader"
             int length = 5;
             // Hardcoded test spheres
             half3 points[5] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
-                half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998), half3(bonusSphereCenter[0], bonusSphereCenter[1], bonusSphereCenter[2])};
+                half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998),
+                half3(39.4640007,9.28899956,-0.60799998)};
+            // Above only works if hardcoded. 
             // scaling: 0.9, 1.1, 1, 0.7
             half radiusOfCollider = 0.5;
             half radius1 = 0.9 * radiusOfCollider; // 0.45
@@ -66,9 +66,7 @@ Shader "Custom/TestShader"
             half radius4 = 0.7 * radiusOfCollider; // 0.35
 
             // radii as weights
-            half radii[5] = {radius1, radius2, radius3, radius4, bonusSphereRadius};
-            half4 colors[5] = {half4(1.0f, 0.0f, 0.0f, 1.0f), half4(0.0f, 1.0f, 0.0f, 1.0f), half4(0.0f, 0.0f, 1.0f, 1.0f), half4(1.0f, 1.0f, 0.0f, 1.0f),
-                half4(1.0f, 1.0f, 1.0f, 1.0f)};
+            half radii[5] = {radius1, radius2, radius3, radius4, 0.37}; // even w/full hardcode something is off, possibly due to too-close radii...
             half minDist = 10000;
             int minI = 0;
 
@@ -88,6 +86,7 @@ Shader "Custom/TestShader"
             bool onSphere1 = distance(points[1].xyz, IN.worldPos) <= radii[1];
             bool onSphere2 = distance(points[2].xyz, IN.worldPos) <= radii[2];
             bool onSphere3 = distance(points[3].xyz, IN.worldPos) <= radii[3];
+            // only problem: specifying by radii might be an issue because some bubbles might have same radius
             bool onSphere4 = distance(points[4].xyz, IN.worldPos) <= radii[4];
             if (onSphere0 && minI != 0)
             {
@@ -107,6 +106,8 @@ Shader "Custom/TestShader"
             }
             if (onSphere4 && minI != 4)
             {
+                // error: nothing is currently being computed as on sphere4 (tried removing the minI thing)
+                // minI by itself should preserve the single bubble but it does not
                 discard;
             }
 
