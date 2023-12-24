@@ -6,6 +6,7 @@ Shader "Custom/TestShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
+        _SphereCenter("SphereCenter", Vector) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -22,9 +23,6 @@ Shader "Custom/TestShader"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        // TODO not working yet
-        float bonusSphereCenter[3];
-        float bonusSphereRadius;
         // {39.4640007,9.28899956,-0.60799998};
         // 0.37;
         // I think the issue is not with data passing but rather formatting
@@ -34,13 +32,14 @@ Shader "Custom/TestShader"
         {
             float2 uv_MainTex;
             float3 worldPos;
-            float bonusSphereCenter[3];
             float bonusSphereRadius;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        half4 _SphereCenter;
+        float4 testMe = float4(39.4640007,9.28899956,-0.60799998, 1.0);
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -56,7 +55,7 @@ Shader "Custom/TestShader"
             // Hardcoded test spheres
             half3 points[5] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
                 half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998),
-                half3(39.4640007,9.28899956,-0.60799998)};
+                float3(testMe[0], testMe[1], testMe[2])};
             // Above only works if hardcoded. 
             // scaling: 0.9, 1.1, 1, 0.7
             half radiusOfCollider = 0.5;

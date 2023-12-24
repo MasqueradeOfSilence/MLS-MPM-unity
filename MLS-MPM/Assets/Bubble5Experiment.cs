@@ -16,6 +16,13 @@ public class Bubble5Experiment : MonoBehaviour
     {
         bubble5 = GameObject.Find("Bubble5");
         Invoke("MoveObject", 2f);
+
+
+        bubble5 = GameObject.Find("Bubble5");
+        Material material = bubble5.GetComponent<Renderer>().material;
+        Vector3 position = bubble5.GetComponent<Transform>().position;
+        material.SetVector("bonusSphereCenter", position);
+        material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
     }
 
     // Update is called once per frame
@@ -24,7 +31,8 @@ public class Bubble5Experiment : MonoBehaviour
         bubble5 = GameObject.Find("Bubble5");
         Material material = bubble5.GetComponent<Renderer>().material;
         Vector3 position = bubble5.GetComponent<Transform>().position;
-        material.SetVector("bonusSphereCenter", position);
+        Vector4 full = new Vector4(position.x, position.y, position.z, 1);
+        material.SetVector("_SphereCenter", full);
         material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
     }
 }
