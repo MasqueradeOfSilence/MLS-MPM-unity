@@ -39,7 +39,8 @@ Shader "Custom/TestShader"
         half _Metallic;
         fixed4 _Color;
         half4 _SphereCenter;
-        float4 testMe = float4(39.4640007,9.28899956,-0.60799998, 1.0);
+        // doesn't work even without passing the data over, just using this. It only works with variables inside of surf???
+        half4 testMe = half4(39.4640007,9.28899956,-0.60799998, 1.0);
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -50,12 +51,13 @@ Shader "Custom/TestShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            half4 testMe2 = half4(39.4640007,9.28899956,-0.60799998, 1.0);
             // Testing
             int length = 5;
             // Hardcoded test spheres
             half3 points[5] = {half3(40.0999985,8.88998699,0), half3(39.4020004,8.88998699,0),
                 half3(40.0289993,8.88998699,-0.758000016), half3(39.4640007,8.47900009,-0.60799998),
-                float3(testMe[0], testMe[1], testMe[2])};
+                half3(testMe2[0], testMe2[1], testMe2[2])};
             // Above only works if hardcoded. 
             // scaling: 0.9, 1.1, 1, 0.7
             half radiusOfCollider = 0.5;
