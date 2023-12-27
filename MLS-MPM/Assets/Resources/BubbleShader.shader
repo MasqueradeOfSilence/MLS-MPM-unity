@@ -58,7 +58,6 @@ Shader "Custom/TestShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             half4 testMe2 = half4(39.4640007,9.28899956,-0.60799998, 1.0);
-            half4 testMe3 = _SphereCenter;
             
             // Testing
             int length = 5;
@@ -96,8 +95,10 @@ Shader "Custom/TestShader"
             }
             bool override = false;
             // SphereCenter.xyz is 1, 1, 1 for some reason!
-            if (_SphereCenter.z == 1)
+            // OK, now it's 0, 0, 0. 
+            if (_SphereCenter.z == 0)
             {
+                // cyan
                 fixed4 c3 = tex2D (_MainTex, IN.uv_MainTex) * _TestColorWhatever;
                 o.Albedo = c3.rgb;
                 o.Alpha = 1.0;

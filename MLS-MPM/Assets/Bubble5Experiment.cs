@@ -21,7 +21,7 @@ public class Bubble5Experiment : MonoBehaviour
         Material material = bubble5.GetComponent<Renderer>().material;
         Vector3 position = bubble5.GetComponent<Transform>().position;
         Debug.Log("POS: " + position);
-        material.SetVector("_SphereCenter", new Vector4(position.x, position.y, position.z, 1));
+        material.SetVector("SphereCenter", new Vector4(position.x, position.y, position.z, 1));
         material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
         // It...sort of discards it? When running, that is. 
     }
@@ -33,7 +33,8 @@ public class Bubble5Experiment : MonoBehaviour
         Material material = bubble5.GetComponent<Renderer>().material;
         Vector3 position = bubble5.GetComponent<Transform>().position;
         Debug.Log("POS: " + position);
-        material.SetVector("_SphereCenter", new Vector4(position.x, position.y, position.z, 1));
+        Debug.Log(new Vector4(position.x, position.y, position.z, 1));
+        material.SetVector("SphereCenter", new Vector4(position.x, position.y, position.z, 1));
         material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
     }
 }
