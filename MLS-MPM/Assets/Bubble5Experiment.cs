@@ -15,26 +15,23 @@ public class Bubble5Experiment : MonoBehaviour
     void Start()
     {
         bubble5 = GameObject.Find("Bubble5");
-        Invoke("MoveObject", 2f);
-
-
-        Material material = bubble5.GetComponent<Renderer>().material;
+        Material material = bubble5.GetComponent<Renderer>().sharedMaterial;
         Vector3 position = bubble5.GetComponent<Transform>().position;
-        Debug.Log("POS: " + position);
-        material.SetVector("SphereCenter", new Vector4(position.x, position.y, position.z, 1));
-        material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
-        // It...sort of discards it? When running, that is. 
+        material.SetVector("_SphereCenter", new Vector4(position.x, position.y, position.z, 1));
+        material.SetFloat("_SphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
+        Invoke("MoveObject", 2f);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         bubble5 = GameObject.Find("Bubble5");
-        Material material = bubble5.GetComponent<Renderer>().material;
+        Material material = bubble5.GetComponent<Renderer>().sharedMaterial;
         Vector3 position = bubble5.GetComponent<Transform>().position;
-        Debug.Log("POS: " + position);
+        Debug.Log("POS: " + new Vector4(position.x, position.y, position.z, 1));
         Debug.Log(new Vector4(position.x, position.y, position.z, 1));
-        material.SetVector("SphereCenter", new Vector4(position.x, position.y, position.z, 1));
-        material.SetFloat("bonusSphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
+        material.SetVector("_SphereCenter", new Vector4(position.x, position.y, position.z, 1));
+        material.SetFloat("_SphereRadius", bubble5.GetComponent<Transform>().transform.lossyScale.x * 0.5f);
     }
 }

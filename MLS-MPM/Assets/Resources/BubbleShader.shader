@@ -6,11 +6,12 @@ Shader "Custom/TestShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        _SphereCenter("SphereCenter", Vector) = (0, 0, 0, 1)
+        _SphereCenter("_SphereCenter", Vector) = (0, 0, 0, 1)
         _TestColorGreen("Green", Color) = (0, 1, 0, 1)
         _TestColorBlue("Blue", Color) = (0, 0, 1, 1)
         _TestColorRed("Red", Color) = (1, 0, 0, 1)
         _TestColorWhatever("Whatever", Color) = (0, 1, 1, 1)
+        _SphereRadius("_SphereRadius", Float) = 0.0
     }
     SubShader
     {
@@ -42,11 +43,12 @@ Shader "Custom/TestShader"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        fixed4 _SphereCenter;
+        float4 _SphereCenter;
         fixed4 _TestColorGreen;
         fixed4 _TestColorBlue;
         fixed4 _TestColorRed;
         fixed4 _TestColorWhatever;
+        float _SphereRadius;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -74,7 +76,7 @@ Shader "Custom/TestShader"
             half radius4 = 0.7 * radiusOfCollider; // 0.35
 
             // radii as weights
-            half radii[5] = {radius1, radius2, radius3, radius4, 0.371665}; // even w/full hardcode something is off, possibly due to too-close radii...
+            half radii[5] = {radius1, radius2, radius3, radius4, 0.3715}; // even w/full hardcode something is off, possibly due to too-close radii...
             half minDist = 10000;
             int minI = -1;
 
@@ -93,18 +95,6 @@ Shader "Custom/TestShader"
                     minI = i;
                 }
             }
-            bool override = false;
-            // SphereCenter.xyz is 1, 1, 1 for some reason!
-            // OK, now it's 0, 0, 0. 
-            if (_SphereCenter.z == 0)
-            {
-                // cyan
-                fixed4 c3 = tex2D (_MainTex, IN.uv_MainTex) * _TestColorWhatever;
-                o.Albedo = c3.rgb;
-                o.Alpha = 1.0;
-                override = true;
-            }
-
             // Determine which sphere we're on
 
             bool onSphere0 = distance(points[0].xyz, IN.worldPos) <= radii[0];
@@ -114,52 +104,13 @@ Shader "Custom/TestShader"
             // only problem: specifying by radii might be an issue because some bubbles might have same radius
             bool onSphere4 = distance(points[4].xyz, IN.worldPos) <= radii[4];
 
-            // test
-            if (onSphere1 && minI == 1 && override == false)
-            {
-                fixed4 c3 = tex2D (_MainTex, IN.uv_MainTex) * _TestColorRed;
-                o.Albedo = c3.rgb;
-                o.Alpha = 0.5;
-                /*
-                    it might be computed as 1 for minI because the hardcoded position starts at some default, or is not considered
-                    but it SHOULD be overridden
-
-                    it's almost like...the computations only work for the final sphere
-                    and the other spheres do not acknowledge it,
-                    but IT acknowledges THEM...
-
-                    in other words: onSphere4 is correct
-                    and minI is NOT equal to 4 when it SHOULD NOT be, which is good
-                    but it IS equal to another value when it should be 4
-
-                    could _SphereCenter.xyz somehow be off? or is it working in certain places?
-
-
-                    if dist is in a range, make it pink or something
-
-                    THE BUG IS: SphereCenter.xyz is 1, 1, 1 for some reason.
-
-                */
-
-
-            }
-
             if (onSphere0 && minI != 0)
             {
                 discard;
             }
-            if (onSphere1 && minI != 1 && override == false)
+            if (onSphere1 && minI != 1)
             {
-                //discard;
-
-                // this is not properly interacting with the new sphere
-                // I wonder if it will work if it's also dynamically created?
-                // this means that minI is incorrect for the overlapping place, likely
-                // it is likely 1 and it shouldn't be
-                // so the distance to the first sphere is seen as closer than the final
-                fixed4 c3 = tex2D (_MainTex, IN.uv_MainTex) * _TestColorBlue;
-                o.Albedo = c3.rgb;
-                o.Alpha = 0.5;
+                discard;
             }
             if (onSphere2 && minI != 2)
             {
@@ -169,18 +120,9 @@ Shader "Custom/TestShader"
             {
                 discard;
             }
-            if (onSphere4 && minI != 4 && override == false)
+            if (onSphere4 && minI != 4)
             {
-                // now it is somewhat discarding them but not fully
-                // I am not sure if this gets entered
-                //discard;
-
-                // it DOES get entered, but the computation is incorrect
-                // actually, it may be correct, but not with how others interact with it?
-
-                fixed4 c3 = tex2D (_MainTex, IN.uv_MainTex) * _TestColorGreen;
-                o.Albedo = c3.rgb;
-                o.Alpha = 0.5;
+                discard;
             }
 
             

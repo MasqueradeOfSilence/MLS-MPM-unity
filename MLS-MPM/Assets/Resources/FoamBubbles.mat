@@ -15,7 +15,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 5000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -72,10 +72,16 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SphereRadius: 0.371665
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 0.21960783, g: 0.21960783, b: 0.21960783, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SphereCenter: {r: 39.95, g: 9.195999, b: -1.237, a: 1}
+    - _TestColorBlue: {r: 0, g: 0, b: 1, a: 1}
+    - _TestColorGreen: {r: 0, g: 1, b: 0, a: 1}
+    - _TestColorRed: {r: 1, g: 0, b: 0, a: 1}
+    - _TestColorWhatever: {r: 0, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
