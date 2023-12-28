@@ -76,7 +76,7 @@ Shader "Custom/TestShader"
             half radius4 = 0.7 * radiusOfCollider; // 0.35
 
             // radii as weights
-            half radii[5] = {radius1, radius2, radius3, radius4, 0.3715}; // even w/full hardcode something is off, possibly due to too-close radii...
+            half radii[5] = {radius1, radius2, radius3, radius4, _SphereRadius}; // even w/full hardcode something is off, possibly due to too-close radii...
             half minDist = 10000;
             int minI = -1;
 
