@@ -8,7 +8,7 @@ public class FoamSimulatorTests
     [Test]
     public void InitializeFoamSimulatorShouldSetUpGridAndParticles()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         int2 expectedGridSize = new(64, 64);
         int expectedNumberOfParticles = 4096;
@@ -21,7 +21,7 @@ public class FoamSimulatorTests
     [Test]
     public void InitializeGridShouldInstantiateTheGrid()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeGrid();
         Assert.IsNotNull(foamSimulator.GetGrid());
         int2 expectedSize = new(64, 64);
@@ -31,7 +31,7 @@ public class FoamSimulatorTests
     [Test]
     public void InitializeParticlesWrapperShouldInitialize4096Particles()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeGrid();
         foamSimulator.InitializeParticles();
         // 16 to 48 with a spacing of 0.5, two dimensions = 4096 particles.
@@ -45,7 +45,7 @@ public class FoamSimulatorTests
     public void InitializeParticlesShouldAssignSomeParticlesToBeAirAndOthersToBeFluid()
     {
         // To consider: Do we want to hard-lock certain particles so the ratio is guaranteed, or do we want to use the randomizer which should still give us an approximate ratio? Does it matter?
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeGrid();
         foamSimulator.InitializeParticles();
         Particle[,] particles = foamSimulator.GetParticles();
@@ -64,7 +64,7 @@ public class FoamSimulatorTests
     [Test]
     public void BuildGridOfTemporaryParticlePositionsShouldCreateEvenlySpacedParticlesFrom16_16To48_48()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         double2[,] temporaryParticlePositionGrid = foamSimulator.BuildGridOfTemporaryParticlePositions();
         double2 expectedFirstPosition = new(16, 16);
         double2 actualFirstPosition = temporaryParticlePositionGrid[0, 0];
@@ -88,7 +88,7 @@ public class FoamSimulatorTests
         int firstCellYPosition = 0;
         int lastCellXPosition = 63;
         int lastCellYPosition = 63;
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         // clear grid just re-initializes, so no need for first init call
         foamSimulator.ClearGrid();
         GridCell firstCell = foamSimulator.GetGrid().At(firstCellXPosition, firstCellYPosition);
@@ -103,7 +103,7 @@ public class FoamSimulatorTests
     public void P2G1ShouldModifyEachGridCellUsingParticleAttributes()
     {
         // Test expected particle masses and velocities
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         // Let's save ourselves a few loops.
         int testNeighborDimension = 1;
         foamSimulator.SetNeighborDimension(testNeighborDimension);
@@ -127,7 +127,7 @@ public class FoamSimulatorTests
     [Test]
     public void P2G2ShouldUpdateGridCellVelocityWithMomentum()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
 
         int testNeighborDimension = 1;
         foamSimulator.SetNeighborDimension(testNeighborDimension);
@@ -161,7 +161,7 @@ public class FoamSimulatorTests
     [Test]
     public void UpdateGridShouldUpdateCellVelocitiesAndEnforceBoundaryConditions()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         int testNeighborDimension = 1;
         foamSimulator.SetNeighborDimension(testNeighborDimension);
         Particle[,] particles = new Particle[4, 4];
@@ -201,7 +201,7 @@ public class FoamSimulatorTests
     [Test]
     public void UpdateCellVelocityWithEnforcedBoundaryConditionsG2PShouldEnforceBoundaries()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         double mass = 1.0;
         double2x2 C = new(1, 1, 1, 1);
         double2 particlePosition = new(1, 1);
@@ -250,7 +250,7 @@ public class FoamSimulatorTests
     [Test]
     public void GridToParticleStepShouldUpdateParticlePositionVelocityAndAffineMomentumMatrix()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         int testNeighborDimension = 1;
         foamSimulator.SetNeighborDimension(testNeighborDimension);
 
@@ -304,7 +304,7 @@ public class FoamSimulatorTests
     [Test]
     public void SimulateShouldUpdateParticleAttributes()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         double2 initialVelocity = foamSimulator.GetParticles()[0, 0].GetVelocity();
         double2 initialPosition = foamSimulator.GetParticles()[0, 0].GetPosition();
@@ -323,7 +323,7 @@ public class FoamSimulatorTests
     [Test]
     public void SimulateShouldUpdateParticleAttributesCorrectly()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.Simulate();
         // Can't do an exact number because of the randomness between fluid and air. 
@@ -335,7 +335,7 @@ public class FoamSimulatorTests
     [Test]
     public void ShouldBeAirShouldReturnTrueDependingOnProbability()
     {
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         // First tested probability: 80 air%
         bool expectedAir = foamSimulator.ShouldBeAir(9);
         Assert.IsTrue(expectedAir);
@@ -349,7 +349,7 @@ public class FoamSimulatorTests
     public void FluidAndAirParticlesShouldHaveDifferentEndPositions()
     {
         // They do, but their difference is too small
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.ClearGrid();
         bool shouldCreateAirParticle = false;
@@ -392,7 +392,7 @@ public class FoamSimulatorTests
         Debug.Log(foamSimulator.GetParticles()[19, 24].GetPosition());
 
         // Part 2
-        FoamSimulator foamSimulator2 = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator2 = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator2.InitializeFoamSimulator();
         foamSimulator2.ClearGrid();
         bool shouldCreateAirParticle2 = true;
@@ -437,7 +437,7 @@ public class FoamSimulatorTests
     public void InitializeParticlesWithFluidOnTopShouldInitializeFluidOnTheTopOfTheContainerOnly()
     {
         int tempParticleArrayRes = 64;
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeGrid();
         foamSimulator.InitializeParticlesWithFluidOnTop();
         Particle[,] particles = foamSimulator.GetParticles();
@@ -455,7 +455,7 @@ public class FoamSimulatorTests
     public void InitializeParticlesWithFluidAtBottomShouldInitializeFluidAtTheBottomOfTheContainerOnly()
     {
         int tempParticleArrayRes = 64;
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeGrid();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         Particle[,] particles = foamSimulator.GetParticles();

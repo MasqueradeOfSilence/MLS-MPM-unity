@@ -12,7 +12,7 @@ public class FoamSurfacerTests
         FoamSurfacer foamSurfacer = GameObject.Find("ExampleGeo").AddComponent<FoamSurfacer>();
 
         // Now let's build some particles
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         Particle[,] particles = foamSimulator.GetParticles();
@@ -37,7 +37,7 @@ public class FoamSurfacerTests
         FoamSurfacer foamSurfacer = GameObject.Find("ExampleGeo").AddComponent<FoamSurfacer>();
 
         // Now let's build some particles
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         Particle[,] particles = foamSimulator.GetParticles();

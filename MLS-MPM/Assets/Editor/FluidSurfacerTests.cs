@@ -34,7 +34,7 @@ public class FluidSurfacerTests
     public void InitializePolygonShouldCreateAPolygonBasedOnASetOfPoints()
     {
         int expectedNumPoints = 4096;
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         FluidSurfacer fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
@@ -47,7 +47,7 @@ public class FluidSurfacerTests
     public void CreateMeshShouldTriangulateThePointsAndReturnAMesh()
     {
         int numParticles = 4096;
-        FoamSimulator foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamSimulator>();
+        FoamFractionFlowSim_2D foamSimulator = GameObject.Find("ExampleGeo").AddComponent<FoamFractionFlowSim_2D>();
         foamSimulator.InitializeFoamSimulator();
         foamSimulator.InitializeParticlesWithFluidAtBottom();
         FluidSurfacer fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<FluidSurfacer>();
