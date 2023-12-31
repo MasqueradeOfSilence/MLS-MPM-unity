@@ -84,10 +84,11 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
     public double2[,] BuildGridOfTemporaryParticlePositions()
     {
         // TODO change spacing, make smaller
-        double spacing = 0.5;
+        double spacing = 1.5;
         double startPosition = 16;
         double endPosition = 48;
-        int tempParticleArrayResolution = 64;
+        // likely connected
+        int tempParticleArrayResolution = 8;
         double2[,] gridOfTemporaryParticlePositions = new double2[tempParticleArrayResolution, tempParticleArrayResolution];
         int iInt = 0;
         int jInt = 0;
