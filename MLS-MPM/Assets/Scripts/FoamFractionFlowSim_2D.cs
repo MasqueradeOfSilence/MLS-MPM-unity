@@ -378,6 +378,10 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                 {
                     p.SetBubbleWithSize(volumeFraction);
                 }
+                else
+                {
+                    p.SetBubbleWithSize(0.0001);
+                }
                 particles[i, j] = p;
                 // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
             }
@@ -404,11 +408,11 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
         }
         // Next: Voronoi diagram to update bubble shapes
         // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master
-        if (foamSurfacer != null)
-        {
-            foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
-            foamSurfacer.CreateWeightedVoronoiDiagram(particles);
-        }
+        //if (foamSurfacer != null)
+        //{
+        //    foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
+        //    foamSurfacer.CreateWeightedVoronoiDiagram(particles);
+        //}
         iteration++;
     }
 

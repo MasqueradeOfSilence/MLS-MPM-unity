@@ -83,7 +83,7 @@ public class FluidSurfacer : MonoBehaviour
     {
         // Note: must verify that this bool should actually be true in our case, if not, don't need options
         ConstraintOptions options = new() { ConformingDelaunay = true };
-        Debug.Log(polygon);
+        //Debug.Log(polygon);
         TriangleNetMesh mesh = (TriangleNetMesh) polygon.Triangulate(options);
         return mesh;
     }
