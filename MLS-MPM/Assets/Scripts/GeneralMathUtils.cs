@@ -59,7 +59,8 @@ public class GeneralMathUtils : MonoBehaviour
     {
 		int x = cellPosition[0] + nx - 1;
 		int y = cellPosition[1] + ny - 1;
-		int[] neighborPosition = { x, y };
+		// TODO this is NOT a good overall fix
+		int[] neighborPosition = { Math.Abs(x), Math.Abs(y) };
 		return neighborPosition;
 	}
 

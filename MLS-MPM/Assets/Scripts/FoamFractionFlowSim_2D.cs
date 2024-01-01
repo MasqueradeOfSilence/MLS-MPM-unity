@@ -83,12 +83,11 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
 
     public double2[,] BuildGridOfTemporaryParticlePositions()
     {
-        // TODO change spacing, make smaller
-        double spacing = 1.5;
+        double spacing = 0.5;
         double startPosition = 16;
         double endPosition = 48;
         // likely connected
-        int tempParticleArrayResolution = 8;
+        int tempParticleArrayResolution = 64;
         double2[,] gridOfTemporaryParticlePositions = new double2[tempParticleArrayResolution, tempParticleArrayResolution];
         int iInt = 0;
         int jInt = 0;
@@ -156,6 +155,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by gridResolution
+                        // TODO if neighbor position is negative, something is really screwy...
                         GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
                         correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q, correspondingCell.GetVelocity()));
@@ -356,6 +356,17 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
         {
             for (int j = 0; j < particles.GetLength(1); j++)
             {
+                bool skipBubble = false;
+                if (i % 2 == 0 || j % 2 == 0)
+                {
+                    skipBubble = true;
+                }
+                System.Random random = new System.Random();
+                double randomValue = random.NextDouble();
+                if (randomValue < 0.5)
+                {
+                    skipBubble = true;
+                }
                 Particle p = particles[i, j];
                 double volumeFraction = VolumeFractionCalculator.CalculateVolumeFractionForParticleAtPosition(particlesList, p);
                 //Debug.Log("VOLUME FRACTION: " + volumeFraction);
@@ -363,7 +374,10 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                 // This is why the bottom bubbles appear as the largest. 
                 // Also, might be easier to not have any hardcoded values for different bubble sizes, and just use a pure scaling factor based on volume fraction -- TBD. 
                 sw.WriteLine(volumeFraction);
-                p.SetBubbleWithSize(volumeFraction);
+                if (!skipBubble)
+                {
+                    p.SetBubbleWithSize(volumeFraction);
+                }
                 particles[i, j] = p;
                 // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
             }
