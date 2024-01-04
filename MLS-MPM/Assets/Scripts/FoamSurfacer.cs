@@ -34,51 +34,51 @@ public class FoamSurfacer : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        bool drawUntranslatedVoronoi = false;
-        double distX = Math.Abs(rectAtZero.center.x - adjustedRectForCurrentPosition.center.x);
-        double distY = Math.Abs(rectAtZero.center.y - adjustedRectForCurrentPosition.center.y);
-        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in voronoiDiagram.GeneratedSites)
-        {
-            Color randomizedColor = new(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            foreach (VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
-            {
-                if (drawUntranslatedVoronoi)
-                {
-                    Gizmos.color = Color.cyan;
-                    Vector3 p0 = new(edge.LeftEndPoint[0], edge.LeftEndPoint[1], 0.0f);
-                    Vector3 p1 = new(edge.RightEndPoint[0], edge.RightEndPoint[1], 0.0f);
-                    Gizmos.DrawLine(p0, p1);
-                }
-                Gizmos.color = Color.green;
-                Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)distX, edge.LeftEndPoint[1] + (float)distY, 0.0f);
-                Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)distX, edge.RightEndPoint[1] + (float)distY, 0.0f);
-                Gizmos.DrawLine(p0_2, p1_2);
+        //bool drawUntranslatedVoronoi = false;
+        //double distX = Math.Abs(rectAtZero.center.x - adjustedRectForCurrentPosition.center.x);
+        //double distY = Math.Abs(rectAtZero.center.y - adjustedRectForCurrentPosition.center.y);
+        //foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in voronoiDiagram.GeneratedSites)
+        //{
+        //    Color randomizedColor = new(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+        //    foreach (VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
+        //    {
+        //        if (drawUntranslatedVoronoi)
+        //        {
+        //            Gizmos.color = Color.cyan;
+        //            Vector3 p0 = new(edge.LeftEndPoint[0], edge.LeftEndPoint[1], 0.0f);
+        //            Vector3 p1 = new(edge.RightEndPoint[0], edge.RightEndPoint[1], 0.0f);
+        //            Gizmos.DrawLine(p0, p1);
+        //        }
+        //        Gizmos.color = Color.green;
+        //        Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)distX, edge.LeftEndPoint[1] + (float)distY, 0.0f);
+        //        Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)distX, edge.RightEndPoint[1] + (float)distY, 0.0f);
+        //        Gizmos.DrawLine(p0_2, p1_2);
 
-            }
-        }
+        //    }
+        //}
 
-        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in weightedVD.GeneratedSites)
-        {
-            Color randomizedColor = new(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
-            foreach (VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
-            {
-                Gizmos.color = Color.yellow;
-                Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)distX, edge.LeftEndPoint[1] + (float)distY, 0.0f);
-                Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)distX, edge.RightEndPoint[1] + (float)distY, 0.0f);
-                Gizmos.DrawLine(p0_2, p1_2);
-            }
-        }
+        //foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> voronoiCellPair in weightedVD.GeneratedSites)
+        //{
+        //    Color randomizedColor = new(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+        //    foreach (VoronoiDiagramGeneratedEdge edge in voronoiCellPair.Value.Edges)
+        //    {
+        //        Gizmos.color = Color.yellow;
+        //        Vector3 p0_2 = new(edge.LeftEndPoint[0] + (float)distX, edge.LeftEndPoint[1] + (float)distY, 0.0f);
+        //        Vector3 p1_2 = new(edge.RightEndPoint[0] + (float)distX, edge.RightEndPoint[1] + (float)distY, 0.0f);
+        //        Gizmos.DrawLine(p0_2, p1_2);
+        //    }
+        //}
 
-        if (rectAtZero != null && drawUntranslatedVoronoi)
-        {
-            Gizmos.color = Color.black;
-            Gizmos.DrawWireCube(new Vector3(rectAtZero.center.x, rectAtZero.center.y, 0.01f), new Vector3(rectAtZero.size.x, rectAtZero.size.y, 0.01f));
-        }
-        if (adjustedRectForCurrentPosition != null) 
-        {
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawWireCube(new Vector3(adjustedRectForCurrentPosition.center.x, adjustedRectForCurrentPosition.center.y, 0.01f), new Vector3(adjustedRectForCurrentPosition.size.x, adjustedRectForCurrentPosition.size.y, 0.01f));
-        }
+        //if (rectAtZero != null && drawUntranslatedVoronoi)
+        //{
+        //    Gizmos.color = Color.black;
+        //    Gizmos.DrawWireCube(new Vector3(rectAtZero.center.x, rectAtZero.center.y, 0.01f), new Vector3(rectAtZero.size.x, rectAtZero.size.y, 0.01f));
+        //}
+        //if (adjustedRectForCurrentPosition != null) 
+        //{
+        //    Gizmos.color = Color.magenta;
+        //    Gizmos.DrawWireCube(new Vector3(adjustedRectForCurrentPosition.center.x, adjustedRectForCurrentPosition.center.y, 0.01f), new Vector3(adjustedRectForCurrentPosition.size.x, adjustedRectForCurrentPosition.size.y, 0.01f));
+        //}
     }
 
     // For preliminary testing purposes. Fine if the bubbles overlap the adjustedRect a bit since it's unweighted currently.

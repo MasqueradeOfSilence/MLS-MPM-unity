@@ -380,6 +380,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                 }
                 else
                 {
+                    // shrinking the bubble to better see the Voronoi interactions
                     p.SetBubbleWithSize(0.0001);
                 }
                 particles[i, j] = p;

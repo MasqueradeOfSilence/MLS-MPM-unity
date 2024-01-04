@@ -135,31 +135,31 @@ public class FluidSurfacer : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        if (foamSurface != null)
-        {
-            Gizmos.color = Color.blue;
-            foreach (Edge edge in foamSurface.Edges)
-            {
-                Vertex v0 = foamSurface.Vertices.ElementAt(edge.P0);
-                Vertex v1 = foamSurface.Vertices.ElementAt(edge.P1);
-                Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
-                Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
-                Gizmos.DrawLine(p0, p1);
-            }
-        }
-        if (fluidSurface == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.red;
-        foreach (Edge edge in fluidSurface.Edges)
-        {
-            Vertex v0 = fluidSurface.Vertices.ElementAt(edge.P0);
-            Vertex v1 = fluidSurface.Vertices.ElementAt(edge.P1);
-            Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
-            Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
-            Gizmos.DrawLine(p0, p1);
-        }
+        //if (foamSurface != null)
+        //{
+        //    Gizmos.color = Color.blue;
+        //    foreach (Edge edge in foamSurface.Edges)
+        //    {
+        //        Vertex v0 = foamSurface.Vertices.ElementAt(edge.P0);
+        //        Vertex v1 = foamSurface.Vertices.ElementAt(edge.P1);
+        //        Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
+        //        Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
+        //        Gizmos.DrawLine(p0, p1);
+        //    }
+        //}
+        //if (fluidSurface == null)
+        //{
+        //    return;
+        //}
+        //Gizmos.color = Color.red;
+        //foreach (Edge edge in fluidSurface.Edges)
+        //{
+        //    Vertex v0 = fluidSurface.Vertices.ElementAt(edge.P0);
+        //    Vertex v1 = fluidSurface.Vertices.ElementAt(edge.P1);
+        //    Vector3 p0 = new((float)v0[0], (float)v0[1], 0.0f);
+        //    Vector3 p1 = new((float)v1[0], (float)v1[1], 0.0f);
+        //    Gizmos.DrawLine(p0, p1);
+        //}
     }
 
     public void SetPlane(GameObject plane)
