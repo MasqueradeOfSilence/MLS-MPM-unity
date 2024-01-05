@@ -1,4 +1,4 @@
-Shader "Custom/TestShader"
+Shader "Custom/FFFShader"
 {
     Properties
     {

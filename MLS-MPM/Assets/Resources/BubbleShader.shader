@@ -1,4 +1,4 @@
-Shader "Custom/TestShader"
+Shader "Custom/BubbleShader"
 {
     Properties
     {
@@ -59,7 +59,10 @@ Shader "Custom/TestShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            half4 testMe2 = half4(39.4640007,9.28899956,-0.60799998, 1.0);
+            // Nvidia doesn't support cg, which is likely why this works on Mac and not Windows. It uses hlsl, so something is different
+            // maybe change CGPROGRAM to something supported for HLSL
+    // https://stackoverflow.com/questions/37747135/how-to-get-full-list-of-unity-shader-properties
+    half4 testMe2 = half4(39.4640007,9.28899956,-0.60799998, 1.0);
             
             // Testing
             int length = 5;
