@@ -2,19 +2,19 @@ Shader "Custom/TestShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (0,0,1,1)
+        _Color ("Color", Color) = (0,0,1,0)
         _MainTex ("Albedo (RGB)", 2D) = "blue" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" }
         LOD 200
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+        #pragma surface surf Standard fullforwardshadows alpha
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
@@ -50,7 +50,7 @@ Shader "Custom/TestShader"
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = 1;
+            o.Alpha = 0;
         }
         ENDCG
     }

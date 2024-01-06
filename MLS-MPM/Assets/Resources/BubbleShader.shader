@@ -2,7 +2,7 @@ Shader "Custom/BubbleShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
+        _Color ("Color", Color) = (1,1,1,0)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
@@ -19,8 +19,11 @@ Shader "Custom/BubbleShader"
         LOD 200
 
         CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
-#pragma exclude_renderers d3d11 gles
+
+        // Uncomment me if you are on MAC OS
+        // Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+        //#pragma exclude_renderers d3d11 gles
+
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard fullforwardshadows alpha
 
@@ -85,6 +88,7 @@ Shader "Custom/BubbleShader"
 
             fixed4 c2 = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c2.rgb;
+            //o.Albedo = float3(1, 0, 0);
             o.Alpha = 0;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
@@ -127,9 +131,9 @@ Shader "Custom/BubbleShader"
             {
                 discard;
             }
-
-            
+                
         }
+
         ENDCG
     }
     FallBack "Diffuse"
