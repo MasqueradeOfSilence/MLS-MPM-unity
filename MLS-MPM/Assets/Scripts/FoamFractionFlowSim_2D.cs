@@ -574,7 +574,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
     {
         print("Starting foam simulator");
         InitializeFoamSimulator();
-        gameInterface.DumpParticlesIntoScene(FlattenParticles());
+        gameInterface.DumpParticlesIntoScene(FlattenParticles(), true);
     }
     // test variable for stopping early -- will need to clean up when finished
     int testMe = 0;

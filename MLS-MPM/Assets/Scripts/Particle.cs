@@ -19,14 +19,14 @@ public class Particle : ScriptableObject
         this.affineMomentumMatrix = affineMomentumMatrix;
     }
 
-    public GameObject ConstructSphereFromParticle()
+    public GameObject ConstructSphereFromParticle(string materialName = "ClearBubbleTest")
     {
         if (bubble != null)
         {
             float unitySphereRadius = bubble.ComputeUnitySphereRadius();
-            return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass, unitySphereRadius);
+            return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass, unitySphereRadius, materialName);
         }
-        return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass);
+        return GeometryCreator.SpawnParticleSphere_2DVersion(position, mass, materialName: materialName);
     }
 
     public double2 GetPosition()

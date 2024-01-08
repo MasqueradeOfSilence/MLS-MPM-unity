@@ -34,9 +34,9 @@ public class GameInterface: MonoBehaviour
         }
     }
 
-    public void DumpParticlesIntoScene(Particle[] particles)
+    public void DumpParticlesIntoScene(Particle[] particles, bool shouldUseFFFShader = false)
     {
-        GameObject[] particleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles);
+        GameObject[] particleSpheres = GeometryCreator.SpawnFinalParticleSpheres(particles, shouldUseFFFShader);
         listOfParticleSpheres = particleSpheres;
         AddAllParticles();
     }

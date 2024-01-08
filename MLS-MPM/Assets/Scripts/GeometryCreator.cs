@@ -14,7 +14,7 @@ public class GeometryCreator: MonoBehaviour
      * Currently a Vector3 with a 0 for z, but will be extended to a full Vector3 in the 3D Version (to be coded).
      * Need to have another function that uses Particles on top
      */
-    public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f)
+    public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f, string materialName = "ClearBubbleTest")
     {
         // BUG: sphereSize isn't doing anything!
         bool spawnClearBubbleSphere = false;
@@ -35,7 +35,7 @@ public class GeometryCreator: MonoBehaviour
         if (spawnClearBubbleSphere)
         {
             //materialForSphere = Resources.Load("AirTest", typeof(Material)) as Material;
-            materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+            materialForSphere = Resources.Load(materialName, typeof(Material)) as Material;
         }
         else
         {
@@ -49,14 +49,23 @@ public class GeometryCreator: MonoBehaviour
     }
 
     // Note: Spawn may not be the best name, as we don't put them into the game until later
-    public static GameObject[] SpawnFinalParticleSpheres(Particle[] particles)
+    public static GameObject[] SpawnFinalParticleSpheres(Particle[] particles, bool shouldUseFFFShader = false)
     {
         GameObject[] finalParticleSpheres = new GameObject[particles.Length];
         for (int i = 0; i < particles.Length; i++)
         {
             Particle p = particles[i];
-            GameObject particleSphere = p.ConstructSphereFromParticle();
-            finalParticleSpheres[i] = particleSphere;
+            if (shouldUseFFFShader)
+            {
+                // TODO we shouldn't hardcode
+                GameObject particleSphere = p.ConstructSphereFromParticle("FFFBubbles");
+                finalParticleSpheres[i] = particleSphere;
+            }
+            else
+            {
+                GameObject particleSphere = p.ConstructSphereFromParticle();
+                finalParticleSpheres[i] = particleSphere;
+            }
         }
         return finalParticleSpheres;
     }
