@@ -83,10 +83,10 @@ public class Particle : ScriptableObject
         affineMomentumMatrix = C;
     }
 
-    public void SetBubbleWithSize(double volumeFraction)
+    public void SetBubbleWithSize(double volumeFraction, bool skipMe = false)
     {
         bubble = CreateInstance<Bubble>();
-        bubble.InstantiateBubble(volumeFraction);
+        bubble.InstantiateBubble(volumeFraction, skipMe);
         // bug: I think bubble is instantiated after the unity object is spawned?
     }
 

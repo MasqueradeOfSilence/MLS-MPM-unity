@@ -25,9 +25,9 @@ public class Bubble : ScriptableObject
         // Can't call this directly due to it being a ScriptableObject
     }
 
-    public void InstantiateBubble(double volumeFraction)
+    public void InstantiateBubble(double volumeFraction, bool skipMe = false)
     {
-        if (volumeFraction <= maxSkipSize) 
+        if (skipMe) 
         {
             bubbleSize = BubbleSize.SKIP;
         }
