@@ -4,6 +4,7 @@ public class Bubble : ScriptableObject
 {
     public enum BubbleSize 
     { 
+        SKIP,
         MICROSCOPIC, 
         SMALL, 
         MEDIUM, 
@@ -11,6 +12,7 @@ public class Bubble : ScriptableObject
     };
 
     // Thresholding: 128.8 - 134 range has the most bubbles.
+    private double maxSkipSize = -199;
     double maxMicroscopicSize = 50;
     double maxSmallSize = 100;
     double maxMediumSize = 134.5;
@@ -25,7 +27,11 @@ public class Bubble : ScriptableObject
 
     public void InstantiateBubble(double volumeFraction)
     {
-        if (volumeFraction <= maxMicroscopicSize)
+        if (volumeFraction <= maxSkipSize) 
+        {
+            bubbleSize = BubbleSize.SKIP;
+        }
+        else if (volumeFraction <= maxMicroscopicSize)
         {
             bubbleSize = BubbleSize.MICROSCOPIC;
         }
@@ -52,12 +58,13 @@ public class Bubble : ScriptableObject
         scalingFactorFloat += randomJitter;
         return bubbleSize switch
         {
+            BubbleSize.SKIP => 0,
             BubbleSize.MICROSCOPIC => 0.1f + scalingFactorFloat,
             BubbleSize.SMALL => 0.15f + scalingFactorFloat,
             BubbleSize.MEDIUM => 0.3f + scalingFactorFloat,
             BubbleSize.LARGE => 0.4f + scalingFactorFloat,
             _ => 0.1f,
-        };
+        } ;
     }
 
     public void SetBubbleSize(BubbleSize bubbleSize) 

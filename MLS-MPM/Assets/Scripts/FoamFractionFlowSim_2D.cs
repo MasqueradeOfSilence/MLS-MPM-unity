@@ -380,8 +380,9 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                 }
                 else
                 {
-                    // shrinking the bubble to better see the Voronoi interactions
-                    p.SetBubbleWithSize(0.0001);
+                    // TODO: decide if removing or shrinking, and if removing, don't remove fluid bubbles from the viewport. 
+                    // removing the bubble to better see the Voronoi interactions
+                    p.SetBubbleWithSize(-200);
                 }
                 particles[i, j] = p;
                 // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
