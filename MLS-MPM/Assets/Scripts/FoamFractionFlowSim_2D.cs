@@ -416,7 +416,13 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
         //    foamSurfacer.CreateUnweightedVoronoiDiagram(particles);
         //    foamSurfacer.CreateWeightedVoronoiDiagram(particles);
         //}
+        UpdateBubbleShaderWithVoronoi();
         iteration++;
+    }
+
+    private void UpdateBubbleShaderWithVoronoi()
+    {
+
     }
 
     public double2 UpdateParticleVelocityWithEnforcedBoundaryConditions(Particle particle)
