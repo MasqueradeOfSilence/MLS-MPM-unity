@@ -422,7 +422,9 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
 
     private void UpdateBubbleShaderWithVoronoi()
     {
-
+        VoronoiShaderDTO voronoiShaderDTO = ScriptableObject.CreateInstance<VoronoiShaderDTO>();
+        voronoiShaderDTO.Initialize(particles);
+        voronoiShaderDTO.UpdateVoronoiTexture();
     }
 
     public double2 UpdateParticleVelocityWithEnforcedBoundaryConditions(Particle particle)
