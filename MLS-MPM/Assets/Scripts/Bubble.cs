@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Bubble : ScriptableObject
 {
@@ -12,12 +13,14 @@ public class Bubble : ScriptableObject
     };
 
     // Thresholding: 128.8 - 134 range has the most bubbles.
-    double maxMicroscopicSize = 50;
-    double maxSmallSize = 100;
-    double maxMediumSize = 134.5;
+    readonly double maxMicroscopicSize = 50;
+    readonly double maxSmallSize = 100;
+    readonly double maxMediumSize = 134.5;
 
     private BubbleSize bubbleSize = BubbleSize.MEDIUM;
     private double volumeFraction = 0;
+    private float radius = -1;
+    private bool instantiated = false;
 
     public Bubble()
     {
@@ -47,15 +50,22 @@ public class Bubble : ScriptableObject
             bubbleSize = BubbleSize.LARGE;
         }
         this.volumeFraction = volumeFraction;
+        instantiated = true;
     }
 
     public float ComputeUnitySphereRadius()
     {
+        // Commenting out for now. Do we want to avoid a re-init since we are not changing bubble sizes after first time?
+        //if (radius != -1)
+        //{
+        //    return radius;
+        //}
         double scalingFactor = 0.01 * volumeFraction;
+        // Might want more jitter.
         float randomJitter = Random.Range(-0.01f, 0.01f);
         float scalingFactorFloat = (float)scalingFactor;
         scalingFactorFloat += randomJitter;
-        return bubbleSize switch
+        radius = bubbleSize switch
         {
             BubbleSize.SKIP => 0,
             BubbleSize.MICROSCOPIC => 0.1f + scalingFactorFloat,
@@ -64,6 +74,7 @@ public class Bubble : ScriptableObject
             BubbleSize.LARGE => 0.4f + scalingFactorFloat,
             _ => 0.1f,
         } ;
+        return radius;
     }
 
     public void SetBubbleSize(BubbleSize bubbleSize) 
@@ -79,5 +90,15 @@ public class Bubble : ScriptableObject
     public double GetVolumeFraction()
     {
         return volumeFraction;
+    }
+
+    public float GetRadius()
+    {
+        return radius;
+    }
+
+    public bool IsInstantiated()
+    {
+        return instantiated;
     }
 }

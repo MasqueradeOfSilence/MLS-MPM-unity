@@ -22,15 +22,22 @@ public class VoronoiShaderDTO : ScriptableObject
         spheres = new List<ShaderSphere>();
         foreach (Particle p in particles)
         {
-            if (p.GetBubble() == null)
+            Bubble b = p.GetBubble();
+            if (b == null)
             {
                 continue;
             }
-            if (p.GetBubble().GetBubbleSize() == Bubble.BubbleSize.SKIP)
+            if (b.GetBubbleSize() == Bubble.BubbleSize.SKIP)
             {
                 continue;
             }
-            ShaderSphere shaderSphere = new(p.GetPosition(), p.GetBubble().ComputeUnitySphereRadius());
+            if (!b.IsInstantiated())
+            {
+                continue;
+            }
+            // Mild issue: ComputeUnitySphereRadius has a randomness factor. This should only be done ONCE
+            // TODO: Bug -- If we do the randomness twice (ComputeUnitySphereRad instead of GetRad), we get a bunch of shattered glasslike fragments. If we only do it once, we see no Voronoi.
+            ShaderSphere shaderSphere = new(p.GetPosition(), b.GetRadius());
             spheres.Add(shaderSphere);
         }
     }
