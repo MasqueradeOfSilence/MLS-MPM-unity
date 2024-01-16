@@ -45,13 +45,13 @@ public class VoronoiShaderDTO : ScriptableObject
         {
             // TODO change z-position when 3D, also 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
-            radii.Add(shaderSphere.radius);
+            radii.Add(shaderSphere.radius); // TODO are these radii correct?
+            Debug.Log("RADIUS: " + shaderSphere.radius);
         }
-        if (sphereCenters.Count == 0 || radii.Count == 0 || sphereCenters.Count == 1 || radii.Count == 1)
+        if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
             return;
         }
-        Debug.Log("How many? " + sphereCenters.Count);
         material.SetVectorArray("_SphereCenters", sphereCenters);
         material.SetFloatArray("_SphereRadii", radii);
         material.SetInteger("_Count", sphereCenters.Count);

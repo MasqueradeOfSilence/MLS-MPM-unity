@@ -41,8 +41,8 @@ Shader "Custom/FFFShader"
         // TODO abstract out
 
         // it can't seem to handle length 4096
-        float4 _SphereCenters[704];
-        float _SphereRadii[704];
+        float4 _SphereCenters[900];
+        float _SphereRadii[900];
         int _Count;
         fixed4 _DebugCyan;
 
