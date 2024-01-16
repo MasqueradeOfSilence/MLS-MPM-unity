@@ -12,7 +12,6 @@ public class Bubble : ScriptableObject
     };
 
     // Thresholding: 128.8 - 134 range has the most bubbles.
-    private double maxSkipSize = -199;
     double maxMicroscopicSize = 50;
     double maxSmallSize = 100;
     double maxMediumSize = 134.5;

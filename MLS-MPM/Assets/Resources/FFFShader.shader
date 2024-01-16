@@ -33,14 +33,14 @@ Shader "Custom/FFFShader"
         {
             float2 uv_MainTex;
             float3 worldPos;
-            float bonusSphereRadius;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        float _SphereRadius;
-        // TODO abstract out, 900 is just a default test value
+        // TODO abstract out
+
+        // it can't seem to handle length 4096
         float4 _SphereCenters[900];
         float _SphereRadii[900];
         int _Count;

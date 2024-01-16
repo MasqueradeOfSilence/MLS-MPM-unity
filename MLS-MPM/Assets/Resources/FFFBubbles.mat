@@ -61,7 +61,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints:
-    - _Count: 0
+    - _Count: 4096
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -83,6 +83,7 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 0.21960783, g: 0.21960783, b: 0.21960783, a: 0}
+    - _DebugCyan: {r: 0, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SphereCenter: {r: 39.95, g: 9.195999, b: -1.237, a: 1}
     - _SphereCenters: {r: 1, g: 0, b: 0, a: 1}

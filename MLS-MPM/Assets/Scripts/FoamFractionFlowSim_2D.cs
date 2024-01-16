@@ -362,7 +362,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                 {
                     skipBubble = true;
                 }
-                System.Random random = new System.Random();
+                System.Random random = new();
                 double randomValue = random.NextDouble();
                 if (randomValue < 0.5 && p.GetMass() == 0.5) // Mass of 3 = fluid particle, 0.5 = air
                 {
@@ -383,7 +383,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                     // removing the bubble to better see the Voronoi interactions
                     // we do not want to skip the blue-labeled bubbles...
                     // volume fraction number is now not necessary.
-                    p.SetBubbleWithSize(-200, true);
+                    p.SetBubbleWithSize(-200, true); // many bubbles are not getting the right material assigned to them. it's still ClearBubbleTest which is incorrect.
                 }
                 particles[i, j] = p;
                 // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
@@ -607,7 +607,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
         {
             Simulate();
         }
-        gameInterface.UpdateParticles(FlattenParticles());
+        gameInterface.UpdateParticles(FlattenParticles(), true);
         gameInterface.NukeClones();
         testMe++;
     }

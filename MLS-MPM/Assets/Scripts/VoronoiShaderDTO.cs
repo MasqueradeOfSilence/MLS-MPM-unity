@@ -32,9 +32,9 @@ public class VoronoiShaderDTO : ScriptableObject
     }
     public void UpdateVoronoiTexture()
     {
-        // Since all the spheres will have the same material, it does not really matter which one we use
-        GameObject sphere1 = GameObject.Find("Sphere1");
-        Material material = sphere1.GetComponent<Renderer>().sharedMaterial;
+        // Grab a reference to the FFF shader -- NOTE, not all spheres may have it!!
+        GameObject sphere = GameObject.Find("Sphere27");
+        Material material = sphere.GetComponent<Renderer>().sharedMaterial;
         List<Vector4> sphereCenters = new();
         List<float> radii = new();
         foreach (ShaderSphere shaderSphere in spheres)

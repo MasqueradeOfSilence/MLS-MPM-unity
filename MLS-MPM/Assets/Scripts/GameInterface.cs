@@ -41,7 +41,7 @@ public class GameInterface: MonoBehaviour
         AddAllParticles();
     }
 
-    public void UpdateParticles(Particle[] particles)
+    public void UpdateParticles(Particle[] particles, bool fffMaterial = false)
     {
         // should be equal lengths
         for (int i = 0; i < listOfParticleSpheres.Length; i++)
@@ -55,9 +55,14 @@ public class GameInterface: MonoBehaviour
                 double macroscopicThreshold = 0.8;
                 if (radius >= macroscopicThreshold)
                 {
-                    Material materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
+                    Material materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material; // TODO FFFShader if needed
+                    if (fffMaterial)
+                    {
+                        materialForSphere = Resources.Load("FFFBubbles", typeof(Material)) as Material;
+                    }
                     currentParticleSphere.GetComponent<MeshRenderer>().material = materialForSphere;
                     currentParticleSphere.GetComponent<Renderer>().material = materialForSphere;
+                    currentParticleSphere.GetComponent<Renderer>().sharedMaterial = materialForSphere;
                 }
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }
