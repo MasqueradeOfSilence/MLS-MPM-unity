@@ -46,7 +46,6 @@ public class VoronoiShaderDTO : ScriptableObject
             // TODO change z-position when 3D, also 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
             radii.Add(shaderSphere.radius); // TODO are these radii correct?
-            Debug.Log("RADIUS: " + shaderSphere.radius);
         }
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
