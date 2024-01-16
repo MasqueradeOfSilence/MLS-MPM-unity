@@ -26,6 +26,10 @@ public class VoronoiShaderDTO : ScriptableObject
             {
                 continue;
             }
+            if (p.GetBubble().GetBubbleSize() == Bubble.BubbleSize.SKIP)
+            {
+                continue;
+            }
             ShaderSphere shaderSphere = new(p.GetPosition(), p.GetBubble().ComputeUnitySphereRadius());
             spheres.Add(shaderSphere);
         }
@@ -43,10 +47,11 @@ public class VoronoiShaderDTO : ScriptableObject
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
             radii.Add(shaderSphere.radius);
         }
-        if (sphereCenters.Count == 0 || radii.Count == 0)
+        if (sphereCenters.Count == 0 || radii.Count == 0 || sphereCenters.Count == 1 || radii.Count == 1)
         {
             return;
         }
+        Debug.Log("How many? " + sphereCenters.Count);
         material.SetVectorArray("_SphereCenters", sphereCenters);
         material.SetFloatArray("_SphereRadii", radii);
         material.SetInteger("_Count", sphereCenters.Count);

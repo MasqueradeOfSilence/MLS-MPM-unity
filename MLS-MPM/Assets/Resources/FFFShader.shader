@@ -6,8 +6,8 @@ Shader "Custom/FFFShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        _SphereCenters ("_SphereCenters", Vector) = (1, 0, 0, 1)
-        _SphereRadii ("_SphereRadii", Float) = 1.0
+        //_SphereCenters ("_SphereCenters", Vector) = (1, 0, 0, 1)
+        //_SphereRadii ("_SphereRadii", Float) = 1.0
         _Count("_Count", Integer) = 0
         _DebugCyan("_DebugCyan", Color) = (0, 1, 1, 1)
     }
@@ -41,8 +41,8 @@ Shader "Custom/FFFShader"
         // TODO abstract out
 
         // it can't seem to handle length 4096
-        float4 _SphereCenters[900];
-        float _SphereRadii[900];
+        float4 _SphereCenters[704];
+        float _SphereRadii[704];
         int _Count;
         fixed4 _DebugCyan;
 
