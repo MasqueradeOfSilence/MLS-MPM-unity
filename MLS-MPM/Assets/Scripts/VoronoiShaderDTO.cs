@@ -35,8 +35,7 @@ public class VoronoiShaderDTO : ScriptableObject
             {
                 continue;
             }
-            // Mild issue: ComputeUnitySphereRadius has a randomness factor. This should only be done ONCE
-            // TODO: Bug -- If we do the randomness twice (ComputeUnitySphereRad instead of GetRad), we get a bunch of shattered glasslike fragments. If we only do it once, we see no Voronoi.
+            // ComputeUnitySphereRadius has a randomness factor. This should only be done ONCE
             ShaderSphere shaderSphere = new(p.GetPosition(), b.GetRadius());
             spheres.Add(shaderSphere);
         }
@@ -52,8 +51,7 @@ public class VoronoiShaderDTO : ScriptableObject
         {
             // TODO change z-position when 3D, also 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
-            radii.Add(shaderSphere.radius); // TODO are these radii correct?
-            Debug.Log(shaderSphere.radius);
+            radii.Add(shaderSphere.radius);
         }
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
