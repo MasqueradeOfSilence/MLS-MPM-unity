@@ -60,12 +60,12 @@ Shader "Custom/FFFShader"
             o.Alpha = 0;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-    
+            half radiusOfCollider = 0.5; // Default radius for Unity colliders
             half minDist = 10000;
             int minI = -1;
             for (int i = 0; i < _Count; i++)
             {
-                half dist = distance(IN.worldPos, _SphereCenters[i].xyz) - _SphereRadii[i];
+                half dist = distance(IN.worldPos, _SphereCenters[i].xyz) - (_SphereRadii[i] * radiusOfCollider);
                 if (dist < minDist)
                 {
                     minDist = dist;
@@ -75,7 +75,7 @@ Shader "Custom/FFFShader"
     
             for (int j = 0; j < _Count; j++)
             {
-                bool onCurrentSphere = distance(_SphereCenters[j].xyz, IN.worldPos) <= _SphereRadii[j];
+                bool onCurrentSphere = distance(_SphereCenters[j].xyz, IN.worldPos) <= (_SphereRadii[j] * radiusOfCollider);
                 if (onCurrentSphere && minI != j)
                 {
                     discard;

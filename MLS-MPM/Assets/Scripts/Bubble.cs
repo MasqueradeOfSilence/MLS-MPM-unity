@@ -51,15 +51,19 @@ public class Bubble : ScriptableObject
         }
         this.volumeFraction = volumeFraction;
         instantiated = true;
+        if (radius == -1)
+        {
+            ComputeUnitySphereRadius();
+        }
     }
 
     public float ComputeUnitySphereRadius()
     {
         // Commenting out for now. Do we want to avoid a re-init since we are not changing bubble sizes after first time?
-        //if (radius != -1)
-        //{
-        //    return radius;
-        //}
+        if (radius != -1)
+        {
+            return radius;
+        }
         double scalingFactor = 0.01 * volumeFraction;
         // Might want more jitter.
         float randomJitter = Random.Range(-0.01f, 0.01f);
