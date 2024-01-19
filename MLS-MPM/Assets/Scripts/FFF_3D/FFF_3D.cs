@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /**
- * FFF_3D: Simulates a 3D foam with a small pool of water at the bottom, using the Foam Fraction Flow method. 
+ * FFF_3D: Simulates a 3D foam with a small pool of water at the bottom.
+ *  Uses the Foam Fraction Flow method. 
  */
 
 public class FFF_3D : MonoBehaviour
 {
+    /**
+     * Data members
+     */
+    private Particle_3D[,] particles;
+
     // Start is called before the first frame update
     void Start()
     {

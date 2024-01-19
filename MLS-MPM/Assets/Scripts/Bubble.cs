@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class Bubble : ScriptableObject
 {
@@ -13,9 +12,9 @@ public class Bubble : ScriptableObject
     };
 
     // Thresholding: 128.8 - 134 range has the most bubbles.
-    readonly double maxMicroscopicSize = 50;
-    readonly double maxSmallSize = 100;
-    readonly double maxMediumSize = 134.5;
+    private readonly double maxMicroscopicSize = 50;
+    private readonly double maxSmallSize = 100;
+    private readonly double maxMediumSize = 134.5;
 
     private BubbleSize bubbleSize = BubbleSize.MEDIUM;
     private double volumeFraction = 0;
