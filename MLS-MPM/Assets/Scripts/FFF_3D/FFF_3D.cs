@@ -12,7 +12,7 @@ public class FFF_3D : MonoBehaviour
     /**
      * Data members
      */
-    private Particle_3D[,] particles;
+    private Particle_3D[][][] particles;
 
     // Start is called before the first frame update
     void Start()
