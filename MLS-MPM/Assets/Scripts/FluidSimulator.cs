@@ -116,7 +116,7 @@ public class FluidSimulator : MonoBehaviour
                         double[] distanceFromCurrentParticleToCurrentNeighbor = GeneralMathUtils.ComputeDistanceFromCurrentParticleToCurrentNeighbor(neighborPosition, particlePosition);
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
-                        // note: number of particles = number of cells, since they are controlled by gridResolution
+                        // note: number of particles = number of cells, since they are controlled by resolution
                         // I believe this should actually be the grid cell at neighbor position, NOT i, j!
                         GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
