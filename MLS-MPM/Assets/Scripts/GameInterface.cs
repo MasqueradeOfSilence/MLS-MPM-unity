@@ -55,7 +55,7 @@ public class GameInterface: MonoBehaviour
                 double macroscopicThreshold = 0.8;
                 if (radius >= macroscopicThreshold)
                 {
-                    Material materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material; // TODO FFFShader if needed
+                    Material materialForSphere = Resources.Load("ClearBubbleTest", typeof(Material)) as Material;
                     if (fffMaterial)
                     {
                         materialForSphere = Resources.Load("FFFBubbles", typeof(Material)) as Material;

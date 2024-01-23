@@ -30,8 +30,10 @@ public class Grid_3D : ScriptableObject
         this.resolution = resolution;
         for (int i = 0; i < resolution; i++) 
         {
+            grid[i] = new Cell_3D[resolution][];
             for (int j = 0; j < resolution; j++)
             {
+                grid[i][j] = new Cell_3D[resolution];
                 for (int k = 0; k < resolution; k++)
                 {
                     Cell_3D cell = CreateInstance("Cell_3D") as Cell_3D;

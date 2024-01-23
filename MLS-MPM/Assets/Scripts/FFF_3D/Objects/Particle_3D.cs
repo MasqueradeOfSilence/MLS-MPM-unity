@@ -80,6 +80,11 @@ public class Particle_3D : ScriptableObject
         bubbleSet = true;
     }
 
+    public bool HasBubble()
+    {
+        return bubble != null;
+    }
+
     // Affine momentum matrix for APIC ------------------------------
     public double3x3 GetC()
     {

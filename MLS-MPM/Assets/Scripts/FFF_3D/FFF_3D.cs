@@ -16,9 +16,10 @@ public class FFF_3D : MonoBehaviour
     private Grid_3D[] grid;
     private int gridResolution = 64;
     private const double timestep = 0.2;
-    private const int numberOfSimulationsPerUpdateCall = (int) (1 / timestep);
+    private const int numSimsPerUpdate = (int) (1 / timestep);
     private const double gravity = -9.8;
-
+    private int neighborDimension = 3;
+    private GameInterface_3D gameInterface;
 
     // Start is called before the first frame update
     void Start()

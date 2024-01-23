@@ -16,7 +16,6 @@ public class GeometryCreator: MonoBehaviour
      */
     public static GameObject SpawnParticleSphere_2DVersion(double2 location, double mass, float sphereSize = 0.1f, string materialName = "ClearBubbleTest")
     {
-        // BUG: sphereSize isn't doing anything!
         bool spawnClearBubbleSphere = false;
         AirParticle air = ScriptableObject.CreateInstance("AirParticle") as AirParticle;
         air.InitParticle(new double2(0), new double2(0), new double2x2(0));
