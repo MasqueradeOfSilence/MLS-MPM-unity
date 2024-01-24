@@ -89,4 +89,32 @@ public class MathUtils_3D
     {
         return weight * mass;
     }
+    
+    public static double UpdateMass(double initialMass, double contribution)
+    {
+        return initialMass + contribution;
+    }
+
+    public static double3 UpdateVelocity(double massContribution, double3 particleVelocity, double3 Q, double3 oldCellVelocity) 
+    {
+        double3 newCellVelocity = massContribution * (particleVelocity + Q);
+        return oldCellVelocity + newCellVelocity;
+    }
+
+    /**
+     * P2G2
+     */
+    public static double ComputeVolume(double mass, double density)
+    {
+        if (density == 0)
+        {
+            density = 0.001;
+        }
+        return mass / density;
+    }
+
+    public static double ComputeTrace(double3x3 strain)
+    {
+        return strain.c0.x + strain.c1.y + strain.c2.z;
+    }
 }

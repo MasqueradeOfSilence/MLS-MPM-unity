@@ -80,16 +80,64 @@ public class FFF_3D : MonoBehaviour
                         {
                             for (int nz = 0; nz < neighborDimension; nz++)
                             {
+                                double mass = p.GetMass();
+                                double3 velocity = p.GetVelocity();
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
                                 double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
                                 double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
-                                double massContribution = MathUtils_3D.ComputeMassContribution(weight, p.GetMass());
+                                // Mass contribution of neighbor
+                                double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
                                 Cell_3D correspondingCell = grid.At(neighborPosition);
+                                double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
+                                correspondingCell.SetMass(updatedMass);
+                                double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
+                                correspondingCell.SetVelocity(updatedVelocity);
+                                grid.UpdateCellAt(neighborPosition, correspondingCell);
+                            }
+                        }
+                        particles[i][j][k] = p;
+                    }
+                }
+            }
+        }
+    }
+
+    public void ParticleToGridStep2()
+    {
+        for (int i = 0; i < particles.Length; i++)
+        {
+            for (int j = 0; j < particles[i].Length; j++)
+            {
+                for (int k = 0; k < particles[i][j].Length; k++)
+                {
+                    // Obtaining requisite data
+                    Particle_3D p = particles[i][j][k];
+                    double3 particlePosition = p.GetPosition();
+                    int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
+                    double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
+                    List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
+
+                    double density = 0;
+
+                    for (int nx = 0; nx < neighborDimension; nx++)
+                    {
+                        for (int ny = 0; ny < neighborDimension; ny++)
+                        {
+                            for (int nz = 0; nz < neighborDimension; nz++)
+                            {
+                                double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                                int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                                double volume = MathUtils_3D.ComputeVolume(p.GetMass(), density);
+                                double3x3 strain = p.GetC();
+                                double trace = MathUtils_3D.ComputeTrace(strain);
+                                
+
                             }
                         }
                     }
                 }
+                // T-T <~ there are way too many curly braces in here 
             }
         }
     }
@@ -106,8 +154,7 @@ public class FFF_3D : MonoBehaviour
 
     public void InitGrid()
     {
-        grid = ScriptableObject.CreateInstance("Grid_3D") as Grid_3D;
-        grid.Init(resolution);
+        grid = GeometryCreator_3D.CreateNewGrid(resolution);
     }
 
     public void InitParticles()
@@ -127,14 +174,12 @@ public class FFF_3D : MonoBehaviour
                     double3x3 initialC = new(0);
                     if (shouldCreateFluidParticle)
                     {
-                        FluidParticle_3D p = ScriptableObject.CreateInstance("FluidParticle_3D") as FluidParticle_3D;
-                        p.Init(tempParticlePositions[i][j][k], initialVelocity, initialC);
+                        FluidParticle_3D p = GeometryCreator_3D.CreateNewFluidParticle(tempParticlePositions[i][j][k], initialVelocity, initialC);
                         particles[i][j][k] = p;
                     }
                     else
                     {
-                        AirParticle_3D p = ScriptableObject.CreateInstance("AirParticle_3D") as AirParticle_3D;
-                        p.Init(tempParticlePositions[i][j][k], initialVelocity, initialC);
+                        AirParticle_3D p = GeometryCreator_3D.CreateNewAirParticle(tempParticlePositions[i][j][k], initialVelocity, initialC);
                         particles[i][j][k] = p;
                     }
                 }

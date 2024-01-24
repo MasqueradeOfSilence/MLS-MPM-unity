@@ -77,9 +77,30 @@ public class GeometryCreator_3D : MonoBehaviour
      */
     public static Particle_3D CreateNewParticle(double3 position, double3 velocity, double mass, double3x3 c)
     {
-        Particle_3D particle = ScriptableObject.CreateInstance("Particle_3D") as Particle_3D;
-        particle.Init(position, velocity, mass, c);
-        return particle;
+        Particle_3D p = ScriptableObject.CreateInstance("Particle_3D") as Particle_3D;
+        p.Init(position, velocity, mass, c);
+        return p;
+    }
+
+    public static FluidParticle_3D CreateNewFluidParticle(double3 position, double3 velocity, double3x3 c)
+    {
+        FluidParticle_3D p = ScriptableObject.CreateInstance("FluidParticle_3D") as FluidParticle_3D;
+        p.Init(position, velocity, c);
+        return p;
+    }
+
+    public static AirParticle_3D CreateNewAirParticle(double3 position, double3 velocity, double3x3 c)
+    {
+        AirParticle_3D p = ScriptableObject.CreateInstance("AirParticle_3D") as AirParticle_3D;
+        p.Init(position, velocity, c);
+        return p;
+    }
+
+    public static Grid_3D CreateNewGrid(int resolution)
+    {
+        Grid_3D grid = ScriptableObject.CreateInstance("Grid_3D") as Grid_3D;
+        grid.Init(resolution);
+        return grid;
     }
 
     public static int GetSphereID()
