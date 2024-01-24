@@ -128,16 +128,72 @@ public class FFF_3D : MonoBehaviour
                             {
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-                                double volume = MathUtils_3D.ComputeVolume(p.GetMass(), density);
-                                double3x3 strain = p.GetC();
-                                double trace = MathUtils_3D.ComputeTrace(strain);
-                                
+                                Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                                double mass = nearestCellToParticle.GetMass();
+                                density = MathUtils_3D.UpdateDensity(weight, mass, density);
+                            }
+                        }
+                    }
+                    double volume = MathUtils_3D.ComputeVolume(p.GetMass(), density);
+                    double3x3 strain = p.GetC();
+                    double trace = MathUtils_3D.ComputeTrace(strain);
+                    strain.c0.z = strain.c1.y = strain.c2.x = trace;
 
+                    // Herschel-Bulkley
+                    double yieldStress_T0 = 0.319;
+                    double viscosity_mu = 2.72;
+                    double flowIndex_n = 0.22;
+                    double eosStiffness = 19.6;
+                    double restDensity = 3.108;
+                    int eosPower = 2;
+                    double smallestValue = double.MaxValue;
+                    // Mapping
+                    for (int l = 0; l < 2; l++)
+                    {
+                        for (int m = 0; m < 2; m++)
+                        {
+                            double currentValue = strain[l][m];
+                            if (currentValue < smallestValue)
+                            {
+                                smallestValue = currentValue;
+                            }
+                        }
+                    }
+                    double extraOffset = 0;
+                    if (smallestValue < 0)
+                    {
+                        extraOffset = 0.001;
+                        smallestValue = math.abs(smallestValue);
+                        extraOffset += smallestValue;
+                        for (int row = 0; row < 2; row++)
+                        {
+                            for (int col = 0; col < 2; col++)
+                            {
+                                strain[row][col] += extraOffset;
+                            }
+                        }
+                    }
+                    double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
+                        strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
+                    double3x3 equation16Term0 = MathUtils_3D.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
+                    for (int nx = 0; nx < neighborDimension; nx++)
+                    {
+                        for (int ny = 0; ny < neighborDimension; ny++)
+                        {
+                            for (int nz = 0; nz < neighborDimension; nz++)
+                            {
+                                double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                                int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                                double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                                Cell_3D correspondingCell = grid.At(neighborPosition);
+                                double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
+                                double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
+                                grid.UpdateCellAt(neighborPosition, correspondingCell);
                             }
                         }
                     }
                 }
-                // T-T <~ there are way too many curly braces in here 
+                // T-T <~ holy crap that's a lot of curly braces
             }
         }
     }

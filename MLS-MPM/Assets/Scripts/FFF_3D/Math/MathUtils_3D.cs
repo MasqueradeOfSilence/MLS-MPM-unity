@@ -104,6 +104,11 @@ public class MathUtils_3D
     /**
      * P2G2
      */
+    public static double UpdateDensity(double weight, double mass, double density)
+    {
+        return density + (mass * weight);
+    }
+
     public static double ComputeVolume(double mass, double density)
     {
         if (density == 0)
@@ -116,5 +121,60 @@ public class MathUtils_3D
     public static double ComputeTrace(double3x3 strain)
     {
         return strain.c0.x + strain.c1.y + strain.c2.z;
+    }
+
+    public static double ComputePressure(double eosStiffness, double density, double restDensity, double eosPower)
+    {
+        // Note: eosStiffness is applied to the term after it's raised to the power and 1 is subtracted from it.
+        return Math.Max(-0.1, eosStiffness * (Math.Pow((density / restDensity), eosPower) - 1));
+    }
+
+    public static double3x3 CreateStressMatrix(double pressure)
+    {
+        double3x3 stressMatrix = new(
+            new double3(-pressure, 0, 0),
+            new double3(0, -pressure, 0),
+            new double3(0, 0, -pressure)
+        );
+
+        return stressMatrix;
+    }
+
+    public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
+        double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower, double offset = 0)
+    {
+        double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
+        double3x3 pressureTimesTranspose = CreateStressMatrix(pressure);
+        double3x3 strainRaisedToPower = new();
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                strainRaisedToPower[i][j] = math.pow(strain_deltaVPlusDeltaVTransposed[i][j], flowIndex_n);
+            }
+        }
+        strainRaisedToPower -= offset;
+        double3x3 viscosity = viscosity_mu * strainRaisedToPower;
+        double3x3 shearStress = yieldStress_T0 + viscosity;
+        double3x3 toReturn = pressureTimesTranspose + shearStress;
+        return toReturn;
+    }
+
+    public static double3x3 ComputeEquation16Term0(double3x3 stress, double volume, double dt)
+    {
+        double3x3 term0 = -volume * 4 * stress * dt;
+        return term0;
+    }
+
+    public static double3 ComputeMomentum(double3x3 equation16Term0, double weight, double3 distanceFromParticleToNeighbor)
+    {
+        double3x3 firstFactorMatrix = equation16Term0 * weight;
+        double3 secondFactorVector = distanceFromParticleToNeighbor;
+        return math.mul(firstFactorMatrix, secondFactorVector);
+    }
+
+    public static double3 AddMomentumToVelocity(double3 momentum, double3 initialVelocity)
+    {
+        return momentum + initialVelocity;
     }
 }
