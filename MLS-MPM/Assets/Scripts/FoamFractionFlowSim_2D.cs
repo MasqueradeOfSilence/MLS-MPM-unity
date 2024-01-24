@@ -155,7 +155,6 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                         double2 Q = P2G1Math.ComputeQ(C, distanceFromCurrentParticleToCurrentNeighbor);
                         double massContribution = P2G1Math.ComputeMassContribution(weight, particle.GetMass());
                         // note: number of particles = number of cells, since they are controlled by resolution
-                        // TODO if neighbor position is negative, something is really screwy...
                         GridCell correspondingCell = grid.At(neighborPosition[0], neighborPosition[1]);
                         correspondingCell.SetMass(P2G1Math.RecomputeCellMassAndReturnIt(correspondingCell.GetMass(), massContribution));
                         correspondingCell.SetVelocity(P2G1Math.RecomputeCellVelocityAndReturnIt(massContribution, particle.GetVelocity(), Q, correspondingCell.GetVelocity()));

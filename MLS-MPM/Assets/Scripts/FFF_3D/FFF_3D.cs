@@ -73,13 +73,19 @@ public class FFF_3D : MonoBehaviour
                     int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
                     double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
                     List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
+                    double3x3 C = p.GetC();
                     for (int nx = 0; nx < neighborDimension; nx++)
                     {
                         for (int ny = 0; ny < neighborDimension; ny++) 
                         {
                             for (int nz = 0; nz < neighborDimension; nz++)
                             {
-
+                                double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                                int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                                double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                                double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
+                                double massContribution = MathUtils_3D.ComputeMassContribution(weight, p.GetMass());
+                                Cell_3D correspondingCell = grid.At(neighborPosition);
                             }
                         }
                     }
