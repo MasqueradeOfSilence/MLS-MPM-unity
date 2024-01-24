@@ -188,6 +188,7 @@ public class FFF_3D : MonoBehaviour
                                 Cell_3D correspondingCell = grid.At(neighborPosition);
                                 double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
                                 double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
+                                correspondingCell.SetVelocity(updatedVelocity);
                                 grid.UpdateCellAt(neighborPosition, correspondingCell);
                             }
                         }
