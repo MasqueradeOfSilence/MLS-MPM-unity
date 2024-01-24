@@ -199,6 +199,52 @@ public class FFF_3D : MonoBehaviour
         }
     }
 
+    public void UpdateGrid()
+    {
+        for (int i = 0; i < resolution; i++) 
+        {
+            for (int j =  0; j < resolution; j++) 
+            {
+                for (int k = 0; k < resolution; k++)
+                {
+                    int3 position = new(i, j, k);
+                    Cell_3D cell = grid.At(position);
+                    if (cell.GetMass() > 0)
+                    {
+                        cell.SetVelocity(cell.GetVelocity() / cell.GetMass());
+                        cell.SetVelocity(cell.GetVelocity() + (timestep * new double3(0, gravity, 0)));
+                        double3 updatedVelocityWithBoundary = UpdateVelocityWithBoundary(i, j, k, cell.GetVelocity());
+                        cell.SetVelocity(updatedVelocityWithBoundary);
+                        grid.UpdateCellAt(position, cell);
+                    }
+                }
+            }
+        }
+    }
+
+    private double3 UpdateVelocityWithBoundary(int i, int j, int k, double3 velocity)
+    {
+        double3 velocityWithBoundary = velocity;
+        if (i < 2 || i > resolution - 3)
+        {
+            velocityWithBoundary.x = 0;
+        }
+        if (j < 2 || j > resolution - 3)
+        {
+            velocityWithBoundary.y = 0;
+        }
+        if (k < 2 || k > resolution - 3)
+        {
+            velocityWithBoundary.z = 0;
+        }
+        return velocityWithBoundary;
+    }
+
+    public void GridToParticleStep()
+    {
+
+    }
+
     /**
      * Setup (Init) functions
      */
