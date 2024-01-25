@@ -214,4 +214,10 @@ public class MathUtils_3D
     {
         return position + (velocity * dt);
     }
+
+    public static bool IsAir(Particle_3D p)
+    {
+        double airMass = 0.5;
+        return p.GetMass() == airMass;
+    }
 }

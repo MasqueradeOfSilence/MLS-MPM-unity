@@ -344,7 +344,19 @@ public class FFF_3D : MonoBehaviour
             {
                 for (int k = 0; k < particles[i][j].Length; k++)
                 {
-
+                    bool skipBubble = false;
+                    Particle_3D p = particles[i][j][k];
+                    if ((i % 2 == 0 || j % 2 == 0 || k % 2 == 0) && MathUtils_3D.IsAir(p))
+                    {
+                        skipBubble = true;
+                    }
+                    System.Random random = new();
+                    double randomValue = random.NextDouble();
+                    if (randomValue < 0.5 && MathUtils_3D.IsAir(p))
+                    {
+                        skipBubble = true;
+                    }
+                    double volumeFraction;
                 }
             }
         }
