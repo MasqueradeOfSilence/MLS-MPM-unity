@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -242,7 +243,116 @@ public class FFF_3D : MonoBehaviour
 
     public void GridToParticleStep()
     {
+        for (int i = 0; i < particles.Length; i++)
+        {
+            for (int j = 0; j < particles[i].Length; j++)
+            {
+                for (int k = 0; k < particles[i][j].Length; k++)
+                {
+                    Particle_3D p = particles[i][j][k];
+                    double3 particlePosition = p.GetPosition();
+                    p.ResetVelocity();
+                    int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
+                    double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
+                    List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
+                    // APIC matrix, see equation 8 of MLS-MPM paper
+                    double3x3 B = 0;
+                    for (int nx = 0; nx < neighborDimension; nx++) 
+                    {
+                        for (int ny = 0; ny < neighborDimension; ny++) 
+                        {
+                            for (int nz = 0; nz < neighborDimension; nz++)
+                            {
+                                double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                                int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                                double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                                Cell_3D neighborCell = grid.At(neighborPosition);
+                                double3 neighborVelocity = neighborCell.GetVelocity();
+                                double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
+                                double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
+                                B = MathUtils_3D.UpdateB(B, term);
+                                double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
+                                p.SetVelocity(updatedVelocity);
+                            }
+                        }
+                    }
+                    double3x3 updatedC = MathUtils_3D.RecomputeCMatrix(B);
+                    p.SetC(updatedC);
+                    // Move particle
+                    double3 advectedPosition = MathUtils_3D.AdvectParticle(p.GetPosition(), p.GetVelocity(), timestep);
+                    p.SetPosition(advectedPosition);
+                    // Clamp
+                    double3 clampedPosition = ClampPosition(p);
+                    p.SetPosition(clampedPosition);
+                    // Enforce boundaries
+                    double3 boundedVelocity = EnforceBoundaryVelocity(p);
+                    p.SetVelocity(boundedVelocity);
+                    particles[i][j][k] = p;
+                }
+            }
+        }
+    }
 
+    private double3 ClampPosition(Particle_3D p)
+    {
+        return math.clamp(p.GetPosition(), 1, resolution - 2);
+    }
+
+    public double3 EnforceBoundaryVelocity(Particle_3D p)
+    {
+        double3 velocity = p.GetVelocity();
+        double3 xN = p.GetPosition() + velocity;
+        const double wallMin = 3;
+        double wallMax = resolution - 4;
+        if (xN.x < wallMin)
+        {
+            velocity.x += (wallMin - xN.x);
+        }
+        if (xN.x > wallMax)
+        {
+            velocity.x += (wallMax - xN.x);
+        }
+        if (xN.y < wallMin)
+        {
+            velocity.y += (wallMin - xN.y);
+        }
+        if (xN.y > wallMax)
+        {
+            velocity.y += (wallMax - xN.y);
+        }
+        if (xN.z < wallMin)
+        {
+            velocity.z += (wallMin - xN.z);
+        }
+        if (xN.z > wallMax)
+        {
+            velocity.z += (wallMax - xN.z);
+        }
+
+        return velocity;
+    }
+
+    /**
+     * Bubble functionality
+     */
+    private void DetermineBubbleSizes()
+    {
+        List<Particle_3D> flatParticleList = GetFlattenedParticleList();
+        for (int i = 0; i < particles.Length; i++)
+        {
+            for (int j = 0; j < particles[i].Length; j++)
+            {
+                for (int k = 0; k < particles[i][j].Length; k++)
+                {
+
+                }
+            }
+        }
+    }
+
+    private List<Particle_3D> GetFlattenedParticleList()
+    {
+        return particles.SelectMany(array2D => array2D.SelectMany(array1D => array1D)).ToList();
     }
 
     /**

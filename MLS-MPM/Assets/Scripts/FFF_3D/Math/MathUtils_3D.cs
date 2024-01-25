@@ -177,4 +177,41 @@ public class MathUtils_3D
     {
         return momentum + initialVelocity;
     }
+
+    /**
+     * G2P
+     */
+    public static double3 ComputeWeightedVelocity(double3 velocity, double weight)
+    {
+        return velocity * weight;
+    }
+
+    public static double3x3 ComputeTerm(double3 velocity, double3 distance)
+    {
+        return new double3x3(
+            velocity.x * distance.x, velocity.y * distance.x, velocity.z * distance.x,
+            velocity.x * distance.y, velocity.y * distance.y, velocity.z * distance.y,
+            velocity.x * distance.z, velocity.y * distance.z, velocity.z * distance.z
+        );
+    }
+
+    public static double3x3 UpdateB(double3x3 B, double3x3 term)
+    {
+        return B + term;
+    }
+
+    public static double3 AddWeightedVelocity(double3 velocity, double3 weightedVelocity)
+    {
+        return velocity + weightedVelocity;
+    }
+
+    public static double3x3 RecomputeCMatrix(double3x3 B)
+    {
+        return B * 4;
+    }
+
+    public static double3 AdvectParticle(double3 position, double3 velocity, double dt)
+    {
+        return position + (velocity * dt);
+    }
 }

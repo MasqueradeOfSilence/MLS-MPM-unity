@@ -32,6 +32,11 @@ public class Particle_3D : ScriptableObject
         initialized = true;
     }
 
+    public void ResetVelocity()
+    {
+        velocity = 0;
+    }
+
     /**
      * Getters and Setters
      * 
