@@ -20,6 +20,14 @@ public class Particle_3D : ScriptableObject
     private bool initialized = false;
     private bool bubbleSet = false;
 
+    public void CreateBlank()
+    {
+        position = 0;
+        velocity = 0;
+        mass = 0;
+        affineMomentumMatrix = 0;
+    }
+
     /**
      * Effectively the constructor to initialize the scriptable object
      */

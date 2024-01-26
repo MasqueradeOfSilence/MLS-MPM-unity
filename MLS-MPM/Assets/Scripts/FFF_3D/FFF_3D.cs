@@ -11,34 +11,72 @@ using UnityEngine;
 
 public class FFF_3D : MonoBehaviour
 {
-
     /**
      * Data members
      */
     private Particle_3D[][][] particles;
     private Grid_3D grid;
-    private int resolution = 64;
+    private readonly int resolution = 64;
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int) (1 / timestep);
     private const double gravity = -9.8;
-    private int neighborDimension = 3;
+    private readonly int neighborDimension = 3;
     private GameInterface_3D gameInterface;
     private WaterSurfacer_3D waterSurfacer;
     int iteration = 0;
     private const string geoAttacher = "ExampleGeo";
     // it is a subservient god, for it creates and destroys upon command
     private const string geoGod = "CreatorDestroyer";
+    private int numUpdates = 1;
+    private bool shouldStopEarly = true; // TRUE only for debug purposes
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Init();
+        // TODO this freezes Unity right now
+        gameInterface.DumpParticlesIntoScene(GetFlattenedParticleList().ToArray(), true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        return;
+        if (shouldStopEarly && numUpdates > 1)
+        {
+            numUpdates++;
+            return;
+        }
+        for (int i = 0; i < numSimsPerUpdate; i++)
+        {
+            Simulate();
+        }
+        gameInterface.UpdateParticles(GetFlattenedParticleList().ToArray(), true);
+        gameInterface.NukeClones();
+        numUpdates++;
+    }
+
+    /**
+     * High-level simulation logic
+     */
+    public void Simulate()
+    {
+        ClearGrid();
+        ParticleToGridStep1();
+        ParticleToGridStep2();
+        UpdateGrid();
+        GridToParticleStep();
+        if (iteration == 1)
+        {
+            Debug.Log("Foam simulator beginning!");
+            DetermineBubbleSizes();
+        }
+        if (waterSurfacer != null)
+        {
+            waterSurfacer.InitializeFluidSurface(particles);
+        }
+        ComputeVoronoi();
+        iteration++;
     }
 
     /**
@@ -357,6 +395,14 @@ public class FFF_3D : MonoBehaviour
                         skipBubble = true;
                     }
                     double volumeFraction = VolumeFractionUtils.ComputeVolumeFraction(flatParticleList, p);
+                    if (skipBubble)
+                    {
+                        p.SetBubble(-200, true);
+                    }
+                    else
+                    {
+                        p.SetBubble(volumeFraction);
+                    }
                 }
             }
         }
@@ -390,8 +436,10 @@ public class FFF_3D : MonoBehaviour
         // Fluid at bottom
         for (int i = 0; i < resolution; i++) 
         {
+            particles[i] = new Particle_3D[resolution][];
             for (int j = 0; j < resolution; j++)
             {
+                particles[i][j] = new Particle_3D[resolution];
                 for (int k = 0; k < resolution; k++)
                 {
                     bool shouldCreateFluidParticle = (j < 3);
@@ -453,6 +501,16 @@ public class FFF_3D : MonoBehaviour
             iInt++;
         }
         return grid;
+    }
+
+    /**
+     * Voronoi
+     */
+    private void ComputeVoronoi()
+    {
+        VoronoiShaderDTO_3D dto = ScriptableObject.CreateInstance<VoronoiShaderDTO_3D>();
+        dto.Init(GetFlattenedParticleList());
+        dto.UpdateVoronoiTexture();
     }
 
     /**

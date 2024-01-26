@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class VoronoiShaderDTO : ScriptableObject
+public class VoronoiShaderDTO_3D : ScriptableObject
 {
     private class ShaderSphere
     {
-        public double2 center;
+        public double3 center;
         public float radius;
-        public ShaderSphere(double2 center, float radius)
+        public ShaderSphere(double3 center, float radius)
         {
             this.center = center;
             this.radius = radius;
         }
     }
     private List<ShaderSphere> spheres;
-    public void Initialize(Particle[,] particles)
+
+    public void Init(List<Particle_3D> particles)
     {
         spheres = new List<ShaderSphere>();
-        foreach (Particle p in particles)
+        foreach (Particle_3D p in particles)
         {
             Bubble b = p.GetBubble();
             if (b == null)
@@ -34,22 +35,23 @@ public class VoronoiShaderDTO : ScriptableObject
             {
                 continue;
             }
-            // ComputeUnitySphereRadius has a randomness factor. This should only be done ONCE
             ShaderSphere shaderSphere = new(p.GetPosition(), b.GetRadius());
             spheres.Add(shaderSphere);
         }
     }
+
     public void UpdateVoronoiTexture()
     {
         // Grab a reference to the FFF shader -- NOTE, not all spheres may have it!!
-        GameObject sphere = GameObject.Find("Sphere27");
+        string sphereWithTexture = "Sphere27";
+        GameObject sphere = GameObject.Find(sphereWithTexture);
         Material material = sphere.GetComponent<Renderer>().sharedMaterial;
         List<Vector4> sphereCenters = new();
         List<float> radii = new();
         foreach (ShaderSphere shaderSphere in spheres)
         {
-            // Z is 0 due to 3D, also 4th value is meaningless
-            sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
+            // 4th value is meaningless
+            sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
         }
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
