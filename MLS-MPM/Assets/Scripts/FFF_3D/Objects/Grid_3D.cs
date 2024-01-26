@@ -13,7 +13,7 @@ public class Grid_3D : ScriptableObject
      */
     private int resolution;
     private Cell_3D[][][] grid;
-    private const int defaultResolution = 64;
+    private const int defaultResolution = 32; // or 64
     private bool gridInstantiated = false;
 
     /**
@@ -81,6 +81,11 @@ public class Grid_3D : ScriptableObject
         {
             Init();
         }
+        //Debug.Log("POS: " + position);
+        //if (position.z >= resolution)
+        //{
+        //    position.z = resolution - 1; // too hacky. out of bounds things keep coming here.
+        //}
         return grid[position.x][position.y][position.z];
     }
 
@@ -90,6 +95,10 @@ public class Grid_3D : ScriptableObject
         {
             Init();
         }
+        //if (position.z >= resolution)
+        //{
+        //    position.z = resolution = 1;
+        //}
         grid[position.x][position.y][position.z] = updated;
     }
 }

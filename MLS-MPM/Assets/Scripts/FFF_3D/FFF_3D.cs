@@ -28,20 +28,18 @@ public class FFF_3D : MonoBehaviour
     // it is a subservient god, for it creates and destroys upon command
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
-    private bool shouldStopEarly = true; // TRUE only for debug purposes
+    private bool shouldStopEarly = false; // Set to TRUE only for debug purposes
 
     // Start is called before the first frame update
     void Start()
     {
         Init();
-        // TODO this freezes Unity right now
         gameInterface.DumpParticlesIntoScene(GetFlattenedParticleList().ToArray(), true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        return;
         if (shouldStopEarly && numUpdates > 1)
         {
             numUpdates++;
@@ -86,7 +84,7 @@ public class FFF_3D : MonoBehaviour
     {
         if (grid == null)
         {
-            grid = ScriptableObject.CreateInstance("Grid_3D") as Grid_3D;
+            grid = GeometryCreator_3D.CreateNewGrid(resolution);
         }
         grid.Init(resolution);
     }
@@ -127,6 +125,9 @@ public class FFF_3D : MonoBehaviour
                                 double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
                                 // Mass contribution of neighbor
                                 double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
+                                Debug.Log("GRID.AT E " + neighborPosition);
+                                // 16, 16, 31 cellPosition at 0, 0, 2
+                                Debug.Log("OTHERS: " + cellPosition + ", " + nx + ", " + ny + ", " + nz + ", " + particlePosition);
                                 Cell_3D correspondingCell = grid.At(neighborPosition);
                                 double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
                                 correspondingCell.SetMass(updatedMass);
@@ -167,6 +168,7 @@ public class FFF_3D : MonoBehaviour
                             {
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                                Debug.Log("GRID.AT A: " + cellCoordinates);
                                 Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
                                 double mass = nearestCellToParticle.GetMass();
                                 density = MathUtils_3D.UpdateDensity(weight, mass, density);
@@ -224,6 +226,7 @@ public class FFF_3D : MonoBehaviour
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
                                 double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                                Debug.Log("GRID.AT B " + neighborPosition);
                                 Cell_3D correspondingCell = grid.At(neighborPosition);
                                 double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
                                 double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
@@ -247,6 +250,7 @@ public class FFF_3D : MonoBehaviour
                 for (int k = 0; k < resolution; k++)
                 {
                     int3 position = new(i, j, k);
+                    Debug.Log("GRID.AT C " + position);
                     Cell_3D cell = grid.At(position);
                     if (cell.GetMass() > 0)
                     {
@@ -304,6 +308,7 @@ public class FFF_3D : MonoBehaviour
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
                                 double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                                Debug.Log("GRID.AT D " + neighborPosition);
                                 Cell_3D neighborCell = grid.At(neighborPosition);
                                 double3 neighborVelocity = neighborCell.GetVelocity();
                                 double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
@@ -322,6 +327,7 @@ public class FFF_3D : MonoBehaviour
                     // Clamp
                     double3 clampedPosition = ClampPosition(p);
                     p.SetPosition(clampedPosition);
+                    Debug.Log("Clamped position: " + clampedPosition);
                     // Enforce boundaries
                     double3 boundedVelocity = EnforceBoundaryVelocity(p);
                     p.SetVelocity(boundedVelocity);
@@ -334,6 +340,11 @@ public class FFF_3D : MonoBehaviour
     private double3 ClampPosition(Particle_3D p)
     {
         return math.clamp(p.GetPosition(), 1, resolution - 2);
+    }
+
+    private double3 ClampPosition(double3 p)
+    {
+        return math.clamp(p, 1, resolution - 2);
     }
 
     public double3 EnforceBoundaryVelocity(Particle_3D p)
@@ -491,6 +502,7 @@ public class FFF_3D : MonoBehaviour
                 for (double k = startPosition; k < endPosition; k += spacing)
                 {
                     double3 position = new(i, j, k);
+                    position = ClampPosition(position); // So it doesn't init at 32
                     grid[iInt][jInt][kInt] = position;
                     kInt++;
                 }
