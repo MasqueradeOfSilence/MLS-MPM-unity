@@ -26,7 +26,7 @@ public class VolumeFractionCalculator : MonoBehaviour
         /*
          * 1. Find 9-neighborhood of particle. 
          * 2. For each grid cell in the 9-neighborhood,
-         *  2a) Iterate through the particles and see if IsParticleInsideCell is true
+         *  2a) Iterate through the particles and see if IsParticleInsideNeighbor is true
          *  2b) Add all of those to the neighbors list.
          */
         List<Particle> neighbors = new List<Particle> { };

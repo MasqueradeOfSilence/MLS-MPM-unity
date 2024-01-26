@@ -356,7 +356,7 @@ public class FFF_3D : MonoBehaviour
                     {
                         skipBubble = true;
                     }
-                    double volumeFraction;
+                    double volumeFraction = VolumeFractionUtils.ComputeVolumeFraction(flatParticleList, p);
                 }
             }
         }
