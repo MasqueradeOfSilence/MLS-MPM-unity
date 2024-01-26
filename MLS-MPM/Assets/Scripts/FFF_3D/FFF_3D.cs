@@ -16,7 +16,7 @@ public class FFF_3D : MonoBehaviour
      */
     private Particle_3D[][][] particles;
     private Grid_3D grid;
-    private readonly int resolution = 64;
+    private readonly int resolution = 32; // Was 64 for 2D
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int) (1 / timestep);
     private const double gravity = -9.8;
@@ -470,7 +470,7 @@ public class FFF_3D : MonoBehaviour
     {
         double spacing = 0.5;
         double startPosition = 16;
-        double endPosition = 48;
+        double endPosition = 16 + resolution * spacing;
         double3[][][] grid = new double3[resolution][][];
         // Initializing grid
         for (int i = 0; i < resolution; i++)
