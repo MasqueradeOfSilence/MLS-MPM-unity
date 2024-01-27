@@ -28,7 +28,7 @@ public class FFF_3D : MonoBehaviour
     // it is a subservient god, for it creates and destroys upon command
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
-    private bool shouldStopEarly = false; // Set to TRUE only for debug purposes
+    private bool shouldStopEarly = true; // Set to TRUE only for debug purposes
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +60,7 @@ public class FFF_3D : MonoBehaviour
     public void Simulate()
     {
         ClearGrid();
+        return;
         ParticleToGridStep1();
         ParticleToGridStep2();
         UpdateGrid();
@@ -86,7 +87,10 @@ public class FFF_3D : MonoBehaviour
         {
             grid = GeometryCreator_3D.CreateNewGrid(resolution);
         }
-        grid.Init(resolution);
+        else
+        {
+            grid.Init(resolution);
+        }
     }
 
     public void ParticleToGridStep1()
@@ -99,6 +103,7 @@ public class FFF_3D : MonoBehaviour
         {
             InitParticles();
         }
+        //TODO it dies before here
         for (int i = 0; i < particles.Length; i++)
         {
             for (int j = 0; j < particles[i].Length; j++)
@@ -480,8 +485,8 @@ public class FFF_3D : MonoBehaviour
     public double3[][][] InitTempGrid()
     {
         double spacing = 0.5;
-        double startPosition = 16;
-        double endPosition = 16 + resolution * spacing;
+        double startPosition = resolution / 4;
+        double endPosition = startPosition + resolution * spacing;
         double3[][][] grid = new double3[resolution][][];
         // Initializing grid
         for (int i = 0; i < resolution; i++)
