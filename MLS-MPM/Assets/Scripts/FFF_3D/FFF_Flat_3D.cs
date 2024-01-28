@@ -5,24 +5,24 @@ using Unity.Mathematics;
 using UnityEngine;
 
 /**
- * FFF_3D: Simulates a 3D foam with a small pool of water at the bottom.
- *  Uses the Foam Fraction Flow method. 
+ * Trying a 1D array with indexing to get 3D
+ * 
+ * NOTE: This is still too slow and freezes it. Next step: Try eliminating the triple-for by using indexing. 
  */
-
-public class FFF_3D : MonoBehaviour
+public class FFF_Flat_3D : MonoBehaviour
 {
     /**
      * Data members
      */
-    private Particle_3D[][][] particles;
+    private Particle_3D[] particles;
     private Grid_3D grid;
     private readonly int resolution = 16; // Was 64 for 2D
-    private readonly int zResolution = 4; // Experimenting with lower resolution for Z
+    //private readonly int zResolution = 4; // Experimenting with lower resolution for Z
     private const double timestep = 0.2;
-    private const int numSimsPerUpdate = (int) (1 / timestep);
+    private const int numSimsPerUpdate = (int)(1 / timestep);
     private const double gravity = -9.8;
     private readonly int neighborDimension = 3;
-    private readonly int zNeighborDimension = 3;
+    //private readonly int zNeighborDimension = 3;
     private GameInterface_3D gameInterface;
     private WaterSurfacer_3D waterSurfacer;
     int iteration = 0;
@@ -88,11 +88,11 @@ public class FFF_3D : MonoBehaviour
     {
         if (grid == null)
         {
-            grid = GeometryCreator_3D.CreateNewGrid(resolution, zResolution);
+            grid = GeometryCreator_3D.CreateNewGrid(resolution);
         }
         else
         {
-            grid.Init(resolution, zResolution);
+            grid.Init(resolution);
         }
     }
 
@@ -106,13 +106,17 @@ public class FFF_3D : MonoBehaviour
         {
             InitParticles();
         }
-        for (int i = 0; i < particles.Length; i++)
+        int width = resolution;
+        int height = resolution;
+        int depth = resolution;
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < particles[i].Length; j++)
+            for (int j = 0; j < height; j++)
             {
-                for (int k = 0; k < particles[i][j].Length; k++)
+                for (int k = 0; k < depth; k++)
                 {
-                    Particle_3D p = particles[i][j][k];
+                    int index = i + width * (j + height * k);
+                    Particle_3D p = particles[index];
                     double3 particlePosition = p.GetPosition();
                     int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
                     double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
@@ -120,9 +124,9 @@ public class FFF_3D : MonoBehaviour
                     double3x3 C = p.GetC();
                     for (int nx = 0; nx < neighborDimension; nx++)
                     {
-                        for (int ny = 0; ny < neighborDimension; ny++) 
+                        for (int ny = 0; ny < neighborDimension; ny++)
                         {
-                            for (int nz = 0; nz < zNeighborDimension; nz++)
+                            for (int nz = 0; nz < neighborDimension; nz++)
                             {
                                 double mass = p.GetMass();
                                 double3 velocity = p.GetVelocity();
@@ -143,7 +147,7 @@ public class FFF_3D : MonoBehaviour
                                 grid.UpdateCellAt(neighborPosition, correspondingCell);
                             }
                         }
-                        particles[i][j][k] = p;
+                        particles[index] = p;
                     }
                 }
             }
@@ -152,14 +156,17 @@ public class FFF_3D : MonoBehaviour
 
     public void ParticleToGridStep2()
     {
-        for (int i = 0; i < particles.Length; i++)
+        int width = resolution;
+        int height = resolution;
+        int depth = resolution;
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < particles[i].Length; j++)
+            for (int j = 0; j < height; j++)
             {
-                for (int k = 0; k < particles[i][j].Length; k++)
+                for (int k = 0; k < depth; k++)
                 {
-                    // Obtaining requisite data
-                    Particle_3D p = particles[i][j][k];
+                    int index = i + width * (j + height * k);
+                    Particle_3D p = particles[index];
                     double3 particlePosition = p.GetPosition();
                     int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
                     double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
@@ -171,7 +178,7 @@ public class FFF_3D : MonoBehaviour
                     {
                         for (int ny = 0; ny < neighborDimension; ny++)
                         {
-                            for (int nz = 0; nz < zNeighborDimension; nz++)
+                            for (int nz = 0; nz < neighborDimension; nz++)
                             {
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
@@ -228,7 +235,7 @@ public class FFF_3D : MonoBehaviour
                     {
                         for (int ny = 0; ny < neighborDimension; ny++)
                         {
-                            for (int nz = 0; nz < zNeighborDimension; nz++)
+                            for (int nz = 0; nz < neighborDimension; nz++)
                             {
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
@@ -250,11 +257,11 @@ public class FFF_3D : MonoBehaviour
 
     public void UpdateGrid()
     {
-        for (int i = 0; i < resolution; i++) 
+        for (int i = 0; i < resolution; i++)
         {
-            for (int j =  0; j < resolution; j++) 
+            for (int j = 0; j < resolution; j++)
             {
-                for (int k = 0; k < zResolution; k++)
+                for (int k = 0; k < resolution; k++)
                 {
                     int3 position = new(i, j, k);
                     Debug.Log("GRID.AT C " + position);
@@ -283,7 +290,7 @@ public class FFF_3D : MonoBehaviour
         {
             velocityWithBoundary.y = 0;
         }
-        if (k < 2 || k > zResolution - 3)
+        if (k < 2 || k > resolution - 3)
         {
             velocityWithBoundary.z = 0;
         }
@@ -292,13 +299,17 @@ public class FFF_3D : MonoBehaviour
 
     public void GridToParticleStep()
     {
-        for (int i = 0; i < particles.Length; i++)
+        int width = resolution;
+        int height = resolution;
+        int depth = resolution;
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < particles[i].Length; j++)
+            for (int j = 0; j < height; j++)
             {
-                for (int k = 0; k < particles[i][j].Length; k++)
+                for (int k = 0; k < depth; k++)
                 {
-                    Particle_3D p = particles[i][j][k];
+                    int index = i + width * (j + height * k);
+                    Particle_3D p = particles[index];
                     double3 particlePosition = p.GetPosition();
                     p.ResetVelocity();
                     int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
@@ -306,11 +317,11 @@ public class FFF_3D : MonoBehaviour
                     List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
                     // APIC matrix, see equation 8 of MLS-MPM paper
                     double3x3 B = 0;
-                    for (int nx = 0; nx < neighborDimension; nx++) 
+                    for (int nx = 0; nx < neighborDimension; nx++)
                     {
-                        for (int ny = 0; ny < neighborDimension; ny++) 
+                        for (int ny = 0; ny < neighborDimension; ny++)
                         {
-                            for (int nz = 0; nz < zNeighborDimension; nz++)
+                            for (int nz = 0; nz < neighborDimension; nz++)
                             {
                                 double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                                 int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
@@ -338,7 +349,7 @@ public class FFF_3D : MonoBehaviour
                     // Enforce boundaries
                     double3 boundedVelocity = EnforceBoundaryVelocity(p);
                     p.SetVelocity(boundedVelocity);
-                    particles[i][j][k] = p;
+                    particles[index] = p;
                 }
             }
         }
@@ -394,14 +405,18 @@ public class FFF_3D : MonoBehaviour
     private void DetermineBubbleSizes()
     {
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
-        for (int i = 0; i < particles.Length; i++)
+        int width = resolution;
+        int height = resolution;
+        int depth = resolution;
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < particles[i].Length; j++)
+            for (int j = 0; j < height; j++)
             {
-                for (int k = 0; k < particles[i][j].Length; k++)
+                for (int k = 0; k < depth; k++)
                 {
+                    int index = i + width * (j + height * k);
+                    Particle_3D p = particles[index];
                     bool skipBubble = false;
-                    Particle_3D p = particles[i][j][k];
                     if ((i % 2 == 0 || j % 2 == 0 || k % 2 == 0) && MathUtils_3D.IsAir(p))
                     {
                         skipBubble = true;
@@ -421,6 +436,7 @@ public class FFF_3D : MonoBehaviour
                         double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);
                         p.SetBubble(volumeFraction);
                     }
+                    particles[index] = p;
                 }
             }
         }
@@ -428,7 +444,8 @@ public class FFF_3D : MonoBehaviour
 
     private List<Particle_3D> GetFlattenedParticleList()
     {
-        return particles.SelectMany(array2D => array2D.SelectMany(array1D => array1D)).ToList();
+        List<Particle_3D> flattenedList = particles.Cast<Particle_3D>().ToList();
+        return flattenedList;//particles.SelectMany(array2D => array2D.SelectMany(array1D => array1D)).ToList();
     }
 
     /**
@@ -443,35 +460,37 @@ public class FFF_3D : MonoBehaviour
 
     public void InitGrid()
     {
-        grid = GeometryCreator_3D.CreateNewGrid(resolution, zResolution);
+        grid = GeometryCreator_3D.CreateNewGrid(resolution);
     }
 
     public void InitParticles()
     {
-        particles = new Particle_3D[resolution][][];
-        double3[][][] tempParticlePositions = InitTempGrid();
-        
+        particles = new Particle_3D[resolution * resolution * resolution];
+        double3[] tempParticlePositions = InitTempGrid();
+
         // Fluid at bottom
-        for (int i = 0; i < resolution; i++) 
+        int width = resolution;
+        int height = resolution;
+        int depth = resolution;
+        for (int i = 0; i < width; i++)
         {
-            particles[i] = new Particle_3D[resolution][];
-            for (int j = 0; j < resolution; j++)
+            for (int j = 0; j < height; j++)
             {
-                particles[i][j] = new Particle_3D[zResolution];
-                for (int k = 0; k < zResolution; k++)
+                for (int k = 0; k < depth; k++)
                 {
+                    int index = i + width * (j + height * k);
                     bool shouldCreateFluidParticle = (j < 3);
                     double3 initialVelocity = new(0);
                     double3x3 initialC = new(0);
                     if (shouldCreateFluidParticle)
                     {
-                        FluidParticle_3D p = GeometryCreator_3D.CreateNewFluidParticle(tempParticlePositions[i][j][k], initialVelocity, initialC);
-                        particles[i][j][k] = p;
+                        FluidParticle_3D p = GeometryCreator_3D.CreateNewFluidParticle(tempParticlePositions[index], initialVelocity, initialC);
+                        particles[index] = p;
                     }
                     else
                     {
-                        AirParticle_3D p = GeometryCreator_3D.CreateNewAirParticle(tempParticlePositions[i][j][k], initialVelocity, initialC);
-                        particles[i][j][k] = p;
+                        AirParticle_3D p = GeometryCreator_3D.CreateNewAirParticle(tempParticlePositions[index], initialVelocity, initialC);
+                        particles[index] = p;
                     }
                 }
             }
@@ -484,36 +503,39 @@ public class FFF_3D : MonoBehaviour
         waterSurfacer = GameObject.Find(geoAttacher).AddComponent<WaterSurfacer_3D>();
     }
 
-    public double3[][][] InitTempGrid()
+    public double3[] InitTempGrid()
     {
         double spacing = 0.5;
         double startPosition = resolution / 4;
         double endPosition = startPosition + resolution * spacing;
-        double startPositionZ = zResolution / 4;
-        double endPositionZ = startPositionZ + zResolution * spacing;
-        double3[][][] grid = new double3[resolution][][];
+        //double startPositionZ = zResolution / 4;
+        //double endPositionZ = startPositionZ + zResolution * spacing;
+        //double3[,,] grid = new double3[resolution, resolution, resolution];
+        double3[] grid = new double3[resolution * resolution * resolution];
         // Initializing grid
-        for (int i = 0; i < resolution; i++)
-        {
-            grid[i] = new double3[resolution][];
-            for (int j = 0; j < resolution; j++)
-            {
-                grid[i][j] = new double3[zResolution];
-            }
-        }
+        //for (int i = 0; i < resolution; i++)
+        //{
+        //    grid[i] = new double3[resolution][];
+        //    for (int j = 0; j < resolution; j++)
+        //    {
+        //        grid[i][j] = new double3[resolution];
+        //    }
+        //}
         int iInt = 0;
         int jInt = 0;
         int kInt = 0;
+        int index = 0;
         for (double i = startPosition; i < endPosition; i += spacing)
         {
             for (double j = startPosition; j < endPosition; j += spacing)
             {
-                for (double k = startPositionZ; k < endPositionZ; k += spacing)
+                for (double k = startPosition; k < endPosition; k += spacing)
                 {
                     double3 position = new(i, j, k);
                     position = ClampPosition(position); // So it doesn't init at 32
-                    grid[iInt][jInt][kInt] = position;
+                    grid[index] = position;
                     kInt++;
+                    index++;
                 }
                 kInt = 0;
                 jInt++;

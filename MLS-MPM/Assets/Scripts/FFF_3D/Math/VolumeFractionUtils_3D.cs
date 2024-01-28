@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEngine;
 
-public class VolumeFractionUtils
+public class VolumeFractionUtils_3D
 {
     public static int ComputeNumberOfParticlesInCell(List<Particle_3D> particles, int3 cellPosition)
     {

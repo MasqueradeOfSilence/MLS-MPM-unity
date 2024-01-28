@@ -103,6 +103,13 @@ public class GeometryCreator_3D : MonoBehaviour
         return grid;
     }
 
+    public static Grid_3D CreateNewGrid(int resolution, int zResolution)
+    {
+        Grid_3D grid = ScriptableObject.CreateInstance("Grid_3D") as Grid_3D;
+        grid.Init(resolution, zResolution);
+        return grid;
+    }
+
     public static int GetSphereID()
     {
         return sphereID;
