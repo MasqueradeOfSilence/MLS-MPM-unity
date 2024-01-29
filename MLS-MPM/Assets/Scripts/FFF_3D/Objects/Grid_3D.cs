@@ -14,7 +14,7 @@ public class Grid_3D : ScriptableObject
      * Data members
      */
     private int resolution;
-    private Cell_3D[][][] grid; // TODO change to multidim, and then also try single-dimensional access w/math, to prevent freezes
+    private Cell_3D[][][] grid;
     private const int defaultResolution = 32; // or 64
     private bool gridInstantiated = false;
     private const int defaultZResolution = 32;

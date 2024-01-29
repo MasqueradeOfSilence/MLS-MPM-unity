@@ -46,7 +46,7 @@ public class MathUtils_3D
         double3 weight0 = ComputeWeight0(distanceFromParticleToCell);
         double3 weight1 = ComputeWeight1(distanceFromParticleToCell);
         double3 weight2 = ComputeWeight2(distanceFromParticleToCell);
-        List<double3> weights = new List<double3>
+        List<double3> weights = new()
         {
             weight0, weight1, weight2
         };

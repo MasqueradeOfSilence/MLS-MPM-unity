@@ -18,7 +18,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     private Particle_3D[] particles;
     private Grid_3D grid;
     private readonly int resolution = 16; // Was 64 for 2D
-    //private readonly int zResolution = 4; // Experimenting with lower resolution for Z
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int)(1 / timestep);
     private const double gravity = -9.8;
@@ -72,13 +71,14 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (iteration == 1)
         {
             Debug.Log("Foam simulator beginning!");
-            DetermineBubbleSizes();
+            // TODO something is up here, also it doesn't move
+            //DetermineBubbleSizes();
         }
         if (waterSurfacer != null)
         {
             //waterSurfacer.InitializeFluidSurface(particles);
         }
-        ComputeVoronoi();
+        //ComputeVoronoi();
         iteration++;
     }
 
@@ -367,6 +367,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                        //Debug.Log("WEIGHT: " + weight);
+                        // These prints slow it down too much.
                         int neighborX = x + nx - neighborDimension / 2;
                         int neighborY = y + ny - neighborDimension / 2;
                         int neighborZ = z + nz - neighborDimension / 2;
@@ -383,6 +385,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                             double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
                             B = MathUtils_3D.UpdateB(B, term);
                             double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
+                            //Debug.Log("Weighted velocity: " + weightedVelocity);
                             p.SetVelocity(updatedVelocity);
                         }
                     }
@@ -398,7 +401,9 @@ public class FFF_Optimized_3D : MonoBehaviour
             p.SetPosition(clampedPosition);
             Debug.Log("Clamped position: " + clampedPosition);
             // Enforce boundaries
+            Debug.Log("Velocity before bound: " + p.GetVelocity()); // TODO this could also be it
             double3 boundedVelocity = EnforceBoundaryVelocity(p);
+            Debug.Log("Final velocity: " + boundedVelocity);
             p.SetVelocity(boundedVelocity);
             particles[i] = p;
         }
@@ -419,6 +424,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
         const double wallMin = 3;
+        // TODO velocity is always zero, possibly due to this.
         double wallMax = resolution - 4;
         if (xN.x < wallMin)
         {
