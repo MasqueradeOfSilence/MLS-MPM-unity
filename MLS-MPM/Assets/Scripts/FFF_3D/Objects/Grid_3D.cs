@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
@@ -34,25 +35,14 @@ public class Grid_3D : ScriptableObject
         //gridMultidim = new Cell_3D[resolution, resolution, resolution];
         gridFlat = new Cell_3D[resolution * resolution * resolution];
         this.resolution = resolution;
-        int width = resolution;
-        int height = resolution;
-        int depth = resolution;
-        for (int i = 0; i < width; i++)
+
+        for (int i = 0; i < gridFlat.Length; i++)
         {
-            for (int j = 0; j < height; j++)
-            {
-                for (int k = 0; k < depth; k++)
-                {
-                    int index = i + width * (j + height * k);
-                    Cell_3D cell = CreateInstance("Cell_3D") as Cell_3D;
-                    double3 initialVelocity = new(0, 0, 0);
-                    double initialMass = 0;
-                    cell.Init(initialVelocity, initialMass);
-                    //grid[i][j][k] = cell;
-                    //gridMultidim[i, j, k] = cell;
-                    gridFlat[index] = cell;
-                }
-            }
+            Cell_3D cell = CreateInstance("Cell_3D") as Cell_3D;
+            double3 initialVelocity = new(0, 0, 0);
+            double initialMass = 0;
+            cell.Init(initialVelocity, initialMass);
+            gridFlat[i] = cell;
         }
         gridInstantiated = true;
     }
