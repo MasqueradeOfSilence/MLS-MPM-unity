@@ -541,42 +541,24 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double spacing = 0.5;
         double startPosition = resolution / 4;
-        double endPosition = startPosition + resolution * spacing;
-        //double startPositionZ = zResolution / 4;
-        //double endPositionZ = startPositionZ + zResolution * spacing;
-        //double3[,,] grid = new double3[resolution, resolution, resolution];
-        double3[] grid = new double3[resolution * resolution * resolution];
+        int size = resolution * resolution * resolution;
+        double3[] grid = new double3[size];
         // Initializing grid
-        //for (int i = 0; i < resolution; i++)
-        //{
-        //    grid[i] = new double3[resolution][];
-        //    for (int j = 0; j < resolution; j++)
-        //    {
-        //        grid[i][j] = new double3[resolution];
-        //    }
-        //}
-        int iInt = 0;
-        int jInt = 0;
-        int kInt = 0;
         int index = 0;
-        // TODO we MIGHT be able to keep this here as 3D, but maybe not. 
-        for (double i = startPosition; i < endPosition; i += spacing)
+        for (int i = 0; i < size; i++)
         {
-            for (double j = startPosition; j < endPosition; j += spacing)
-            {
-                for (double k = startPosition; k < endPosition; k += spacing)
-                {
-                    double3 position = new(i, j, k);
-                    position = ClampPosition(position); // So it doesn't init at 32
-                    grid[index] = position;
-                    kInt++;
-                    index++;
-                }
-                kInt = 0;
-                jInt++;
-            }
-            jInt = 0;
-            iInt++;
+            int z = i / (resolution * resolution);
+            int y = (i / resolution) % resolution;
+            int x = i % resolution;
+
+            double3 position = new(
+                startPosition + x * spacing,
+                startPosition + y * spacing,
+                startPosition + z * spacing
+            );
+            position = ClampPosition(position); // So it doesn't init at 32
+            grid[index] = position;
+            index++;
         }
         return grid;
     }
