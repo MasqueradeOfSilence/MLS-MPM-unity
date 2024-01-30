@@ -275,7 +275,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
             double3x3 equation16Term0 = MathUtils_3D.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
-            bool nanSeen = false;
             for (int nx = 0; nx < neighborDimension; nx++)
             {
                 for (int ny = 0; ny < neighborDimension; ny++)
@@ -296,17 +295,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                             Cell_3D correspondingCell = grid.At(neighborPosition);
                             double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
                             double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
-                            if (!nanSeen && double.IsNaN(updatedVelocity.x))
-                            {
-                                nanSeen = true;
-                                Debug.Log("NAN spotted");
-                                Debug.Log("Nan spotted updatedVelocity: " + updatedVelocity);
-                                Debug.Log("Nan spotted momentum: " + momentum);
-                                Debug.Log("Nan spotted distanceFromParticleToNeighbor: " + distanceFromParticleToNeighbor);
-                                Debug.Log("Nan spotted eq16term0: " + equation16Term0);
-                                Debug.Log("Nan spotted weight: " + weight);
-                                Debug.Log("Nan spotted cell velocity: " + correspondingCell.GetVelocity());
-                            }
                             correspondingCell.SetVelocity(updatedVelocity); // TODO could be here
                             grid.UpdateCellAt(neighborPosition, correspondingCell);
                         }
@@ -327,13 +315,10 @@ public class FFF_Optimized_3D : MonoBehaviour
             Cell_3D cell = grid.At(position);
             if (cell.GetMass() > 0)
             {
-                Debug.Log("myVelocity at very beginning: " + cell.GetVelocity());
                 cell.SetVelocity(cell.GetVelocity() / cell.GetMass());
                 cell.SetVelocity(cell.GetVelocity() + (timestep * new double3(0, gravity, 0)));
-                Debug.Log("myVelocity before: " + cell.GetVelocity()); // these are coming through as NaN then going to zero
                 double3 updatedVelocityWithBoundary = UpdateVelocityWithBoundary(x, y, z, cell.GetVelocity());
                 cell.SetVelocity(updatedVelocityWithBoundary);
-                Debug.Log("myVelocity after: " + cell.GetVelocity());
                 grid.UpdateCellAt(position, cell);
             }
         }
