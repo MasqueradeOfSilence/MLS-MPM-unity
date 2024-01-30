@@ -69,12 +69,12 @@ public class Grid_3D : ScriptableObject
 
     // Size ------------------
 
-    public int3 GetSize()
+    public int GetSize()
     {
         //return new(grid.Length, grid[0].Length, grid[0][0].Length);
         //return new(gridMultidim.GetLength(0), gridMultidim.GetLength(1), gridMultidim.GetLength(2));
         int size = Mathf.RoundToInt(Mathf.Pow(resolution, 1.0f / 3.0f));
-        return new(size);
+        return size;
     }
 
     // Indexing ------------------

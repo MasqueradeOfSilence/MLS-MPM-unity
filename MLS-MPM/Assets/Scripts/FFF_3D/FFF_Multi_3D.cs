@@ -535,7 +535,7 @@ public class FFF_Multi_3D : MonoBehaviour
 
     private bool GridSizeIsZero()
     {
-        return grid == null || (grid.GetSize()[0] == 0 && grid.GetSize()[1] == 0 && grid.GetSize()[2] == 0);
+        return grid == null || (grid.GetSize() == 0);
     }
 
     private bool ParticlesSizeIsZero()
