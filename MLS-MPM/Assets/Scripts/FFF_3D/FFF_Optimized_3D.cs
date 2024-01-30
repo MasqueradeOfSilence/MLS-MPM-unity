@@ -358,6 +358,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
             double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
             List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
+            //Debug.Log("Velocity HERE ARE WEIGHTS: " + weights.ElementAt(0) + ", " + weights.ElementAt(1) + ", " + weights.ElementAt(2)); // Not the issue
             // APIC matrix, see equation 8 of MLS-MPM paper
             double3x3 B = 0;
             for (int nx = 0; nx < neighborDimension; nx++)
@@ -368,7 +369,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
                         //Debug.Log("WEIGHT: " + weight);
-                        // These prints slow it down too much.
+                        // These prints slow it down too much. But, weight is not the issue.
                         int neighborX = x + nx - neighborDimension / 2;
                         int neighborY = y + ny - neighborDimension / 2;
                         int neighborZ = z + nz - neighborDimension / 2;
@@ -399,7 +400,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             // Clamp
             double3 clampedPosition = ClampPosition(p);
             p.SetPosition(clampedPosition);
-            Debug.Log("Clamped position: " + clampedPosition);
             // Enforce boundaries
             Debug.Log("Velocity before bound: " + p.GetVelocity()); // TODO this could also be it
             double3 boundedVelocity = EnforceBoundaryVelocity(p);
@@ -424,7 +424,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
         const double wallMin = 3;
-        // TODO velocity is always zero, possibly due to this.
+        // TODO velocity ends up sticking at zero, possibly due to this.
         double wallMax = resolution - 4;
         if (xN.x < wallMin)
         {
