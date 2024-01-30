@@ -138,7 +138,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                             neighborY >= 0 && neighborY < height &&
                             neighborZ >= 0 && neighborZ < depth)
                         {
-                            int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                            //int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                            int3 neighborPosition = new(neighborX, neighborY, neighborZ);
                             double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
                             double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
                             // Mass contribution of neighbor
@@ -189,8 +190,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                             neighborY >= 0 && neighborY < height &&
                             neighborZ >= 0 && neighborZ < depth)
                         {
-                            int cellCoordinates = neighborX + width * (neighborY + height * neighborZ);
-                            Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                            //int cellCoordinates = neighborX + width * (neighborY + height * neighborZ);
+                            int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
+                            Cell_3D nearestCellToParticle = grid.At(cellCoordinates); // This is wrong, needs to be an int3
                             double mass = nearestCellToParticle.GetMass();
                             density = MathUtils_3D.UpdateDensity(weight, mass, density);
                         }
@@ -220,7 +222,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = x + nx - neighborDimension / 2;
                         int neighborY = y + ny - neighborDimension / 2;
                         int neighborZ = z + nz - neighborDimension / 2;
-                        int cellCoordinates = neighborX + width * (neighborY + height * neighborZ);
+                        //int cellCoordinates = neighborX + width * (neighborY + height * neighborZ);
+                        int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
                             neighborY >= 0 && neighborY < height &&
@@ -285,7 +288,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = x + nx - neighborDimension / 2;
                         int neighborY = y + ny - neighborDimension / 2;
                         int neighborZ = z + nz - neighborDimension / 2;
-                        int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                        //int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                        int3 neighborPosition = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
                             neighborY >= 0 && neighborY < height &&
@@ -373,7 +377,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = x + nx - neighborDimension / 2;
                         int neighborY = y + ny - neighborDimension / 2;
                         int neighborZ = z + nz - neighborDimension / 2;
-                        int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                        //int neighborPosition = neighborX + width * (neighborY + height * neighborZ);
+                        int3 neighborPosition = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
                             neighborY >= 0 && neighborY < height &&
