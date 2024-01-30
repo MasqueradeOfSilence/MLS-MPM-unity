@@ -150,6 +150,10 @@ public class MathUtils_3D
         {
             for (int j = 0; j < 3; j++)
             {
+                if (strain_deltaVPlusDeltaVTransposed[i][j] < 0)
+                {
+                    Debug.Log("UH OH");
+                }
                 strainRaisedToPower[i][j] = math.pow(strain_deltaVPlusDeltaVTransposed[i][j], flowIndex_n);
             }
         }
