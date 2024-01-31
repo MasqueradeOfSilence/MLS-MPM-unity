@@ -41,7 +41,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //return;
         if (shouldStopEarly && numUpdates > 1)
         {
             numUpdates++;
@@ -62,7 +61,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     public void Simulate()
     {
         ClearGrid();
-        //return;
         ParticleToGridStep1();
         ParticleToGridStep2();
         UpdateGrid();
@@ -392,9 +390,12 @@ public class FFF_Optimized_3D : MonoBehaviour
             // Move particle
             double3 advectedPosition = MathUtils_3D.AdvectParticle(p.GetPosition(), p.GetVelocity(), timestep);
             p.SetPosition(advectedPosition);
+            Debug.Log("OUR VELOCITY WAS: " + p.GetVelocity()); // sometimes this gets really far and idk why 
+            Debug.Log("POSITION ADVECTED: " + advectedPosition);
             // Clamp
             double3 clampedPosition = ClampPosition(p);
             p.SetPosition(clampedPosition);
+            Debug.Log("POSITION clamped: " + clampedPosition);
             // Enforce boundaries
             double3 boundedVelocity = EnforceBoundaryVelocity(p);
             p.SetVelocity(boundedVelocity);
@@ -407,7 +408,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         return math.clamp(p.GetPosition(), 1, resolution - 2);
     }
 
-    private double3 ClampPosition(double3 p)
+    private double3 ClampInitPosition(double3 p)
     {
         return math.clamp(p, 1, resolution - 2);
     }
@@ -554,7 +555,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                 startPosition + y * spacing,
                 startPosition + z * spacing
             );
-            position = ClampPosition(position); // So it doesn't init at 32
+            position = ClampInitPosition(position); // So it doesn't init at 32
             grid[index] = position;
             index++;
         }
@@ -567,7 +568,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     private void ComputeVoronoi()
     {
         VoronoiShaderDTO_3D dto = ScriptableObject.CreateInstance<VoronoiShaderDTO_3D>();
-        //return;
         dto.Init(GetFlattenedParticleList());
         dto.UpdateVoronoiTexture();
     }

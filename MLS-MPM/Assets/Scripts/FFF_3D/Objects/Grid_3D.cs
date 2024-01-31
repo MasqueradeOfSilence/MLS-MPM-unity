@@ -1,7 +1,5 @@
-using System;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 /**
  * Grid: Represents the 3D MLS-MPM grid.
@@ -14,11 +12,9 @@ public class Grid_3D : ScriptableObject
      * Data members
      */
     private int resolution;
-    private Cell_3D[][][] grid;
     private const int defaultResolution = 32; // or 64
     private bool gridInstantiated = false;
     private const int defaultZResolution = 32;
-    private Cell_3D[,,] gridMultidim;
     private Cell_3D[] gridFlat;
 
     /**
@@ -31,8 +27,6 @@ public class Grid_3D : ScriptableObject
             Debug.LogWarning("Resolution too small! (<=0) Using defaults.");
             resolution = defaultResolution;
         }
-        //grid = new Cell_3D[resolution][][];
-        //gridMultidim = new Cell_3D[resolution, resolution, resolution];
         gridFlat = new Cell_3D[resolution * resolution * resolution];
         this.resolution = resolution;
 
@@ -71,8 +65,6 @@ public class Grid_3D : ScriptableObject
 
     public int GetSize()
     {
-        //return new(grid.Length, grid[0].Length, grid[0][0].Length);
-        //return new(gridMultidim.GetLength(0), gridMultidim.GetLength(1), gridMultidim.GetLength(2));
         int size = Mathf.RoundToInt(Mathf.Pow(resolution, 1.0f / 3.0f));
         return size;
     }
@@ -101,11 +93,6 @@ public class Grid_3D : ScriptableObject
         {
             Init();
         }
-        //if (position.z >= resolution)
-        //{
-        //    position.z = resolution = 1;
-        //}
-        //grid[position.x][position.y][position.z] = updated;
         int x = Mathf.Clamp(position.x, 0, resolution - 1);
         int y = Mathf.Clamp(position.y, 0, resolution - 1);
         int z = Mathf.Clamp(position.z, 0, resolution - 1);

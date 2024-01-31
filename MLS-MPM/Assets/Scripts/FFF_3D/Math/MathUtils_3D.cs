@@ -120,7 +120,9 @@ public class MathUtils_3D
 
     public static double ComputeTrace(double3x3 strain)
     {
-        return strain.c0.x + strain.c1.y + strain.c2.z;
+        // return strain[1, 0] + strain[0, 1];
+        //return strain.c0.x + strain.c1.y + strain.c2.z;
+        return strain.c2.x + strain.c1.y + strain.c0.z;
     }
 
     public static double ComputePressure(double eosStiffness, double density, double restDensity, double eosPower)
@@ -132,9 +134,9 @@ public class MathUtils_3D
     public static double3x3 CreateStressMatrix(double pressure)
     {
         double3x3 stressMatrix = new(
-            new double3(-pressure, 0, 0),
-            new double3(0, -pressure, 0),
-            new double3(0, 0, -pressure)
+            -pressure, 0, 0,
+            0, -pressure, 0,
+            0, 0, -pressure
         );
 
         return stressMatrix;
@@ -145,14 +147,12 @@ public class MathUtils_3D
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double3x3 pressureTimesTranspose = CreateStressMatrix(pressure);
-        double3x3 strainRaisedToPower = new();
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                strainRaisedToPower[i][j] = math.pow(strain_deltaVPlusDeltaVTransposed[i][j], flowIndex_n);
-            }
-        }
+        double3x3 strainRaisedToPower = new(
+            math.pow(strain_deltaVPlusDeltaVTransposed[0][0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[0][1], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[0][2], flowIndex_n),
+            math.pow(strain_deltaVPlusDeltaVTransposed[1][0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1][1], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1][2], flowIndex_n),
+            math.pow(strain_deltaVPlusDeltaVTransposed[2][0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[2][1], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[2][2], flowIndex_n)
+        );
+
         strainRaisedToPower -= offset;
         double3x3 viscosity = viscosity_mu * strainRaisedToPower;
         double3x3 shearStress = yieldStress_T0 + viscosity;
