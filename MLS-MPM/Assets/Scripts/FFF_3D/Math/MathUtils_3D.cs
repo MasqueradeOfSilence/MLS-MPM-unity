@@ -68,10 +68,7 @@ public class MathUtils_3D
 
     public static double3 ComputeDistanceFromParticleToNeighbor(int3 neighborPosition, double3 particlePosition)
     {
-        double x = (neighborPosition.x - particlePosition.x) + 0.5;
-        double y = (neighborPosition.y - particlePosition.y) + 0.5;
-        double z = (neighborPosition.z - particlePosition.z) + 0.5;
-        return new double3(x, y, z);
+        return neighborPosition - particlePosition + 0.5;
     }
 
      /**
