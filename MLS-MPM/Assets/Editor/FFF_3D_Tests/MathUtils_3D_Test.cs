@@ -5,6 +5,12 @@ using Unity.Mathematics;
 [TestFixture]
 public class MathUtils_3D_Test 
 {
+
+    public void AssertApproximatelyEqual(double3 a, double3 b)
+    {
+        Assert.That((float3)a, Is.EqualTo((float3)b).Within(0.01));
+    }
+
     [Test]
     public void ParticlePositionToCellPositionShouldCorrectlyConvert()
     {
@@ -17,7 +23,11 @@ public class MathUtils_3D_Test
     [Test]
     public void ComputeDistanceFromParticleToCellShouldCorrectlyComputeDistance()
     {
-
+        double3 particlePosition = new(3.2, 6, 8.7);
+        int3 cellPosition = new(3, 6, 9);
+        double3 expectedDistance = new(-0.3, -0.5, -0.8);
+        double3 actualDistance = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
+        AssertApproximatelyEqual(expectedDistance, actualDistance);
     }
 
     [Test]
