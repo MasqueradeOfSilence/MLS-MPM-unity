@@ -20,21 +20,21 @@ public class MathUtils_3D
         return new double3(particlePosition - cellPosition - 0.5);
     }
 
-    private static double3 ComputeWeight0(double3 dist)
+    public static double3 ComputeWeight0(double3 dist)
     {
         double x = 0.5 * Math.Pow((0.5 - dist.x), 2);
         double y = 0.5 * Math.Pow((0.5 - dist.y), 2);
         double z = 0.5 * Math.Pow((0.5 - dist.z), 2);
         return new double3(x, y, z);
     }
-    private static double3 ComputeWeight1(double3 dist)
+    public static double3 ComputeWeight1(double3 dist)
     {
         double x = 0.75 - Math.Pow((dist.x), 2);
         double y = 0.75 - Math.Pow((dist.y), 2);
         double z = 0.75 - Math.Pow((dist.z), 2);
         return new double3(x, y, z);
     }
-    private static double3 ComputeWeight2(double3 dist)
+    public static double3 ComputeWeight2(double3 dist)
     {
         double x = 0.5 * Math.Pow(0.5 + dist.x, 2);
         double y = 0.5 * Math.Pow(0.5 + dist.y, 2);

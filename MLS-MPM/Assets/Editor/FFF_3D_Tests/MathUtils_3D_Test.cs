@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Unity.Mathematics;
 
 [TestFixture]
@@ -9,6 +11,17 @@ public class MathUtils_3D_Test
     public void AssertApproximatelyEqual(double3 a, double3 b)
     {
         Assert.That((float3)a, Is.EqualTo((float3)b).Within(0.01));
+    }
+
+    public void AssertApproximatelyEqual(List<double3> a, List<double3> b)
+    {
+        Assert.IsTrue(a.Count == b.Count);
+        for (int i = 0; i < a.Count; i++) 
+        {
+            double3 current = a[i];
+            double3 current2 = b[i];
+            AssertApproximatelyEqual(current, current2);
+        }
     }
 
     [Test]
@@ -28,6 +41,53 @@ public class MathUtils_3D_Test
         double3 expectedDistance = new(-0.3, -0.5, -0.8);
         double3 actualDistance = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
         AssertApproximatelyEqual(expectedDistance, actualDistance);
+    }
+
+    [Test]
+    public void ComputeWeight0ShouldComputeCorrectly()
+    {
+        double3 distanceFromParticleToCell = new(-0.3, -0.5, -0.1);
+        double3 expectedWeight0 = new(0.32, 0.5, 0.18);
+        double3 actualWeight0 = MathUtils_3D.ComputeWeight0(distanceFromParticleToCell);
+        AssertApproximatelyEqual(expectedWeight0, actualWeight0);
+    }
+
+    [Test]
+    public void ComputeWeight1ShouldComputeCorrectly() 
+    {
+        double3 distanceFromParticleToCell = new(-0.3, -0.5, -0.1);
+        double3 expectedWeight1 = new(0.66, 0.5, 0.74);
+        double3 actualWeight1 = MathUtils_3D.ComputeWeight1(distanceFromParticleToCell);
+        AssertApproximatelyEqual(expectedWeight1, actualWeight1);
+    }
+
+    [Test]
+    public void ComputeWeight2ShouldComputeCorrectly()
+    {
+        double3 distanceFromParticleToCell = new(-0.3, -0.5, -0.1);
+        double3 expectedWeight2 = new(0.02, 0, 0.08);
+        double3 actualWeight2 = MathUtils_3D.ComputeWeight2(distanceFromParticleToCell);
+        AssertApproximatelyEqual(expectedWeight2, actualWeight2);
+    }
+
+    [Test]
+    public void ComputeAllWeightsShouldComputeWeights0Through2()
+    {
+        double3 distanceFromParticleToCell = new(-0.3, -0.5, -0.1);
+        double3 weight0 = new(0.32, 0.5, 0.18);
+        double3 weight1 = new(0.66, 0.5, 0.74);
+        double3 weight2 = new(0.02, 0, 0.08);
+        List<double3> expectedWeights = new()
+        {
+            weight0, weight1, weight2
+        };
+        List<double3> actualWeights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
+        AssertApproximatelyEqual(expectedWeights, actualWeights);
+        // Printing values
+        foreach(double3 d in actualWeights)
+        {
+            TestContext.WriteLine(d);
+        }
     }
 
     [Test]

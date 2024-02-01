@@ -32,7 +32,7 @@ public class P2G1MathTest
     }
 
     [Test]
-    public void ComputeAllWeightsShoulProperlyComputeAllWeights()
+    public void ComputeAllWeightsShouldProperlyComputeAllWeights()
     {
         double[] weight0 = { 0.32, 0.5 };
         double[] weight1 = { 0.66, 0.5 };
