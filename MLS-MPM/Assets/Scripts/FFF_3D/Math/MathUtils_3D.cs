@@ -117,9 +117,8 @@ public class MathUtils_3D
 
     public static double ComputeTrace(double3x3 strain)
     {
-        // return strain[1, 0] + strain[0, 1];
-        //return strain.c0.x + strain.c1.y + strain.c2.z;
-        return strain.c2.x + strain.c1.y + strain.c0.z;
+        return strain.c0.x + strain.c1.y + strain.c2.z;
+        //return strain.c2.x + strain.c1.y + strain.c0.z;
     }
 
     public static double ComputePressure(double eosStiffness, double density, double restDensity, double eosPower)
