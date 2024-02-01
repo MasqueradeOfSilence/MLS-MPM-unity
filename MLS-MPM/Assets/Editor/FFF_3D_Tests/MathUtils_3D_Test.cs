@@ -7,7 +7,9 @@ using Unity.Mathematics;
 [TestFixture]
 public class MathUtils_3D_Test 
 {
-
+    /**
+     * Utility
+     */
     public void AssertApproximatelyEqual(double3 a, double3 b)
     {
         Assert.That((float3)a, Is.EqualTo((float3)b).Within(0.01));
@@ -23,6 +25,10 @@ public class MathUtils_3D_Test
             AssertApproximatelyEqual(current, current2);
         }
     }
+
+    /**
+     * Common
+     */
 
     [Test]
     public void ParticlePositionToCellPositionShouldCorrectlyConvert()
@@ -117,5 +123,71 @@ public class MathUtils_3D_Test
         int3 expectedNeighborPosition = new(2, 5, 8);
         int3 actualNeighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
         Assert.AreEqual(expectedNeighborPosition, actualNeighborPosition);
+    }
+
+    [Test]
+    public void ComputeDistanceFromParticleToNeighborShouldComputeCorrectly()
+    {
+        int3 neighbor = new(2, 5, 1);
+        double3 particle = new(3.2, 6, 1.4);
+        double3 expectedDistance = new(-0.7, -0.5, 0.1);
+        double3 actualDistance = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighbor, particle);
+        AssertApproximatelyEqual(expectedDistance, actualDistance);
+    }
+
+    /**
+     * P2G1
+     */
+    [Test]
+    public void ComputeQShouldComputeCorrectly()
+    {
+        double3x3 C = new(0.1, 1, 0.2, 2, 2, 0.2, 1, 0.7, 0.8);
+        double3 distance = new(-0.7, -0.5, 0.1);
+        double3 expectedQ = new(-0.55, -2.38, -0.97);
+        double3 actualQ = MathUtils_3D.ComputeQ(C, distance);
+        AssertApproximatelyEqual(expectedQ, actualQ);
+        TestContext.WriteLine(actualQ);
+    }
+
+    [Test]
+    public void ComputeMassContributionShouldComputeCorrectly()
+    {
+        double expectedMassContribution = 0.16;
+        double particleMass = 1;
+        double weight = 0.16;
+        double actualMassContribution = MathUtils_3D.ComputeMassContribution(weight, particleMass);
+        AssertApproximatelyEqual(expectedMassContribution, actualMassContribution);
+    }
+
+    [Test]
+    public void UpdateMassShouldAddContributionToMass()
+    {
+        double initialCellMass = 1;
+        double massContribution = 0.16;
+        double expectedUpdatedCellMass = 1.16;
+        double actualUpdatedCellMass = MathUtils_3D.UpdateMass(initialCellMass, massContribution);
+        AssertApproximatelyEqual(expectedUpdatedCellMass, actualUpdatedCellMass);
+    }
+
+    [Test]
+    public void UpdateVelocityShouldModifyVelocity()
+    {
+        double massContribution = 0.16;
+        double3 particleVelocity = new(2, 2, 2);
+        double3 oldCellVelocity = new(3, 3, 3);
+        double3 Q = new(-0.55, -2.38, -0.97);
+        double3 expectedNewVelocity = new(3.232, 2.9392, 3.1648);
+        double3 actualNewVelocity = MathUtils_3D.UpdateVelocity(massContribution, particleVelocity, Q, oldCellVelocity);
+        AssertApproximatelyEqual(expectedNewVelocity, actualNewVelocity);
+    }
+
+    /**
+     * P2G2
+     */
+
+    [Test]
+    public void UpdateDensityShouldIncorporateMassAndWeight()
+    {
+
     }
 }
