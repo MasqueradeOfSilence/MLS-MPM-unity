@@ -364,6 +364,11 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+                        // TODO: Even though swapping x for cellPosition.x stops the freezing, I don't necessarily think it's right.
+                        // For one thing, the fluid looks like a lump. 
+                        // But more importantly, this isn't likely to really be the neighbor, due to the 3D formulation!
+                        // So neighborPosition is likely incorrect, which explains the odd behaviors. Thus, we might want to change it back.
+                        // Even so, the sticking is still a mystery. 
                         int neighborX = cellPosition.x + nx - 1;
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
