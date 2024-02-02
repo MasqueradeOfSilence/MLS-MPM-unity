@@ -127,9 +127,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                         double mass = p.GetMass();
                         double3 velocity = p.GetVelocity();
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = x + nx - neighborDimension / 2;
-                        int neighborY = y + ny - neighborDimension / 2;
-                        int neighborZ = z + nz - neighborDimension / 2;
+                        int neighborX = cellPosition.x + nx - 1;
+                        int neighborY = cellPosition.y + ny - 1;
+                        int neighborZ = cellPosition.z + nz - 1;
 
                         if (neighborX >= 0 && neighborX < width &&
                             neighborY >= 0 && neighborY < height &&
@@ -178,9 +178,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = x + nx - neighborDimension / 2;
-                        int neighborY = y + ny - neighborDimension / 2;
-                        int neighborZ = z + nz - neighborDimension / 2;
+                        int neighborX = cellPosition.x + nx - 1;
+                        int neighborY = cellPosition.y + ny - 1;
+                        int neighborZ = cellPosition.z + nz - 1;
 
                         if (neighborX >= 0 && neighborX < width &&
                             neighborY >= 0 && neighborY < height &&
@@ -214,9 +214,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = x + nx - neighborDimension / 2;
-                        int neighborY = y + ny - neighborDimension / 2;
-                        int neighborZ = z + nz - neighborDimension / 2;
+                        int neighborX = cellPosition.x + nx - 1;
+                        int neighborY = cellPosition.y + ny - 1;
+                        int neighborZ = cellPosition.z + nz - 1;
                         int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
@@ -279,9 +279,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = x + nx - neighborDimension / 2;
-                        int neighborY = y + ny - neighborDimension / 2;
-                        int neighborZ = z + nz - neighborDimension / 2;
+                        int neighborX = cellPosition.x + nx - 1;
+                        int neighborY = cellPosition.y + ny - 1;
+                        int neighborZ = cellPosition.z + nz - 1;
                         int3 neighborPosition = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
@@ -364,9 +364,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = x + nx - neighborDimension / 2;
-                        int neighborY = y + ny - neighborDimension / 2;
-                        int neighborZ = z + nz - neighborDimension / 2;
+                        int neighborX = cellPosition.x + nx - 1;
+                        int neighborY = cellPosition.y + ny - 1;
+                        int neighborZ = cellPosition.z + nz - 1;
                         int3 neighborPosition = new(neighborX, neighborY, neighborZ);
 
                         if (neighborX >= 0 && neighborX < width &&
