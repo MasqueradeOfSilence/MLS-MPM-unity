@@ -117,7 +117,7 @@ public class P2G2MathTest
 		double volume = 1;
 		double dt = 0.2;
 		// From Wolfram Alpha calculator
-		double2x2 expectedTerm0 = new( 5.9884, -0.56, -0.56, 6.0684);
+		double2x2 expectedTerm0 = new(5.9884, -0.56, -0.56, 6.0684);
 		double2x2 actualTerm0 = P2G2Math.ComputeEquation16Term0(stress, volume, dt);
 		Assert.IsTrue(GeneralMathUtils.DeepEquals(actualTerm0, expectedTerm0));
 	}

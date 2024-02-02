@@ -258,4 +258,120 @@ public class MathUtils_3D_Test
         Debug.Log(actualHBStress);
         AssertMatricesAreApproximatelyEqual(expectedHBStress, actualHBStress);
     }
+
+    [Test]
+    public void ComputeEquation16Term0ShouldCorrectlyCompute()
+    {
+        double3x3 stress = new(-7.4855, 0.7, 0.7, 0.7, -7.4855, 0.7, 0.7, 0.7, -7.4855);
+        double volume = 1;
+        double dt = 0.2;
+        double3x3 expectedTerm = new(4.4913, -0.42, -0.42,
+            -0.42, 4.4913, -0.42,
+            -0.42, -0.42, 4.4913);
+        double3x3 actualTerm = MathUtils_3D.ComputeEquation16Term0(stress, volume, dt);
+        AssertMatricesAreApproximatelyEqual(expectedTerm, actualTerm);
+    }
+
+    [Test]
+    public void ComputeMomentumShouldCorrectlyCompute()
+    {
+        double3x3 eq16Term0 = new(4.4913, -0.42, -0.42,
+            -0.42, 4.4913, -0.42,
+            -0.42, -0.42, 4.4913);
+        double weight = 1.5376;
+        //Debug.Log("First factor: " + eq16Term0 * weight);
+        double3 distanceParticleToNeighbor = new(-0.5);
+        double3 expectedMomentum = new(-2.80711944, -2.80711944, -2.80711944);
+        double3 actualMomentum = MathUtils_3D.ComputeMomentum(eq16Term0, weight, distanceParticleToNeighbor);
+        Assert.AreEqual(expectedMomentum, actualMomentum);
+    }
+
+    [Test]
+    public void AddMomentumToVelocityShouldCorrectlyUpdate()
+    {
+        double3 initialCellVelocity = new(0, 1, 0);
+        double3 momentum = new(3);
+        double3 expectedUpdatedVelocity = new(3, 4, 3);
+        double3 actualUpdatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, initialCellVelocity);
+        Assert.AreEqual(expectedUpdatedVelocity, actualUpdatedVelocity);
+    }
+
+    /**
+     * G2P
+     */
+    [Test]
+    public void ComputeWeightedVelocityShouldCorrectlyCompute()
+    {
+        double3 neighborVelocity = new(0, 1, 1);
+        double weight = 0.16;
+        double3 expectedWeightedVelocity = new(0, 0.16, 0.16);
+        double3 actualWeightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
+        Assert.AreEqual(expectedWeightedVelocity, actualWeightedVelocity);
+    }
+
+    [Test]
+    public void ComputeTermShouldCorrectlyCompute()
+    {
+        double3 weightedVelocity = new(1, 2, 4);
+        double3 distanceParticleToNeighbor = new(2, 3, 6);
+        double3x3 expectedTerm = new(2, 4, 8,
+            3, 6, 12,
+            6, 12, 24);
+        double3x3 actualTerm = MathUtils_3D.ComputeTerm(weightedVelocity, distanceParticleToNeighbor);
+        Assert.AreEqual(expectedTerm, actualTerm);
+    }
+
+    [Test]
+    public void UpdateBShouldCorrectlyUpdate()
+    {
+        double3x3 B = new(1);
+        double3x3 term = new(4);
+        double3x3 expectedB = new(5);
+        double3x3 actualB = MathUtils_3D.UpdateB(B, term);
+        Assert.AreEqual(expectedB, actualB);
+    }
+
+    [Test]
+    public void AddWeightedVelocityShouldUpdateParticleVelocity()
+    {
+        double3 initialVelocity = new(2);
+        double3 weightedVelocity = new(4);
+        double3 expectedUpdatedVelocity = new(6);
+        double3 actualUpdatedVelocity = MathUtils_3D.AddWeightedVelocity(initialVelocity, weightedVelocity);
+        Assert.AreEqual(expectedUpdatedVelocity, actualUpdatedVelocity);
+    }
+
+    [Test]
+    public void RecomputeCMatrixShouldCorrectlyCalculate()
+    {
+        double3x3 B = new(4);
+        double3x3 expectedC = new(12); // may be 16 if *4
+        double3x3 actualC = MathUtils_3D.RecomputeCMatrix(B);
+        Assert.AreEqual(expectedC, actualC);
+    }
+
+    [Test]
+    public void AdvectParticleShouldCorrectlyComputeNewPosition()
+    {
+        double3 initialPosition = new(2);
+        double3 particleVelocity = new(10);
+        double dt = 0.2;
+        double3 expectedAdvectionPosition = new(4);
+        double3 actualAdvectionPosition = MathUtils_3D.AdvectParticle(initialPosition, particleVelocity, dt);
+        Assert.AreEqual(expectedAdvectionPosition, actualAdvectionPosition);
+    }
+
+    [Test]
+    public void IsAirShouldReturnTrueForAirAndFalseForFluid()
+    {
+        double3 position = new(0);
+        double3 velocity = new(0);
+        double3x3 c = new(0);
+        FluidParticle_3D pF = GeometryCreator_3D.CreateNewFluidParticle(position, velocity, c);
+        AirParticle_3D pA = GeometryCreator_3D.CreateNewAirParticle(position, velocity, c);
+        bool isFluidAir = MathUtils_3D.IsAir(pF);
+        bool isAirAir = MathUtils_3D.IsAir(pA);
+        Assert.IsFalse(isFluidAir);
+        Assert.IsTrue(isAirAir);
+    }
 }
