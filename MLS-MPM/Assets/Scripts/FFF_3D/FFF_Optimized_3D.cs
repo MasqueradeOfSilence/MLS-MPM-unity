@@ -21,7 +21,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int)(1 / timestep);
     private const double gravity = -9.8;
-    private readonly int neighborDimension = 3;
+    private int neighborDimension = 3;
     private GameInterface_3D gameInterface;
     private WaterSurfacer_3D waterSurfacer;
     int iteration = 0;
@@ -84,14 +84,7 @@ public class FFF_Optimized_3D : MonoBehaviour
      */
     public void ClearGrid()
     {
-        if (grid == null)
-        {
-            grid = GeometryCreator_3D.CreateNewGrid(resolution);
-        }
-        else
-        {
-            grid.Init(resolution);
-        }
+        grid = GeometryCreator_3D.CreateNewGrid(resolution);
     }
 
     public void ParticleToGridStep1()
@@ -340,21 +333,19 @@ public class FFF_Optimized_3D : MonoBehaviour
             int x = i % resolution;
             int y = (i / resolution) % resolution;
             int z = i / (resolution * resolution);
-
-            int3 position = new(x, y, z);
             Cell_3D cell = grid.At(i); // TODO check me 
             if (cell.GetMass() > 0)
             {
                 cell.SetVelocity(cell.GetVelocity() / cell.GetMass());
                 cell.SetVelocity(cell.GetVelocity() + (timestep * new double3(0, gravity, 0)));
-                double3 updatedVelocityWithBoundary = UpdateVelocityWithBoundary(x, y, z, cell.GetVelocity());
+                double3 updatedVelocityWithBoundary = UpdateCellVelocityWithBoundary(x, y, z, cell.GetVelocity());
                 cell.SetVelocity(updatedVelocityWithBoundary);
-                grid.UpdateCellAt(position, cell);
+                grid.UpdateCellAt(i, cell);
             }
         }
     }
 
-    private double3 UpdateVelocityWithBoundary(int i, int j, int k, double3 velocity)
+    private double3 UpdateCellVelocityWithBoundary(int i, int j, int k, double3 velocity)
     {
         double3 velocityWithBoundary = velocity;
         if (i < 2 || i > resolution - 3)
@@ -536,7 +527,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private List<Particle_3D> GetFlattenedParticleList()
     {
         List<Particle_3D> flattenedList = particles.Cast<Particle_3D>().ToList();
-        return flattenedList;//particles.SelectMany(array2D => array2D.SelectMany(array1D => array1D)).ToList();
+        return flattenedList;
     }
 
     /**
@@ -589,27 +580,23 @@ public class FFF_Optimized_3D : MonoBehaviour
     public double3[] InitTempGrid()
     {
         double spacing = 0.5;
-        double startPosition = resolution / 4;
-        int size = resolution * resolution * resolution;
-        double3[] grid = new double3[size];
-        // Initializing grid
+        double startPosition = 4; // resolution / 4
+        double endPosition = 12; // resolution - (resolution - startPosition)
+        double3[] tempGrid = new double3[resolution * resolution * resolution];
         int index = 0;
-        for (int i = 0; i < size; i++)
+        for (double i = startPosition; i < endPosition; i += spacing)
         {
-            int z = i / (resolution * resolution);
-            int y = (i / resolution) % resolution;
-            int x = i % resolution;
-
-            double3 position = new(
-                startPosition + x * spacing,
-                startPosition + y * spacing,
-                startPosition + z * spacing
-            );
-            position = ClampInitPosition(position); // So it doesn't init at 32
-            grid[index] = position;
-            index++;
+            for (double j = startPosition; j < endPosition; j += spacing)
+            {
+                for (double k = startPosition; k < endPosition; k += spacing)
+                {
+                    double3 position = new(i, j, k);
+                    tempGrid[index] = position;
+                    index++;
+                }
+            }
         }
-        return grid;
+        return tempGrid;
     }
 
     /**
@@ -628,11 +615,34 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     private bool GridSizeIsZero()
     {
-        return grid == null || (grid.GetSize() == 0);
+        return grid == null || (grid.GetSize()[0] == 0);
     }
 
     private bool ParticlesSizeIsZero()
     {
         return particles == null || particles.Length == 0;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public Grid_3D GetGrid()
+    {
+        return grid;
+    }
+
+    public Particle_3D[] GetParticles()
+    {
+        return particles;
+    }
+
+    public void SetNeighborDimension(int neighborDimension)
+    {
+        this.neighborDimension = neighborDimension;
+    }
+
+    public void SetParticles(Particle_3D[] particles)
+    {
+        this.particles = particles;
     }
 }

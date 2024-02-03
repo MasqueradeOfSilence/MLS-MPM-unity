@@ -63,10 +63,9 @@ public class Grid_3D : ScriptableObject
 
     // Size ------------------
 
-    public int GetSize()
+    public int3 GetSize()
     {
-        int size = Mathf.RoundToInt(Mathf.Pow(resolution, 1.0f / 3.0f));
-        return size;
+        return new int3(resolution, resolution, resolution);
     }
 
     // Indexing ------------------
@@ -107,5 +106,10 @@ public class Grid_3D : ScriptableObject
 
         // Access the element in the 1D array
         gridFlat[index] = updated;
+    }
+
+    public void UpdateCellAt(int index_1D, Cell_3D updated)
+    {
+        gridFlat[index_1D] = updated;
     }
 }
