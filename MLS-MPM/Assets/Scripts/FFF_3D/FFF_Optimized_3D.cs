@@ -131,22 +131,35 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
 
-                        if (neighborX >= 0 && neighborX < width &&
-                            neighborY >= 0 && neighborY < height &&
-                            neighborZ >= 0 && neighborZ < depth)
-                        {
-                            int3 neighborPosition = new(neighborX, neighborY, neighborZ);
-                            double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                            double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
-                            // Mass contribution of neighbor
-                            double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
-                            Cell_3D correspondingCell = grid.At(neighborPosition);
-                            double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
-                            correspondingCell.SetMass(updatedMass);
-                            double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
-                            correspondingCell.SetVelocity(updatedVelocity);
-                            grid.UpdateCellAt(neighborPosition, correspondingCell);
-                        }
+                        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
+                        // Mass contribution of neighbor
+                        double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
+                        Cell_3D correspondingCell = grid.At(neighborPosition);
+                        double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
+                        correspondingCell.SetMass(updatedMass);
+                        double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
+                        correspondingCell.SetVelocity(updatedVelocity);
+                        grid.UpdateCellAt(neighborPosition, correspondingCell);
+
+                        //if (neighborX >= 0 && neighborX < width &&
+                        //    neighborY >= 0 && neighborY < height &&
+                        //    neighborZ >= 0 && neighborZ < depth)
+                        //{
+                        //    //int3 neighborPosition = new(neighborX, neighborY, neighborZ);
+                        //    int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        //    double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
+                        //    // Mass contribution of neighbor
+                        //    double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
+                        //    Cell_3D correspondingCell = grid.At(neighborPosition);
+                        //    double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
+                        //    correspondingCell.SetMass(updatedMass);
+                        //    double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
+                        //    correspondingCell.SetVelocity(updatedVelocity);
+                        //    grid.UpdateCellAt(neighborPosition, correspondingCell);
+                        //}
                     }
                 }
             }
@@ -182,15 +195,21 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
 
-                        if (neighborX >= 0 && neighborX < width &&
-                            neighborY >= 0 && neighborY < height &&
-                            neighborZ >= 0 && neighborZ < depth)
-                        {
-                            int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
-                            Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-                            double mass = nearestCellToParticle.GetMass();
-                            density = MathUtils_3D.UpdateDensity(weight, mass, density);
-                        }
+                        int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                        Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                        double mass = nearestCellToParticle.GetMass();
+                        density = MathUtils_3D.UpdateDensity(weight, mass, density);
+
+                        //if (neighborX >= 0 && neighborX < width &&
+                        //    neighborY >= 0 && neighborY < height &&
+                        //    neighborZ >= 0 && neighborZ < depth)
+                        //{
+                        //    //int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
+                        //    int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+                        //    Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                        //    double mass = nearestCellToParticle.GetMass();
+                        //    density = MathUtils_3D.UpdateDensity(weight, mass, density);
+                        //}
                     }
                 }
             }
@@ -217,16 +236,21 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = cellPosition.x + nx - 1;
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
-                        int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
+                        //int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
+                        int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
 
-                        if (neighborX >= 0 && neighborX < width &&
-                            neighborY >= 0 && neighborY < height &&
-                            neighborZ >= 0 && neighborZ < depth)
-                        {
-                            Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-                            double mass = nearestCellToParticle.GetMass();
-                            density = MathUtils_3D.UpdateDensity(weight, mass, density);
-                        }
+                        Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                        double mass = nearestCellToParticle.GetMass();
+                        density = MathUtils_3D.UpdateDensity(weight, mass, density);
+
+                        //if (neighborX >= 0 && neighborX < width &&
+                        //    neighborY >= 0 && neighborY < height &&
+                        //    neighborZ >= 0 && neighborZ < depth)
+                        //{
+                        //    Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+                        //    double mass = nearestCellToParticle.GetMass();
+                        //    density = MathUtils_3D.UpdateDensity(weight, mass, density);
+                        //}
                     }
                 }
             }
@@ -282,19 +306,27 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = cellPosition.x + nx - 1;
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
-                        int3 neighborPosition = new(neighborX, neighborY, neighborZ);
+                        //int3 neighborPosition = new(neighborX, neighborY, neighborZ);
+                        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
 
-                        if (neighborX >= 0 && neighborX < width &&
-                            neighborY >= 0 && neighborY < height &&
-                            neighborZ >= 0 && neighborZ < depth)
-                        {
-                            double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                            Cell_3D correspondingCell = grid.At(neighborPosition);
-                            double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
-                            double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
-                            correspondingCell.SetVelocity(updatedVelocity);
-                            grid.UpdateCellAt(neighborPosition, correspondingCell);
-                        }
+                        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        Cell_3D correspondingCell = grid.At(neighborPosition);
+                        double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
+                        double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
+                        correspondingCell.SetVelocity(updatedVelocity);
+                        grid.UpdateCellAt(neighborPosition, correspondingCell);
+
+                        //if (neighborX >= 0 && neighborX < width &&
+                        //    neighborY >= 0 && neighborY < height &&
+                        //    neighborZ >= 0 && neighborZ < depth)
+                        //{
+                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        //    Cell_3D correspondingCell = grid.At(neighborPosition);
+                        //    double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
+                        //    double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
+                        //    correspondingCell.SetVelocity(updatedVelocity);
+                        //    grid.UpdateCellAt(neighborPosition, correspondingCell);
+                        //}
                     }
                 }
             }
@@ -308,8 +340,9 @@ public class FFF_Optimized_3D : MonoBehaviour
             int x = i % resolution;
             int y = (i / resolution) % resolution;
             int z = i / (resolution * resolution);
+
             int3 position = new(x, y, z);
-            Cell_3D cell = grid.At(position);
+            Cell_3D cell = grid.At(i); // TODO check me 
             if (cell.GetMass() > 0)
             {
                 cell.SetVelocity(cell.GetVelocity() / cell.GetMass());
@@ -346,9 +379,12 @@ public class FFF_Optimized_3D : MonoBehaviour
         int depth = resolution;
         for (int i = 0; i < particles.Length; i++)
         {
-            int x = i % resolution;
-            int y = (i / resolution) % resolution;
-            int z = i / (resolution * resolution);
+            int x = i % resolution; // if i = 1, this is 1
+            int y = (i / resolution) % resolution; // if i = 1, this is 0.01 so 0
+            int z = i / (resolution * resolution); // if i = 1, this is 1/256 which casted to an int is 0
+            // so this is the corresponding location as if we were doing i, j, k. like x is what i would be, y is for j, z is for k. 
+            // the thing is, I don't think we can create int3 neighborPosition in the way that we did before. Because it's not computed like that with the flattened loop. 
+            // we need to find the position of 9 different neighbors
             Particle_3D p = particles[i];
             double3 particlePosition = p.GetPosition();
             p.ResetVelocity();
@@ -372,21 +408,30 @@ public class FFF_Optimized_3D : MonoBehaviour
                         int neighborX = cellPosition.x + nx - 1;
                         int neighborY = cellPosition.y + ny - 1;
                         int neighborZ = cellPosition.z + nz - 1;
-                        int3 neighborPosition = new(neighborX, neighborY, neighborZ);
+                        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
 
-                        if (neighborX >= 0 && neighborX < width &&
-                            neighborY >= 0 && neighborY < height &&
-                            neighborZ >= 0 && neighborZ < depth)
-                        {
-                            double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                            Cell_3D neighborCell = grid.At(neighborPosition);
-                            double3 neighborVelocity = neighborCell.GetVelocity();
-                            double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
-                            double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
-                            B = MathUtils_3D.UpdateB(B, term);
-                            double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
-                            p.SetVelocity(updatedVelocity);
-                        }
+                        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        Cell_3D neighborCell = grid.At(neighborPosition);
+                        double3 neighborVelocity = neighborCell.GetVelocity();
+                        double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
+                        double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
+                        B = MathUtils_3D.UpdateB(B, term);
+                        double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
+                        p.SetVelocity(updatedVelocity);
+
+                        //if (neighborX >= 0 && neighborX < width &&
+                        //    neighborY >= 0 && neighborY < height &&
+                        //    neighborZ >= 0 && neighborZ < depth)
+                        //{
+                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+                        //    Cell_3D neighborCell = grid.At(neighborPosition);
+                        //    double3 neighborVelocity = neighborCell.GetVelocity();
+                        //    double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
+                        //    double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
+                        //    B = MathUtils_3D.UpdateB(B, term);
+                        //    double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
+                        //    p.SetVelocity(updatedVelocity);
+                        //}
                     }
                 }
             }

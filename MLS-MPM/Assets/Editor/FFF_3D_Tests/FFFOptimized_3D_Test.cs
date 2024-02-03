@@ -9,5 +9,9 @@ using UnityEngine;
 [TestFixture]
 public class FFFOptimized_3D_Test 
 {
-    
+    [Test]
+    public void InitShouldSetUpGridAndParticles()
+    {
+
+    }
 }

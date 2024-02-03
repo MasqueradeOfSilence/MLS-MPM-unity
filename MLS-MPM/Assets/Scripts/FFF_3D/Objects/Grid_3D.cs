@@ -11,10 +11,10 @@ public class Grid_3D : ScriptableObject
     /**
      * Data members
      */
-    private int resolution;
-    private const int defaultResolution = 32; // or 64
+    private int resolution = 16;
+    private const int defaultResolution = 16; // or 64
     private bool gridInstantiated = false;
-    private const int defaultZResolution = 32;
+    private const int defaultZResolution = 16;
     private Cell_3D[] gridFlat;
 
     /**
@@ -85,6 +85,11 @@ public class Grid_3D : ScriptableObject
 
         // Access the element in the 1D array
         return gridFlat[index];
+    }
+
+    public Cell_3D At(int position)
+    {
+        return gridFlat[position];
     }
 
     public void UpdateCellAt(int3 position, Cell_3D updated)
