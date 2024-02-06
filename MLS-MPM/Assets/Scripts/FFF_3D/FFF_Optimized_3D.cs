@@ -88,6 +88,24 @@ public class FFF_Optimized_3D : MonoBehaviour
         grid = GeometryCreator_3D.CreateNewGrid(resolution);
     }
 
+    private void P2G1NeighborAlgorithm(int nx, int ny, int nz, Particle_3D p, List<double3> weights, double3x3 C, double3 particlePosition, int3 cellPosition)
+    {
+        double mass = p.GetMass();
+        double3 velocity = p.GetVelocity();
+        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+        double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
+        // Mass contribution of neighbor
+        double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
+        Cell_3D correspondingCell = grid.At(neighborPosition);
+        double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
+        correspondingCell.SetMass(updatedMass);
+        double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
+        correspondingCell.SetVelocity(updatedVelocity);
+        grid.UpdateCellAt(neighborPosition, correspondingCell);
+    }
+
     public void ParticleToGridStep1()
     {
         if (GridSizeIsZero())
@@ -98,44 +116,25 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             InitParticles();
         }
-        int width = resolution;
-        int height = resolution;
-        int depth = resolution;
         for (int i = 0; i < particles.Length; i++)
         {
-            int x = i % resolution;
-            int y = (i / resolution) % resolution;
-            int z = i / (resolution * resolution);
             Particle_3D p = particles[i];
             double3 particlePosition = p.GetPosition();
             int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
             double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
             List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
             double3x3 C = p.GetC();
+            //int nx = 0;
+            //int ny = 0;
+            //int nz = 0;
+            //P2G1NeighborAlgorithm(nx, ny, nz, p, weights, C, particlePosition, cellPosition); // We can eliminate the triple-for here
             for (int nx = 0; nx < neighborDimension; nx++)
             {
                 for (int ny = 0; ny < neighborDimension; ny++)
                 {
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
-                        double mass = p.GetMass();
-                        double3 velocity = p.GetVelocity();
-                        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = cellPosition.x + nx - 1;
-                        int neighborY = cellPosition.y + ny - 1;
-                        int neighborZ = cellPosition.z + nz - 1;
-
-                        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-                        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                        double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
-                        // Mass contribution of neighbor
-                        double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
-                        Cell_3D correspondingCell = grid.At(neighborPosition);
-                        double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
-                        correspondingCell.SetMass(updatedMass);
-                        double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
-                        correspondingCell.SetVelocity(updatedVelocity);
-                        grid.UpdateCellAt(neighborPosition, correspondingCell);
+                        P2G1NeighborAlgorithm(nx, ny, nz, p, weights, C, particlePosition, cellPosition);
                     }
                 }
             }
@@ -145,15 +144,8 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     public void ParticleToGridStep2()
     {
-        int width = resolution;
-        int height = resolution;
-        int depth = resolution;
-
         for (int i = 0; i < particles.Length; i++)
         {
-            int x = i % resolution;
-            int y = (i / resolution) % resolution;
-            int z = i / (resolution * resolution);
             Particle_3D p = particles[i];
             double3 particlePosition = p.GetPosition();
             int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
@@ -167,12 +159,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = cellPosition.x + nx - 1;
-                        int neighborY = cellPosition.y + ny - 1;
-                        int neighborZ = cellPosition.z + nz - 1;
-                        //int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
                         int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-
                         Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
                         double mass = nearestCellToParticle.GetMass();
                         density = MathUtils_3D.UpdateDensity(weight, mass, density);
@@ -228,12 +215,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int neighborX = cellPosition.x + nx - 1;
-                        int neighborY = cellPosition.y + ny - 1;
-                        int neighborZ = cellPosition.z + nz - 1;
-                        //int3 neighborPosition = new(neighborX, neighborY, neighborZ);
                         int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-
                         double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
                         Cell_3D correspondingCell = grid.At(neighborPosition);
                         double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
@@ -288,18 +270,8 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     public void GridToParticleStep()
     {
-        int width = resolution;
-        int height = resolution;
-        int depth = resolution;
         for (int i = 0; i < particles.Length; i++)
         {
-            // x, y, and z are supposed to be the 
-            int x = i % resolution; // if i = 1, this is 1
-            int y = (i / resolution) % resolution; // if i = 1, this is 0.01 so 0
-            int z = i / (resolution * resolution); // if i = 1, this is 1/256 which casted to an int is 0
-            // so this is the corresponding location as if we were doing i, j, k. like x is what i would be, y is for j, z is for k. 
-            // the thing is, I don't think we can create int3 neighborPosition in the way that we did before. Because it's not computed like that with the flattened loop. 
-            // we need to find the position of 9 different neighbors
             Particle_3D p = particles[i];
             double3 particlePosition = p.GetPosition();
             p.ResetVelocity();
@@ -315,16 +287,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
                         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        // TODO: Even though swapping x for cellPosition.x stops the freezing, I don't necessarily think it's right.
-                        // For one thing, the fluid looks like a lump. 
-                        // But more importantly, this isn't likely to really be the neighbor, due to the 3D formulation!
-                        // So neighborPosition is likely incorrect, which explains the odd behaviors. Thus, we might want to change it back.
-                        // Even so, the sticking is still a mystery. 
-                        int neighborX = cellPosition.x + nx - 1;
-                        int neighborY = cellPosition.y + ny - 1;
-                        int neighborZ = cellPosition.z + nz - 1;
                         int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-
                         double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
                         Cell_3D neighborCell = grid.At(neighborPosition);
                         double3 neighborVelocity = neighborCell.GetVelocity();
