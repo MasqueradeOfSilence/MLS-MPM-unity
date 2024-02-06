@@ -41,6 +41,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //return;
         if (shouldStopEarly && numUpdates > 1)
         {
             numUpdates++;
@@ -135,24 +136,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                         double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
                         grid.UpdateCellAt(neighborPosition, correspondingCell);
-
-                        //if (neighborX >= 0 && neighborX < width &&
-                        //    neighborY >= 0 && neighborY < height &&
-                        //    neighborZ >= 0 && neighborZ < depth)
-                        //{
-                        //    //int3 neighborPosition = new(neighborX, neighborY, neighborZ);
-                        //    int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                        //    double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
-                        //    // Mass contribution of neighbor
-                        //    double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
-                        //    Cell_3D correspondingCell = grid.At(neighborPosition);
-                        //    double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
-                        //    correspondingCell.SetMass(updatedMass);
-                        //    double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
-                        //    correspondingCell.SetVelocity(updatedVelocity);
-                        //    grid.UpdateCellAt(neighborPosition, correspondingCell);
-                        //}
                     }
                 }
             }
@@ -165,48 +148,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         int width = resolution;
         int height = resolution;
         int depth = resolution;
-
-        //for (int i = 0; i < particles.Length; i++)
-        //{
-        //    int x = i % resolution;
-        //    int y = (i / resolution) % resolution;
-        //    int z = i / (resolution * resolution);
-        //    Particle_3D p = particles[i];
-        //    double3 particlePosition = p.GetPosition();
-        //    int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
-        //    double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
-        //    List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
-        //    double density = 0;
-        //    for (int nx = 0; nx < neighborDimension; nx++)
-        //    {
-        //        for (int ny = 0; ny < neighborDimension; ny++)
-        //        {
-        //            for (int nz = 0; nz < neighborDimension; nz++)
-        //            {
-        //                double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-        //                int neighborX = cellPosition.x + nx - 1;
-        //                int neighborY = cellPosition.y + ny - 1;
-        //                int neighborZ = cellPosition.z + nz - 1;
-
-        //                int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-        //                Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-        //                double mass = nearestCellToParticle.GetMass();
-        //                density = MathUtils_3D.UpdateDensity(weight, mass, density);
-
-        //                //if (neighborX >= 0 && neighborX < width &&
-        //                //    neighborY >= 0 && neighborY < height &&
-        //                //    neighborZ >= 0 && neighborZ < depth)
-        //                //{
-        //                //    //int3 cellCoordinates = new(neighborX, neighborY, neighborZ);
-        //                //    int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-        //                //    Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-        //                //    double mass = nearestCellToParticle.GetMass();
-        //                //    density = MathUtils_3D.UpdateDensity(weight, mass, density);
-        //                //}
-        //            }
-        //        }
-        //    }
-        //}
 
         for (int i = 0; i < particles.Length; i++)
         {
@@ -235,15 +176,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                         Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
                         double mass = nearestCellToParticle.GetMass();
                         density = MathUtils_3D.UpdateDensity(weight, mass, density);
-
-                        //if (neighborX >= 0 && neighborX < width &&
-                        //    neighborY >= 0 && neighborY < height &&
-                        //    neighborZ >= 0 && neighborZ < depth)
-                        //{
-                        //    Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-                        //    double mass = nearestCellToParticle.GetMass();
-                        //    density = MathUtils_3D.UpdateDensity(weight, mass, density);
-                        //}
                     }
                 }
             }
@@ -308,18 +240,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                         double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
                         correspondingCell.SetVelocity(updatedVelocity);
                         grid.UpdateCellAt(neighborPosition, correspondingCell);
-
-                        //if (neighborX >= 0 && neighborX < width &&
-                        //    neighborY >= 0 && neighborY < height &&
-                        //    neighborZ >= 0 && neighborZ < depth)
-                        //{
-                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                        //    Cell_3D correspondingCell = grid.At(neighborPosition);
-                        //    double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
-                        //    double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
-                        //    correspondingCell.SetVelocity(updatedVelocity);
-                        //    grid.UpdateCellAt(neighborPosition, correspondingCell);
-                        //}
                     }
                 }
             }
@@ -328,12 +248,15 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     public void UpdateGrid()
     {
-        for (int i = 0; i < particles.Length; i++)
+        int gridSize = grid.GetResolution() * grid.GetResolution() * grid.GetResolution();
+        for (int i = 0; i < gridSize; i++)
         {
-            int x = i % resolution;
+            int x = i / (resolution * resolution);
             int y = (i / resolution) % resolution;
-            int z = i / (resolution * resolution);
-            Cell_3D cell = grid.At(i); // TODO check me 
+            int z = i % resolution;
+            int3 testIndex = new(x, y, z);
+            Cell_3D cell = grid.At(i); // TODO check me. testIndex or i? 
+            // are grid indices exactly correlated with particle indices? 
             if (cell.GetMass() > 0)
             {
                 cell.SetVelocity(cell.GetVelocity() / cell.GetMass());
@@ -370,6 +293,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         int depth = resolution;
         for (int i = 0; i < particles.Length; i++)
         {
+            // x, y, and z are supposed to be the 
             int x = i % resolution; // if i = 1, this is 1
             int y = (i / resolution) % resolution; // if i = 1, this is 0.01 so 0
             int z = i / (resolution * resolution); // if i = 1, this is 1/256 which casted to an int is 0
@@ -409,20 +333,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                         B = MathUtils_3D.UpdateB(B, term);
                         double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
                         p.SetVelocity(updatedVelocity);
-
-                        //if (neighborX >= 0 && neighborX < width &&
-                        //    neighborY >= 0 && neighborY < height &&
-                        //    neighborZ >= 0 && neighborZ < depth)
-                        //{
-                        //    double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                        //    Cell_3D neighborCell = grid.At(neighborPosition);
-                        //    double3 neighborVelocity = neighborCell.GetVelocity();
-                        //    double3 weightedVelocity = MathUtils_3D.ComputeWeightedVelocity(neighborVelocity, weight);
-                        //    double3x3 term = MathUtils_3D.ComputeTerm(weightedVelocity, distanceFromParticleToNeighbor);
-                        //    B = MathUtils_3D.UpdateB(B, term);
-                        //    double3 updatedVelocity = MathUtils_3D.AddWeightedVelocity(p.GetVelocity(), weightedVelocity);
-                        //    p.SetVelocity(updatedVelocity);
-                        //}
                     }
                 }
             }
@@ -431,12 +341,9 @@ public class FFF_Optimized_3D : MonoBehaviour
             // Move particle
             double3 advectedPosition = MathUtils_3D.AdvectParticle(p.GetPosition(), p.GetVelocity(), timestep);
             p.SetPosition(advectedPosition);
-            Debug.Log("OUR VELOCITY WAS: " + p.GetVelocity()); // sometimes this gets really far and idk why 
-            Debug.Log("POSITION ADVECTED: " + advectedPosition);
             // Clamp
             double3 clampedPosition = ClampPosition(p);
             p.SetPosition(clampedPosition);
-            Debug.Log("POSITION clamped: " + clampedPosition);
             // Enforce boundaries
             double3 boundedVelocity = EnforceBoundaryVelocity(p);
             p.SetVelocity(boundedVelocity);
@@ -458,8 +365,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
-        const double wallMin = 3;
-        double wallMax = resolution - 4;
+        const double wallMin = 1;
+        double wallMax = resolution - 2;
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
@@ -496,9 +403,9 @@ public class FFF_Optimized_3D : MonoBehaviour
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
         for (int i = 0; i < particles.Length; i++)
         {
-            int x = i % resolution;
+            int x = i / (resolution * resolution);
             int y = (i / resolution) % resolution;
-            int z = i / (resolution * resolution);
+            int z = i % resolution;
             Particle_3D p = particles[i];
             bool skipBubble = false;
             if ((x % 2 == 0 || y % 2 == 0 || z % 2 == 0) && MathUtils_3D.IsAir(p))
@@ -615,7 +522,7 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     private bool GridSizeIsZero()
     {
-        return grid == null || (grid.GetSize()[0] == 0);
+        return grid == null || (grid.GetSize()[0] == 0 && grid.GetSize()[1] == 0 && grid.GetSize()[2] == 0);
     }
 
     private bool ParticlesSizeIsZero()

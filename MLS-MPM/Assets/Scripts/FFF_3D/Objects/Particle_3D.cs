@@ -42,7 +42,7 @@ public class Particle_3D : ScriptableObject
 
     public void ResetVelocity()
     {
-        velocity = 0;
+        velocity = new(0);
     }
 
     /**
