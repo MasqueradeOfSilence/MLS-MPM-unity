@@ -22,13 +22,13 @@ public class Grid_3D : ScriptableObject
      */
     public void Init(int resolution = defaultResolution, int zResolution = defaultZResolution)
     {
-        if (ResolutionTooSmall(resolution))
+        this.resolution = resolution;
+        if (ResolutionTooSmall())
         {
             Debug.LogWarning("Resolution too small! (<=0) Using defaults.");
             resolution = defaultResolution;
         }
         gridFlat = new Cell_3D[resolution * resolution * resolution];
-        this.resolution = resolution;
 
         for (int i = 0; i < gridFlat.Length; i++)
         {
@@ -45,7 +45,7 @@ public class Grid_3D : ScriptableObject
      * Utilities
      */
 
-    private bool ResolutionTooSmall(int resolution)
+    private bool ResolutionTooSmall()
     {
         return resolution <= 0;
     }
@@ -80,12 +80,6 @@ public class Grid_3D : ScriptableObject
         int z = Mathf.Clamp(position.z, 0, resolution - 1);
 
         // Calculate 1D index from 3D coordinates
-        //int index = x + resolution * (y + resolution * z);
-        //int index = z * (resolution * resolution) + y * resolution + x;
-        // index=x + y × grid_res + z × grid_res × grid_res
-        //int index = x + y * resolution + z * resolution * resolution;
-
-        // int index = height * width * i + width * j + k;
         int index = resolution * resolution * x + resolution * y + z;
 
         // Access the element in the 1D array
@@ -108,11 +102,6 @@ public class Grid_3D : ScriptableObject
         int z = Mathf.Clamp(position.z, 0, resolution - 1);
 
         // Calculate 1D index from 3D coordinates
-        //int index = x + resolution * (y + resolution * z);
-        //int index = z * (resolution * resolution) + y * resolution + x;
-        //int index = x + y * resolution + z * resolution * resolution; // NOT CORRECT
-
-        // int index = height * width * i + width * j + k;
         int index = resolution * resolution * x + resolution * y + z;
         // Access the element in the 1D array
         gridFlat[index] = updated;

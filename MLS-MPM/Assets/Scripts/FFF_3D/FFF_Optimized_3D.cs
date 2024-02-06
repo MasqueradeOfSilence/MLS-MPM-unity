@@ -142,6 +142,28 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
     }
 
+    private double P2G2NeighborAlgorithm1(int nx, int ny, int nz, List<double3> weights, double density, int3 cellPosition)
+    {
+        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+        int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+        Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
+        double mass = nearestCellToParticle.GetMass();
+        density = MathUtils_3D.UpdateDensity(weight, mass, density);
+        return density;
+    }
+
+    private void P2G2NeighborAlgorithm2(int nx, int ny, int nz, List<double3> weights, int3 cellPosition, double3 particlePosition, double3x3 equation16Term0)
+    {
+        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
+        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
+        Cell_3D correspondingCell = grid.At(neighborPosition);
+        double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
+        double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
+        correspondingCell.SetVelocity(updatedVelocity);
+        grid.UpdateCellAt(neighborPosition, correspondingCell);
+    }
+
     public void ParticleToGridStep2()
     {
         for (int i = 0; i < particles.Length; i++)
@@ -158,11 +180,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                 {
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
-                        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int3 cellCoordinates = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-                        Cell_3D nearestCellToParticle = grid.At(cellCoordinates);
-                        double mass = nearestCellToParticle.GetMass();
-                        density = MathUtils_3D.UpdateDensity(weight, mass, density);
+                        density = P2G2NeighborAlgorithm1(nx, ny, nz, weights, density, cellPosition);
                     }
                 }
             }
@@ -214,14 +232,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                 {
                     for (int nz = 0; nz < neighborDimension; nz++)
                     {
-                        double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
-                        int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
-                        double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
-                        Cell_3D correspondingCell = grid.At(neighborPosition);
-                        double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
-                        double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
-                        correspondingCell.SetVelocity(updatedVelocity);
-                        grid.UpdateCellAt(neighborPosition, correspondingCell);
+                        P2G2NeighborAlgorithm2(nx, ny, nz, weights, cellPosition, particlePosition, equation16Term0);
                     }
                 }
             }
@@ -238,6 +249,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             int z = i % resolution;
             int3 testIndex = new(x, y, z);
             Cell_3D cell = grid.At(i); // TODO check me. testIndex or i? 
+            //Debug.Log(x + ", " + y  + ", " + z);
             // are grid indices exactly correlated with particle indices? 
             if (cell.GetMass() > 0)
             {
@@ -319,17 +331,12 @@ public class FFF_Optimized_3D : MonoBehaviour
         return math.clamp(p.GetPosition(), 1, resolution - 2);
     }
 
-    private double3 ClampInitPosition(double3 p)
-    {
-        return math.clamp(p, 1, resolution - 2);
-    }
-
     public double3 EnforceBoundaryVelocity(Particle_3D p)
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
         const double wallMin = 1;
-        double wallMax = resolution - 2;
+        double wallMax = resolution - 2; // changing these seems to affect how long it takes to settle
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
@@ -396,7 +403,7 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     private List<Particle_3D> GetFlattenedParticleList()
     {
-        List<Particle_3D> flattenedList = particles.Cast<Particle_3D>().ToList();
+        List<Particle_3D> flattenedList = particles.ToList();
         return flattenedList;
     }
 
