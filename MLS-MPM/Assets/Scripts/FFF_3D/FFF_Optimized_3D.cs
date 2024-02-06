@@ -29,7 +29,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     // it is a subservient god, for it creates and destroys upon command
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
-    private bool shouldStopEarly = false; // Set to TRUE only for debug purposes
+    private int howManyStepsToTest = 1; // usually set to 1
+    private bool shouldStopEarly = true; // Set to TRUE only for debug purposes
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +42,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //return;
-        if (shouldStopEarly && numUpdates > 1)
+        if (shouldStopEarly && numUpdates > howManyStepsToTest)
         {
             numUpdates++;
             return;
@@ -51,7 +51,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             Simulate();
         }
-        gameInterface.UpdateParticles(GetFlattenedParticleList().ToArray(), true);
+        gameInterface.UpdateParticles(particles, true);
         gameInterface.NukeClones();
         numUpdates++;
     }
@@ -248,7 +248,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             int y = (i / resolution) % resolution;
             int z = i % resolution;
             int3 testIndex = new(x, y, z);
-            Cell_3D cell = grid.At(i); // TODO check me. testIndex or i? 
+            Cell_3D cell = grid.At(i); // Using i or testIndex *should* produce the same results. 
             //Debug.Log(x + ", " + y  + ", " + z);
             // are grid indices exactly correlated with particle indices? 
             if (cell.GetMass() > 0)

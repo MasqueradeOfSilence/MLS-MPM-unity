@@ -110,6 +110,7 @@ public class MathUtils_3D
     {
         if (density == 0)
         {
+            Debug.LogError("Incorrect density of 0, recalculating...");
             density = 0.001;
         }
         return mass / density;
@@ -118,7 +119,6 @@ public class MathUtils_3D
     public static double ComputeTrace(double3x3 strain)
     {
         return strain.c0.x + strain.c1.y + strain.c2.z;
-        //return strain.c2.x + strain.c1.y + strain.c0.z;
     }
 
     public static double ComputePressure(double eosStiffness, double density, double restDensity, double eosPower)
