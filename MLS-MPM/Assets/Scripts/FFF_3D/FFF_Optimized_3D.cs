@@ -30,19 +30,25 @@ public class FFF_Optimized_3D : MonoBehaviour
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
     private int howManyStepsToTest = 1; // usually set to 1
-    private bool shouldStopEarly = true; // Set to TRUE only for debug purposes
+    private bool runLimitedUpdates = true; // Set to TRUE only for debug purposes
+    private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
 
     // Start is called before the first frame update
     void Start()
     {
         Init();
-        gameInterface.DumpParticlesIntoScene(GetFlattenedParticleList().ToArray(), true);
+        gameInterface.DumpParticlesIntoScene(GetFlattenedParticleList().ToArray(), true); 
+        gameInterface.NukeClones();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (shouldStopEarly && numUpdates > howManyStepsToTest)
+        if (onlyDisplayInitialSetup)
+        {
+            return;
+        }
+        if (runLimitedUpdates && numUpdates > howManyStepsToTest)
         {
             numUpdates++;
             return;
@@ -78,6 +84,52 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         //ComputeVoronoi();
         iteration++;
+    }
+
+    private bool IsSphere1611Round1(double3 positionBeforeModification)
+    {
+        double3 target = new(7, 6, 9.5);
+        double3 pos = positionBeforeModification;
+        return (pos.x == target.x && pos.y == target.y && pos.z == target.z);
+    }
+
+    private bool ApproxEquals(double3 target, double3 pos)
+    {
+        double threshold = 0.01;
+        double3 lowerBound = target - threshold;
+        double3 upperBound = target + threshold;
+        return pos.x > lowerBound.x && pos.x < upperBound.x
+            && pos.y > lowerBound.y && pos.y < upperBound.y
+            && pos.z > lowerBound.z && pos.z < upperBound.z;
+    }
+
+    private bool IsSphere1611Round5(double3 positionBeforeMod)
+    {
+        double3 target = new(1, 3.85284023354864, 1);
+        double3 pos = positionBeforeMod;
+        return ApproxEquals(target, pos);
+    }
+
+    private bool IsSphere1611Round4(double3 positionBeforeMod)
+    {
+        double3 target = new(14, 1.18504407908685, 14);
+        double3 pos = positionBeforeMod;
+        return ApproxEquals(target, pos);
+    }
+
+    private bool IsSphere1611Round3(double3 positionBeforeModification)
+    {
+        double3 target = new(11.0002725025151, 1.18797286422047, 13.7733003958333);
+        double3 pos = positionBeforeModification;
+        return ApproxEquals(target, pos);
+    }
+
+    // TODO round2 and on are not accurate under quadratic, fix
+    private bool IsSphere1611Round2(double3 positionBeforeMod)
+    {
+        double3 target = new(6.75789579562901, 5.29006300689108, 9.2578338494544);
+        double3 pos = positionBeforeMod;
+        return ApproxEquals(target, pos);
     }
 
     /**
@@ -282,10 +334,12 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     public void GridToParticleStep()
     {
+        double3 originalPosition;
         for (int i = 0; i < particles.Length; i++)
         {
             Particle_3D p = particles[i];
             double3 particlePosition = p.GetPosition();
+            originalPosition = p.GetPosition(); // Just for debug purposes
             p.ResetVelocity();
             int3 cellPosition = MathUtils_3D.ParticlePositionToCellPosition(particlePosition);
             double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
@@ -313,11 +367,24 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             double3x3 updatedC = MathUtils_3D.RecomputeCMatrix(B);
             p.SetC(updatedC);
+            double3 positionBeforeAdvecting = p.GetPosition(); // Saved for debug purposes
             // Move particle
             double3 advectedPosition = MathUtils_3D.AdvectParticle(p.GetPosition(), p.GetVelocity(), timestep);
             p.SetPosition(advectedPosition);
             // Clamp
             double3 clampedPosition = ClampPosition(p);
+            if (IsSphere1611Round1(originalPosition))
+            {
+                Debug.Log("Sphere 1611 round 5");
+                Debug.Log("Sphere advected: " + advectedPosition);
+                Debug.Log("Sphere clamped: " + clampedPosition);
+                Debug.Log("Particle velocity: " + p.GetVelocity());
+                Debug.Log("Sphere position before advecting: " + positionBeforeAdvecting);
+                Debug.Log("Sphere position before G2P starts: " + originalPosition);
+                // Not an issue
+                //Debug.Log("Here is cell position: " + cellPosition);
+                //Debug.Log("Distance to particle position: " + distanceFromParticleToCell);
+            }
             p.SetPosition(clampedPosition);
             // Enforce boundaries
             double3 boundedVelocity = EnforceBoundaryVelocity(p);

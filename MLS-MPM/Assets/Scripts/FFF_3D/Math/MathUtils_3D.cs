@@ -159,7 +159,7 @@ public class MathUtils_3D
     public static double3x3 ComputeEquation16Term0(double3x3 stress, double volume, double dt)
     {
         // I believe this is 3 for 3D (cubic) and 4 for 2D (quadratic).  
-        double3x3 term0 = -volume * 3 * stress * dt;
+        double3x3 term0 = -volume * 4 * stress * dt;
         return term0;
     }
 
@@ -205,7 +205,7 @@ public class MathUtils_3D
     public static double3x3 RecomputeCMatrix(double3x3 B)
     {
         // It's 4 in 2D, not sure if it should be 3 in 3D. 
-        return B * 3;
+        return B * 4;
     }
 
     public static double3 AdvectParticle(double3 position, double3 velocity, double dt)
