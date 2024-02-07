@@ -75,7 +75,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (iteration == 1)
         {
             Debug.Log("Foam simulator beginning!");
-            // TODO uncomment and fix these
+            // TODO The bubbles are too big, and nothing is getting skipped
             //DetermineBubbleSizes();
         }
         if (waterSurfacer != null)
@@ -166,7 +166,9 @@ public class FFF_Optimized_3D : MonoBehaviour
 
         if (IsSphere1611Round1(p.GetPosition()) && nx == 0 && ny == 0 && nz == 0)
         {
+            Debug.Log("Mass contribution: " + massContribution);
             Debug.Log("Updated Mass: " + updatedMass);
+            Debug.Log("What is our cell's mass: " + cellMass);
         }
     }
 
