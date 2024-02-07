@@ -22,16 +22,16 @@ public class MathUtils_3D
 
     public static double3 ComputeWeight0(double3 dist)
     {
-        double x = 0.5 * Math.Pow((0.5 - dist.x), 2);
-        double y = 0.5 * Math.Pow((0.5 - dist.y), 2);
-        double z = 0.5 * Math.Pow((0.5 - dist.z), 2);
+        double x = 0.5 * Math.Pow(0.5 - dist.x, 2);
+        double y = 0.5 * Math.Pow(0.5 - dist.y, 2);
+        double z = 0.5 * Math.Pow(0.5 - dist.z, 2);
         return new double3(x, y, z);
     }
     public static double3 ComputeWeight1(double3 dist)
     {
-        double x = 0.75 - Math.Pow((dist.x), 2);
-        double y = 0.75 - Math.Pow((dist.y), 2);
-        double z = 0.75 - Math.Pow((dist.z), 2);
+        double x = 0.75 - Math.Pow(dist.x, 2);
+        double y = 0.75 - Math.Pow(dist.y, 2);
+        double z = 0.75 - Math.Pow(dist.z, 2);
         return new double3(x, y, z);
     }
     public static double3 ComputeWeight2(double3 dist)
@@ -51,6 +51,15 @@ public class MathUtils_3D
             weight0, weight1, weight2
         };
         return weights;
+    }
+
+    public static void PrintWeights(List<double3> weights)
+    {
+        Debug.Log("Weights: ");
+        foreach (double3 weight in weights)
+        {
+            Debug.Log(weight);
+        }
     }
 
     public static double ComputeWeight(List<double3> weights, int nx, int ny, int nz) 

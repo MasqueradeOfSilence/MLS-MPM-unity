@@ -30,7 +30,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
     private int howManyStepsToTest = 1; // usually set to 1
-    private bool runLimitedUpdates = true; // Set to TRUE only for debug purposes
+    private bool runLimitedUpdates = false; // Set to TRUE only for debug purposes
     private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
 
     // Start is called before the first frame update
@@ -146,33 +146,28 @@ public class FFF_Optimized_3D : MonoBehaviour
         double3 velocity = p.GetVelocity();
         double weight = MathUtils_3D.ComputeWeight(weights, nx, ny, nz);
         int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
+        //if (neighborPosition.x == 7 && neighborPosition.y == 6 && neighborPosition.z == 9)
+        //{
+        //    Debug.Log("Neighbor spotted");
+        //    Debug.Log("Particle position: " + p.GetPosition());
+        //}
         double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
         double3 Q = MathUtils_3D.ComputeQ(C, distanceFromParticleToNeighbor);
         // Mass contribution of neighbor
         double massContribution = MathUtils_3D.ComputeMassContribution(weight, mass);
         Cell_3D correspondingCell = grid.At(neighborPosition);
-        double updatedMass = MathUtils_3D.UpdateMass(mass, massContribution);
+        // Need to pass in cell mass, not particle mass
+        double cellMass = correspondingCell.GetMass();
+        double updatedMass = MathUtils_3D.UpdateMass(cellMass, massContribution);
         correspondingCell.SetMass(updatedMass);
         double3 updatedVelocity = MathUtils_3D.UpdateVelocity(massContribution, velocity, Q, correspondingCell.GetVelocity());
         correspondingCell.SetVelocity(updatedVelocity);
-        //if (IsSphere1611Round1(particlePosition))
-        //{
-        //    Debug.Log("P2G1 neighbor algorithm");
-        //    Debug.Log("Velocity of cell: " + updatedVelocity);
-        //    // The issue can't be here, because the updatedVelocity is always set to 0 in the first iteration.
-        //    // But, somewhere between here and the next step, it is getting set to SOMETHING weird
-        //}
         grid.UpdateCellAt(neighborPosition, correspondingCell);
-        if (neighborPosition.x == 7 && neighborPosition.y == 6 && neighborPosition.z == 9)
+
+        if (IsSphere1611Round1(p.GetPosition()) && nx == 0 && ny == 0 && nz == 0)
         {
-            Debug.Log("Setting the velocity as " + updatedVelocity);
-            // is this the velocity we want to look at?
+            Debug.Log("Updated Mass: " + updatedMass);
         }
-        //if (IsSphere1611Round1(particlePosition))
-        //{
-        //    Debug.Log("And the velocity double check (should match above): " + grid.At(neighborPosition).GetVelocity());
-        //    // it does match
-        //}
     }
 
     public void ParticleToGridStep1()
@@ -196,7 +191,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             //int nx = 0;
             //int ny = 0;
             //int nz = 0;
-            //P2G1NeighborAlgorithm(nx, ny, nz, p, weights, C, particlePosition, cellPosition); // We can eliminate the triple-for here
+            //P2G1NeighborAlgorithm(nx, ny, nz, p, weights, C, particlePosition, cellPosition); // We can eliminate the triple-for here if desired
             for (int nx = 0; nx < neighborDimension; nx++)
             {
                 for (int ny = 0; ny < neighborDimension; ny++)
@@ -306,10 +301,10 @@ public class FFF_Optimized_3D : MonoBehaviour
             
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
-            if (IsSphere1611Round1(particlePosition))
-            {
-                Debug.Log("Stress: " + herschelBulkleyStress);
-            }
+            //if (IsSphere1611Round1(particlePosition))
+            //{
+            //    Debug.Log("Stress: " + herschelBulkleyStress);
+            //}
             double3x3 equation16Term0 = MathUtils_3D.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
             for (int nx = 0; nx < neighborDimension; nx++)
             {
@@ -333,7 +328,10 @@ public class FFF_Optimized_3D : MonoBehaviour
             int y = (i / resolution) % resolution;
             int z = i % resolution;
             int3 testIndex = new(x, y, z);
-            Cell_3D cell = grid.At(i); // Using i or testIndex *should* produce the same results. 
+            Cell_3D cell = grid.At(i); // Using i and testIndex is the same thing.
+            //Debug.Log("I: " + i);
+            //int computedIndex = resolution * resolution * x + resolution * y + z;
+            //Debug.Log("Computed index (should equal I): " + computedIndex);
             //Debug.Log(x + ", " + y  + ", " + z);
             // are grid indices exactly correlated with particle indices? 
             if (cell.GetMass() > 0)
@@ -368,7 +366,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     public void GridToParticleStep()
     {
         double3 originalPosition;
-        Debug.Log("STARTING FOR LOOP 1");
         for (int i = 0; i < particles.Length; i++)
         {
             Particle_3D p = particles[i];
@@ -384,11 +381,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             //{
             //    Debug.Log("Velocity for cell BEFORE: " + p.GetVelocity()); // starts at 0, 0, 0
             //}
-            if (cellPosition.x == 7 && cellPosition.y == 6 && cellPosition.z == 9)
-            {
-                // too many particles are in this cell, maybe?
-                Debug.Log("What is the velocity of our cell? " + grid.At(cellPosition).GetVelocity());
-            }
             for (int nx = 0; nx < neighborDimension; nx++)
             {
                 for (int ny = 0; ny < neighborDimension; ny++)
@@ -426,14 +418,14 @@ public class FFF_Optimized_3D : MonoBehaviour
             p.SetPosition(advectedPosition);
             // Clamp
             double3 clampedPosition = ClampPosition(p);
-            if (IsSphere1611Round1(originalPosition))
-            {
-                Debug.Log("Sphere 1611 round 1");
-                Debug.Log("Sphere advected: " + advectedPosition);
-                //Debug.Log("Sphere clamped: " + clampedPosition);
-                Debug.Log("Particle velocity: " + p.GetVelocity());
-                Debug.Log("Sphere position initial: " + originalPosition);
-            }
+            //if (IsSphere1611Round1(originalPosition))
+            //{
+            //    Debug.Log("Sphere 1611 round 1");
+            //    Debug.Log("Sphere advected: " + advectedPosition);
+            //    //Debug.Log("Sphere clamped: " + clampedPosition);
+            //    Debug.Log("Particle velocity: " + p.GetVelocity());
+            //    Debug.Log("Sphere position initial: " + originalPosition);
+            //}
             p.SetPosition(clampedPosition);
             // Enforce boundaries
             double3 boundedVelocity = EnforceBoundaryVelocity(p);
