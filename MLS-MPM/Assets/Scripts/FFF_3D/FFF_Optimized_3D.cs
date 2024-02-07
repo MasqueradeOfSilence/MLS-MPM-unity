@@ -445,8 +445,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
-        const double wallMin = 1;
-        double wallMax = resolution - 2; // changing these seems to affect how long it takes to settle
+        const double wallMin = 3;
+        double wallMax = resolution - 4;
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
