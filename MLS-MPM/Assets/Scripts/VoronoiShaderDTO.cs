@@ -48,7 +48,7 @@ public class VoronoiShaderDTO : ScriptableObject
         List<float> radii = new();
         foreach (ShaderSphere shaderSphere in spheres)
         {
-            // Z is 0 due to 3D, also 4th value is meaningless
+            // Z is 0 due to 2D/3D, also 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, 0, 0));
             radii.Add(shaderSphere.radius);
         }

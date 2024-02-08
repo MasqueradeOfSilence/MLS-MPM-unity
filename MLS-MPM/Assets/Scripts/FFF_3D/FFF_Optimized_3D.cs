@@ -77,14 +77,13 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (iteration == 1)
         {
             Debug.Log("Foam simulator beginning!");
-            // TODO The bubbles are too big, and nothing is getting skipped
             DetermineBubbleSizes();
         }
         if (waterSurfacer != null)
         {
             //waterSurfacer.InitializeFluidSurface(particles);
         }
-        //ComputeVoronoi();
+        ComputeVoronoi();
         iteration++;
     }
 
@@ -434,7 +433,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             System.Random random = new();
             double randomValue = random.NextDouble();
             // Closer random value is to 1 = more bubbles skipped
-            if (randomValue < 0.8 && MathUtils_3D.IsAir(p))
+            if (randomValue < 0.7)// && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
             }
@@ -443,6 +442,12 @@ public class FFF_Optimized_3D : MonoBehaviour
                 // skipping is correct
                 p.SetBubble(-200, true);
             }
+            //else if (!MathUtils_3D.IsAir(p))
+            //{
+            //    // Enforcing microscopic size for fluid particles -- may delete
+            //    p.SetBubble(120);
+            //    sw.WriteLine(120);
+            //}
             else
             {
                 double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);

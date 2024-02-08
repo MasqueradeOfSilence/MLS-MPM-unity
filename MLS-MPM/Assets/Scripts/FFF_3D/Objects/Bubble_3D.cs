@@ -12,13 +12,13 @@ public class Bubble_3D : ScriptableObject
     };
 
     // 105 - 421 is the range in 3D
-    private readonly double maxMicroscopicSize = 120;
+    private readonly double maxMicroscopicSize = 130;
     private readonly double maxSmallSize = 300;
     private readonly double maxMediumSize = 415;
 
     private BubbleSize bubbleSize = BubbleSize.MEDIUM;
     private double volumeFraction = 0;
-    private float radius = -1;
+    private float radius = -100;
     private bool instantiated = false;
 
     public void InstantiateBubble(double volumeFraction, bool skipMe = false)
@@ -45,7 +45,7 @@ public class Bubble_3D : ScriptableObject
         }
         this.volumeFraction = volumeFraction;
         instantiated = true;
-        if (radius == -1)
+        if (radius == -100)
         {
             ComputeUnitySphereRadius();
         }
@@ -53,7 +53,7 @@ public class Bubble_3D : ScriptableObject
 
     public float ComputeUnitySphereRadius()
     {
-        if (radius != -1)
+        if (radius != -100)
         {
             return radius;
         }
@@ -62,11 +62,12 @@ public class Bubble_3D : ScriptableObject
         // Might want more jitter.
         float randomJitter = Random.Range(-0.05f, 0.05f);
         float scalingFactorFloat = (float)scalingFactor;
+        float tinyScalingFactorFloat = scalingFactorFloat * 0.1f;
         scalingFactorFloat += randomJitter;
         radius = bubbleSize switch
         {
             BubbleSize.SKIP => 0,
-            BubbleSize.MICROSCOPIC => 0.02f + scalingFactorFloat,
+            BubbleSize.MICROSCOPIC => 0.01f + tinyScalingFactorFloat, // Microscopic = Water.
             BubbleSize.SMALL => 0.05f + scalingFactorFloat,
             BubbleSize.MEDIUM => 0.1f + scalingFactorFloat,
             BubbleSize.LARGE => 0.15f + scalingFactorFloat,

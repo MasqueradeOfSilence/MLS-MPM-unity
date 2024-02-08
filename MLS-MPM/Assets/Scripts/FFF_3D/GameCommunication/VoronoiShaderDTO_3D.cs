@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -53,6 +52,8 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
+            Debug.Log("Center: " + shaderSphere.center);
+            Debug.Log("radius: " + shaderSphere.radius);
         }
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
