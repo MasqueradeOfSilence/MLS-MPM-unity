@@ -26,7 +26,7 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             {
                 continue;
             }
-            if (b.GetBubbleSize() == Bubble_3D.BubbleSize.SKIP)
+            if (b.GetBubbleSize() == Bubble_3D.BubbleSize.SKIP) // could also add microscopic here
             {
                 continue;
             }
