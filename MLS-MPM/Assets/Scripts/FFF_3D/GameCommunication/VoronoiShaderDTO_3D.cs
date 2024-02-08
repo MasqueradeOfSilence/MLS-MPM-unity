@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -47,13 +48,16 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         Material material = sphere.GetComponent<Renderer>().sharedMaterial;
         List<Vector4> sphereCenters = new();
         List<float> radii = new();
+        int current = 0;
         foreach (ShaderSphere shaderSphere in spheres)
         {
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
             Debug.Log("Center: " + shaderSphere.center);
+            Debug.Log("Center to float: " + sphereCenters.ElementAt(current));
             Debug.Log("radius: " + shaderSphere.radius);
+            current++; // remove me, debug only
         }
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {

@@ -58,7 +58,7 @@ Shader "Custom/FFFShader"
             o.Alpha = 0;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            half radiusOfCollider = 0.5; // Default radius for Unity colliders
+            float radiusOfCollider = 0.5; // Default radius for Unity colliders
             half minDist = 10000;
             int minI = -1;
             for (int i = 0; i < _Count; i++)
