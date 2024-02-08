@@ -22,12 +22,12 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         spheres = new List<ShaderSphere>();
         foreach (Particle_3D p in particles)
         {
-            Bubble b = p.GetBubble();
+            Bubble_3D b = p.GetBubble();
             if (b == null)
             {
                 continue;
             }
-            if (b.GetBubbleSize() == Bubble.BubbleSize.SKIP)
+            if (b.GetBubbleSize() == Bubble_3D.BubbleSize.SKIP)
             {
                 continue;
             }

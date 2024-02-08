@@ -15,8 +15,7 @@ public class Particle_3D : ScriptableObject
     private double3 velocity;
     private double mass;
     private double3x3 affineMomentumMatrix;
-    // Bubble class is already fine for 3D, so no need to make a 3D version.
-    private Bubble bubble = null;
+    private Bubble_3D bubble = null;
     private bool initialized = false;
     private bool bubbleSet = false;
 
@@ -81,14 +80,14 @@ public class Particle_3D : ScriptableObject
 
     // Bubble ------------------------------
 
-    public Bubble GetBubble()
+    public Bubble_3D GetBubble()
     {
         return bubble;
     }
 
     public void SetBubble(double volumeFraction, bool skipped = false)
     {
-        bubble = CreateInstance<Bubble>();
+        bubble = CreateInstance<Bubble_3D>();
         bubble.InstantiateBubble(volumeFraction, skipped);
         bubbleSet = true;
     }

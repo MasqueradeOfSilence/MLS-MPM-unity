@@ -82,7 +82,7 @@ public class VolumeFractionUtils_3D
         double volumeFraction = 0;
         foreach (Particle_3D neighbor in neighbors)
         {
-            // Note: the 27-neighborhood is making the bubbles way too big
+            // Note: the 27-neighborhood is likely what is making the bubbles way too big
             volumeFraction += ComputeVolumeFractionContributionForParticle(p, neighbor, neighbors);
         }
         //volumeFraction /= 10;

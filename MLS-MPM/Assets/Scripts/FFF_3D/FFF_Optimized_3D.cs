@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -76,7 +78,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             Debug.Log("Foam simulator beginning!");
             // TODO The bubbles are too big, and nothing is getting skipped
-            //DetermineBubbleSizes();
+            DetermineBubbleSizes();
         }
         if (waterSurfacer != null)
         {
@@ -396,6 +398,27 @@ public class FFF_Optimized_3D : MonoBehaviour
      */
     private void DetermineBubbleSizes()
     {
+        // Excel file to determine volume fraction thresholding
+        /*
+         * VERDICT: Min = 105.1584. Max = 420.2093.
+         *  So, basically 105 - 421
+         */
+        StreamWriter sw;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions_3D.csv");
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            // hardcoding :/ the whitespace actually works though
+            sw = File.CreateText(@"/Users/Alex/Documents/Alex's Crap/Escuela/MS/Winter_2023/MLS-MPM-unity/MLS-MPM/Assets/Resources/volumeFractions_3D.csv");
+        }
+        else
+        {
+            // Linux case not handled right now, yeeting it to the desktop
+            sw = File.CreateText(@"~/Desktop/volumeFractions_3D.csv");
+        }
+
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
         for (int i = 0; i < particles.Length; i++)
         {
@@ -410,19 +433,21 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             System.Random random = new();
             double randomValue = random.NextDouble();
-            if (randomValue < 0.5 && MathUtils_3D.IsAir(p))
+            // Closer random value is to 1 = more bubbles skipped
+            if (randomValue < 0.8 && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
             }
             if (skipBubble)
             {
-                Debug.Log("We skip");
+                // skipping is correct
                 p.SetBubble(-200, true);
             }
             else
             {
                 double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);
                 p.SetBubble(volumeFraction);
+                sw.WriteLine(volumeFraction);
             }
             particles[i] = p;
         }

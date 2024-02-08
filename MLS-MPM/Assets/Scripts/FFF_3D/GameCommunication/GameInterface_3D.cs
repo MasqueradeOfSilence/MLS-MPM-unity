@@ -6,7 +6,7 @@ public class GameInterface_3D : MonoBehaviour
      * Data members
      */
     private GameObject[] particleSphereList;
-    private const double macroscopicThreshold = 0.8;
+    private const double macroscopicThreshold = 0.7;
     private const string defaultMaterial = "ClearBubbleTest";
     private const string voronoiMaterial = "FFFBubbles";
 
