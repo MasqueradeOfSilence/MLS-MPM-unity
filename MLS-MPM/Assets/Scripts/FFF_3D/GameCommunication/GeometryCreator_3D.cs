@@ -47,6 +47,8 @@ public class GeometryCreator_3D : MonoBehaviour
         }
         sphere.GetComponent<MeshRenderer>().material = mat;
         sphere.GetComponent<Renderer>().material = mat;
+        sphere.GetComponent<Renderer>().sharedMaterial = mat;
+        sphere.GetComponent<MeshRenderer>().sharedMaterial = mat;
         sphere.name = "Sphere" + sphereID.ToString();
         sphereID++;
         return sphere;

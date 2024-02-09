@@ -51,6 +51,10 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         int current = 0;
         foreach (ShaderSphere shaderSphere in spheres)
         {
+            //if (current % 2 == 0)
+            //{
+            //    continue; // just skip it for now
+            //}
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
@@ -59,12 +63,18 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             Debug.Log("radius: " + shaderSphere.radius);
             current++; // remove me, debug only
         }
+        Debug.Log("Count: " + sphereCenters.Count);
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
             return;
         }
-        material.SetVectorArray("_SphereCenters", sphereCenters);
+        material.SetVectorArray("_SphereCenters", sphereCenters); // For some reason, these are turning into 0, 0, 0 when passed in, and it doesn't matter what w is
+        Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
+        foreach(Vector4 v in returnedCenters) 
+        {
+            Debug.Log("Vector: " + v);
+        }
         material.SetFloatArray("_SphereRadii", radii);
-        material.SetInteger("_Count", spheres.Count);
+        material.SetInteger("_Count", sphereCenters.Count);
     }
 }
