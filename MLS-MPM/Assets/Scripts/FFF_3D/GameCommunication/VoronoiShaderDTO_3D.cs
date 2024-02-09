@@ -75,6 +75,8 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             Debug.Log("Vector: " + v);
         }
         material.SetFloatArray("_SphereRadii", radii);
+        // This is still zeroed out
+        Shader.SetGlobalVectorArray("_TheData", sphereCenters);
         material.SetInteger("_Count", sphereCenters.Count);
     }
 }

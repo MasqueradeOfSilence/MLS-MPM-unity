@@ -45,6 +45,7 @@ Shader "Custom/FFFShader"
         int _Count;
         fixed4 _DebugCyan;
         fixed4 _DebugWhite;
+        float4 _TheData[900];
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -63,6 +64,7 @@ Shader "Custom/FFFShader"
             float radiusOfCollider = 0.5; // Default radius for Unity colliders
             half minDist = 10000;
             int minI = -1;
+            //_SphereCenters[0].x = 5;
             for (int i = 0; i < _Count; i++)
             {
                 half dist = distance(IN.worldPos, _SphereCenters[i].xyz) - (_SphereRadii[i] * radiusOfCollider);
@@ -80,6 +82,12 @@ Shader "Custom/FFFShader"
                     o.Albedo = _DebugWhite;
                     o.Alpha = 1;
                 }
+                //if (_TheData[i].x == 0 && _TheData[i].y == 0 && _TheData[i].z == 0)
+                //{
+                    // default to zero?
+                    //o.Albedo = _DebugCyan;
+                    //o.Alpha = 1;
+                //}
                 if (dist < minDist)
                 {
                     minDist = dist;
