@@ -78,5 +78,9 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         // This is still zeroed out
         Shader.SetGlobalVectorArray("_TheData", sphereCenters);
         material.SetInteger("_Count", sphereCenters.Count);
+        Material mat2 = sphere.GetComponent<Renderer>().material;
+        mat2.SetVectorArray("_SphereCenters", sphereCenters);
+        mat2.SetFloatArray("_SphereRadii", radii);
+        mat2.SetInteger("_Count", sphereCenters.Count);
     }
 }
