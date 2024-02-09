@@ -39,7 +39,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     void Start()
     {
         Init();
-        gameInterface.DumpParticlesIntoScene(GetFlattenedParticleList().ToArray(), true); 
+        gameInterface.DumpParticlesIntoScene(particles, true); 
         gameInterface.NukeClones();
     }
 
