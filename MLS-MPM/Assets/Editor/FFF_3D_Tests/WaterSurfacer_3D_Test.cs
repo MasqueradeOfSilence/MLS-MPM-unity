@@ -44,7 +44,7 @@ public class WaterSurfacer_3D_Test
     public void InitializePolygonShouldCreateAPolygonFromASetOfPoints()
     {
         int expectedNumPoints = 4096;
-        FFF_3D fffSim = GameObject.Find("ExampleGeo").AddComponent<FFF_3D>();
+        //FFF_3D fffSim = GameObject.Find("ExampleGeo").AddComponent<FFF_3D>();
         //fffSim.InitializeFoamSimulator();
         //fffSim.InitializeParticlesWithFluidAtBottom();
         //WaterSurfacer_3D fluidSurfacer = GameObject.Find("ExampleGeo").AddComponent<WaterSurfacer_3D>();

@@ -547,10 +547,10 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     void OnWillRenderObject()
     {
-        // workaround not working
+        // workaround not working, this does NOTHING
         // https://forum.unity.com/threads/unity-resets-all-my-shader-properties-specifically-my-arrays.428318/ 
         // it seems that properties are safe, but arrays can't be properties
-        // maybe I just got lucky in 2D?
+        // maybe I just got lucky in 2D? but why would it work in that other scene?
         if (voronoiStarted)
         {
             Debug.Log("GO");

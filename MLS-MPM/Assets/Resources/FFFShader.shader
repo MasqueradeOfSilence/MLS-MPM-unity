@@ -46,6 +46,7 @@ Shader "Custom/FFFShader"
         fixed4 _DebugCyan;
         fixed4 _DebugWhite;
         float4 _TheData[900];
+        uniform float arrayName[2];
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -82,18 +83,24 @@ Shader "Custom/FFFShader"
                     o.Albedo = _DebugWhite;
                     o.Alpha = 1;
                 }
+                // They are all cyan so even this is getting reset
+                if (arrayName[0] == 0)
+                {
+                    o.Albedo = _DebugCyan;
+                    o.Alpha = 1;
+                }
                 //if (_TheData[i].x == 0 && _TheData[i].y == 0 && _TheData[i].z == 0)
                 //{
                     // default to zero?
                     //o.Albedo = _DebugCyan;
                     //o.Alpha = 1;
                 //}
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    minI = i;
-                }
+            if (dist < minDist)
+            {
+                minDist = dist;
+                minI = i;
             }
+    }
     
             for (int j = 0; j < _Count; j++)
             {

@@ -72,12 +72,23 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
         foreach(Vector4 v in returnedCenters) 
         {
-            Debug.Log("Vector: " + v);
+            Debug.Log("Vector: " + v); // despite this being correct, it is all zeroes in the shader
         }
         material.SetFloatArray("_SphereRadii", radii);
         // This is still zeroed out
         Shader.SetGlobalVectorArray("_TheData", sphereCenters);
         material.SetInteger("_Count", sphereCenters.Count);
+
+
+        // doesn't work, this still turns into zeroes somehow
+        // I do not want to hardcode 300 different float3 values and remove the randomness element
+        var materialProperty = new MaterialPropertyBlock();
+        float[] floatArray = new float[] { 2f, 1f };
+        materialProperty.SetFloatArray("arrayName", floatArray);
+        sphere.GetComponent<Renderer>().SetPropertyBlock(materialProperty);
+
+
+        // doesn't do anything
         Material mat2 = sphere.GetComponent<Renderer>().material;
         mat2.SetVectorArray("_SphereCenters", sphereCenters);
         mat2.SetFloatArray("_SphereRadii", radii);
