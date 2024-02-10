@@ -83,7 +83,8 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             //waterSurfacer.InitializeFluidSurface(particles);
         }
-        ComputeVoronoi();
+        // TODO fix
+        //ComputeVoronoi();
         iteration++;
     }
 
@@ -543,29 +544,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         dto.Init(GetFlattenedParticleList());
         dto.UpdateVoronoiTexture();
         voronoiStarted = true;
-    }
-
-    void OnWillRenderObject()
-    {
-        // workaround not working, this does NOTHING
-        // https://forum.unity.com/threads/unity-resets-all-my-shader-properties-specifically-my-arrays.428318/ 
-        // it seems that properties are safe, but arrays can't be properties
-        // maybe I just got lucky in 2D? but why would it work in that other scene?
-        if (voronoiStarted)
-        {
-            Debug.Log("GO");
-            string sphereWithTexture = "Sphere27";
-            GameObject sphere = GameObject.Find(sphereWithTexture);
-            Material material = sphere.GetComponent<Renderer>().sharedMaterial;
-            List<Vector4> sphereCenters = new();
-            // this doesn't fix it
-            for (int i = 0; i < 400; i++)
-            {
-                sphereCenters.Add(new Vector4(1f, 1f, 1f, 0f));
-            }
-            material.SetVectorArray("_SphereCenters", sphereCenters);
-            // ComputeVoronoi(); // doesn't work
-        }
     }
 
     /**

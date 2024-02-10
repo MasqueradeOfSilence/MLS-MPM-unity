@@ -45,7 +45,7 @@ Shader "Custom/FFFShader"
         int _Count;
         fixed4 _DebugCyan;
         fixed4 _DebugWhite;
-        float4 _TheData[900];
+        //float4 _TheData[900];
         uniform float arrayName[2];
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -78,29 +78,12 @@ Shader "Custom/FFFShader"
         
                 // Never white, so set correctly.
                 //if (_Count == 0)
-                if (_SphereCenters[i].x == 0 && _SphereCenters[i].y == 0 && _SphereCenters[i].z == 0)
+                if (dist < minDist)
                 {
-                    o.Albedo = _DebugWhite;
-                    o.Alpha = 1;
+                    minDist = dist;
+                    minI = i;
                 }
-                // They are all cyan so even this is getting reset
-                if (arrayName[0] == 0)
-                {
-                    o.Albedo = _DebugCyan;
-                    o.Alpha = 1;
-                }
-                //if (_TheData[i].x == 0 && _TheData[i].y == 0 && _TheData[i].z == 0)
-                //{
-                    // default to zero?
-                    //o.Albedo = _DebugCyan;
-                    //o.Alpha = 1;
-                //}
-            if (dist < minDist)
-            {
-                minDist = dist;
-                minI = i;
             }
-    }
     
             for (int j = 0; j < _Count; j++)
             {

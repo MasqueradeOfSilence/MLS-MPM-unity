@@ -51,10 +51,6 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         int current = 0;
         foreach (ShaderSphere shaderSphere in spheres)
         {
-            //if (current % 2 == 0)
-            //{
-            //    continue; // just skip it for now
-            //}
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
@@ -69,29 +65,29 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             return;
         }
         material.SetVectorArray("_SphereCenters", sphereCenters); // For some reason, these are turning into 0, 0, 0 when passed in, and it doesn't matter what w is
-        Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
+        //Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
         //foreach(Vector4 v in returnedCenters) 
         //{
         //    Debug.Log("Vector: " + v); // despite this being correct, it is all zeroes in the shader
+        // HYPOTHESIS: something LATER, after this class, resets it
         //}
         material.SetFloatArray("_SphereRadii", radii);
         // This is still zeroed out
-        Shader.SetGlobalVectorArray("_TheData", sphereCenters);
+        //Shader.SetGlobalVectorArray("_TheData", sphereCenters);
         material.SetInteger("_Count", sphereCenters.Count);
 
 
         // doesn't work, this still turns into zeroes somehow
-        // I do not want to hardcode 300 different float3 values and remove the randomness element
-        var materialProperty = new MaterialPropertyBlock();
-        float[] floatArray = new float[] { 2f, 1f };
-        materialProperty.SetFloatArray("arrayName", floatArray);
-        sphere.GetComponent<Renderer>().SetPropertyBlock(materialProperty);
+        //var materialProperty = new MaterialPropertyBlock();
+        //float[] floatArray = new float[] { 2f, 1f };
+        //materialProperty.SetFloatArray("arrayName", floatArray);
+        //sphere.GetComponent<Renderer>().SetPropertyBlock(materialProperty);
 
 
-        // doesn't do anything
-        Material mat2 = sphere.GetComponent<Renderer>().material;
-        mat2.SetVectorArray("_SphereCenters", sphereCenters);
-        mat2.SetFloatArray("_SphereRadii", radii);
-        mat2.SetInteger("_Count", sphereCenters.Count);
+        //// doesn't do anything
+        //Material mat2 = sphere.GetComponent<Renderer>().material;
+        //mat2.SetVectorArray("_SphereCenters", sphereCenters);
+        //mat2.SetFloatArray("_SphereRadii", radii);
+        //mat2.SetInteger("_Count", sphereCenters.Count);
     }
 }
