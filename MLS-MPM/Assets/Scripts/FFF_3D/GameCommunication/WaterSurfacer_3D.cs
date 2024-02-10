@@ -63,11 +63,26 @@ public class WaterSurfacer_3D : MonoBehaviour
             {
                 continue;
             }
-            // front row 
+            // back row 
             if (z == 0)
             {
                 double3 position = p.GetPosition();
                 polygon.Add(new Vertex((float)position.x, (float)position.y));
+            }
+            // front row
+            if (z == particles.Length - 1)
+            {
+                // will need different mesh creation functions for these!
+            }
+            // side 1
+            if (x == 0)
+            {
+
+            }
+            // side 2
+            if (x == particles.Length - 1)
+            {
+
             }
         }
         return polygon;
@@ -121,8 +136,8 @@ public class WaterSurfacer_3D : MonoBehaviour
     private Vector3 Get3DPoint(int index, TriangleNetMesh mesh)
     {
         Vertex vertex = mesh.Vertices.ElementAt(index);
-        // most likely 0 for now in 2D
-        return new Vector3(vertex.X, vertex.Y, 0);
+        // Hardcoding 2 is not ideal but it gets close to our current sim
+        return new Vector3(vertex.X, vertex.Y, 2);
     }
 
     public void SetPlane(GameObject plane)
