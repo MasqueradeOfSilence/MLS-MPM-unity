@@ -58,22 +58,22 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
-            Debug.Log("Center: " + shaderSphere.center);
-            Debug.Log("Center to float: " + sphereCenters.ElementAt(current));
-            Debug.Log("radius: " + shaderSphere.radius);
+            //Debug.Log("Center: " + shaderSphere.center);
+            //Debug.Log("Center to float: " + sphereCenters.ElementAt(current));
+            //Debug.Log("radius: " + shaderSphere.radius);
             current++; // remove me, debug only
         }
-        Debug.Log("Count: " + sphereCenters.Count);
+        //Debug.Log("Count: " + sphereCenters.Count);
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
             return;
         }
         material.SetVectorArray("_SphereCenters", sphereCenters); // For some reason, these are turning into 0, 0, 0 when passed in, and it doesn't matter what w is
         Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
-        foreach(Vector4 v in returnedCenters) 
-        {
-            Debug.Log("Vector: " + v); // despite this being correct, it is all zeroes in the shader
-        }
+        //foreach(Vector4 v in returnedCenters) 
+        //{
+        //    Debug.Log("Vector: " + v); // despite this being correct, it is all zeroes in the shader
+        //}
         material.SetFloatArray("_SphereRadii", radii);
         // This is still zeroed out
         Shader.SetGlobalVectorArray("_TheData", sphereCenters);
