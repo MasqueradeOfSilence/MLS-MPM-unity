@@ -81,7 +81,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (waterSurfacer != null)
         {
-            //waterSurfacer.InitializeFluidSurface(particles);
+            waterSurfacer.InitializeFluidSurface(particles, resolution);
         }
         // TODO fix
         //ComputeVoronoi();

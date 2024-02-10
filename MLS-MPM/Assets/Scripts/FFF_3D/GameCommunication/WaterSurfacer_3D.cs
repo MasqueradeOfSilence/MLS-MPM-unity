@@ -36,35 +36,53 @@ public class WaterSurfacer_3D : MonoBehaviour
         
     }
 
-    public void InitializeFluidSurface(Particle_3D[][][] particles, bool fluidOnly = true)
+    public void InitializeFluidSurface(Particle_3D[] particles, int resolution, bool fluidOnly = true)
     {
-        Polygon polygon = InitializePolygon(particles, fluidOnly);
+        Polygon polygon = InitializePolygon(particles, resolution, fluidOnly);
         fluidSurface = CreateMesh(polygon);
         MakeMesh(fluidSurface);
     }
 
-    private bool ParticleIsFluid(Particle_3D p)
+    private bool ParticleIsAir(Particle_3D p)
     {
         return p.GetMass() != 3;
     }
 
-    public Polygon InitializePolygon(Particle_3D[][][] particles, bool fluidOnly = false)
+    public Polygon InitializePolygon(Particle_3D[] particles, int resolution, bool fluidOnly = false)
     {
         Polygon polygon = new();
         // Plane polygon for front row. Doing z = 0 for now, but will do all 4 edge faces.
-        for (int i = 0; i < particles.Length; i++) 
+        for (int i = 0; i < particles.Length; i++)
         {
-            for (int j = 0; j < particles[i].Length; j++)
+            int x = i / (resolution * resolution);
+            int y = (i / resolution) % resolution;
+            int z = i % resolution;
+            Particle_3D p = particles[i];
+            // probably not gonna use
+            if (fluidOnly && ParticleIsAir(p))
             {
-                Particle_3D p = particles[i][j][0];
-                if (fluidOnly && ParticleIsFluid(p))
-                {
-                    continue;
-                }
+                continue;
+            }
+            // front row 
+            if (z == 0)
+            {
                 double3 position = p.GetPosition();
                 polygon.Add(new Vertex((float)position.x, (float)position.y));
             }
         }
+        //for (int i = 0; i < particles.Length; i++) 
+        //{
+        //    for (int j = 0; j < particles[i].Length; j++)
+        //    {
+        //        Particle_3D p = particles[i][j][0];
+        //        if (fluidOnly && ParticleIsAir(p))
+        //        {
+        //            continue;
+        //        }
+        //        double3 position = p.GetPosition();
+        //        polygon.Add(new Vertex((float)position.x, (float)position.y));
+        //    }
+        //}
         return polygon;
     }
 
