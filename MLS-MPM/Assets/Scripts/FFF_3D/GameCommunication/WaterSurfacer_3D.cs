@@ -70,19 +70,6 @@ public class WaterSurfacer_3D : MonoBehaviour
                 polygon.Add(new Vertex((float)position.x, (float)position.y));
             }
         }
-        //for (int i = 0; i < particles.Length; i++) 
-        //{
-        //    for (int j = 0; j < particles[i].Length; j++)
-        //    {
-        //        Particle_3D p = particles[i][j][0];
-        //        if (fluidOnly && ParticleIsAir(p))
-        //        {
-        //            continue;
-        //        }
-        //        double3 position = p.GetPosition();
-        //        polygon.Add(new Vertex((float)position.x, (float)position.y));
-        //    }
-        //}
         return polygon;
     }
 
