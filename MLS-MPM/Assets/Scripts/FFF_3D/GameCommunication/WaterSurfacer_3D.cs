@@ -20,6 +20,10 @@ public class WaterSurfacer_3D : MonoBehaviour
     private Material planeMaterial;
     private static string waterMaterialName = "ClearBubbleTest";
 
+    // Extras
+    private GameObject sidePlane1;
+    private TriangleNetMesh sideFluidSurface1 = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +32,11 @@ public class WaterSurfacer_3D : MonoBehaviour
         planeMaterial = Resources.Load(waterMaterialName, typeof(Material)) as Material;
         plane.GetComponent<MeshRenderer>().material = planeMaterial;
         plane.GetComponent<Renderer>().material = planeMaterial;
+
+        sidePlane1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        sidePlane1.name = "SidePlane1";
+        sidePlane1.GetComponent<MeshRenderer>().material = planeMaterial;
+        sidePlane1.GetComponent<Renderer>().material = planeMaterial;
     }
 
     // Update is called once per frame
@@ -41,11 +50,35 @@ public class WaterSurfacer_3D : MonoBehaviour
         Polygon polygon = InitializePolygon(particles, resolution, fluidOnly);
         fluidSurface = CreateMesh(polygon);
         MakeMesh(fluidSurface);
+
+        Polygon side1 = InitializePolygonSide1(particles, resolution);
+        sideFluidSurface1 = CreateMesh(side1);
+        MakeMeshSide1(sideFluidSurface1);
     }
 
     private bool ParticleIsAir(Particle_3D p)
     {
         return p.GetMass() != 3;
+    }
+
+    private Polygon InitializePolygonSide1(Particle_3D[] particles, int resolution)
+    {
+        Polygon polygon = new();
+        // Plane polygon for front row. Doing z = 0 for now, but will do all 4 edge faces.
+        for (int i = 0; i < particles.Length; i++)
+        {
+            int x = i / (resolution * resolution);
+            int y = (i / resolution) % resolution;
+            int z = i % resolution;
+            Particle_3D p = particles[i];
+            // side 1
+            if (x == 0)
+            {
+                double3 position = p.GetPosition();
+                polygon.Add(new Vertex((float)position.y, (float)position.z));
+            }
+        }
+        return polygon;
     }
 
     public Polygon InitializePolygon(Particle_3D[] particles, int resolution, bool fluidOnly = false)
@@ -74,11 +107,6 @@ public class WaterSurfacer_3D : MonoBehaviour
             {
                 // will need different mesh creation functions for these!
             }
-            // side 1
-            if (x == 0)
-            {
-
-            }
             // side 2
             if (x == particles.Length - 1)
             {
@@ -93,6 +121,42 @@ public class WaterSurfacer_3D : MonoBehaviour
         ConstraintOptions options = new() { ConformingDelaunay = true };
         TriangleNetMesh mesh = (TriangleNetMesh)polygon.Triangulate(options);
         return mesh;
+    }
+
+    private void MakeMeshSide1(TriangleNetMesh mesh)
+    {
+        List<int> triangles = new();
+        List<Vector3> vertices = new();
+        List<Vector3> normals = new();
+        List<Vector2> UVs = new();
+        foreach (var triangle in mesh.Triangles)
+        {
+            Vector3 v0 = Get3DPointSide1(triangle.GetVertex(0).ID, mesh);
+            Vector3 v1 = Get3DPointSide1(triangle.GetVertex(1).ID, mesh);
+            Vector3 v2 = Get3DPointSide1(triangle.GetVertex(2).ID, mesh);
+            triangles.Add(vertices.Count);
+            triangles.Add(vertices.Count + 1);
+            triangles.Add(vertices.Count + 2);
+            vertices.Add(v0);
+            vertices.Add(v1);
+            vertices.Add(v2);
+            Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
+            normals.Add(normal);
+            normals.Add(normal);
+            normals.Add(normal);
+            UVs.Add(new Vector2(0.0f, 0.0f));
+            UVs.Add(new Vector2(0.0f, 0.0f));
+            UVs.Add(new Vector2(0.0f, 0.0f));
+        }
+        Mesh meshForUnity = new()
+        {
+            vertices = vertices.ToArray(),
+            uv = UVs.ToArray(),
+            triangles = triangles.ToArray(),
+            normals = normals.ToArray()
+        };
+        sidePlane1.GetComponent<MeshFilter>().mesh = meshForUnity;
+        sidePlane1.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
     }
 
     private void MakeMesh(TriangleNetMesh mesh)
@@ -131,6 +195,13 @@ public class WaterSurfacer_3D : MonoBehaviour
 
         plane.GetComponent<MeshFilter>().mesh = meshForUnity;
         plane.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+    }
+
+    private Vector3 Get3DPointSide1(int index, TriangleNetMesh mesh)
+    {
+        Vertex vertex = mesh.Vertices.ElementAt(index);
+        // x normally is around 2
+        return new Vector3(2, vertex.X, vertex.Y);
     }
 
     private Vector3 Get3DPoint(int index, TriangleNetMesh mesh)
