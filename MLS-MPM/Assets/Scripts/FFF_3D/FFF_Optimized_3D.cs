@@ -46,6 +46,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RunATestOnShading();
         if (onlyDisplayInitialSetup)
         {
             return;
@@ -86,6 +87,18 @@ public class FFF_Optimized_3D : MonoBehaviour
         // TODO fix
         //ComputeVoronoi();
         iteration++;
+    }
+
+    private void RunATestOnShading()
+    {
+        GameObject cube = GameObject.Find("Cube");
+        Material material = cube.GetComponent<Renderer>().sharedMaterial;
+        List<float> testNumbers = new()
+        {
+            7f,
+            1924f
+        };
+        material.SetFloatArray("_TestNumbers", testNumbers);
     }
 
     private bool IsSphere1611Round1(double3 positionBeforeModification)
@@ -534,7 +547,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         return tempGrid;
     }
 
-    private bool voronoiStarted = false;
     /**
      * Voronoi
      */
@@ -543,7 +555,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         VoronoiShaderDTO_3D dto = ScriptableObject.CreateInstance<VoronoiShaderDTO_3D>();
         dto.Init(GetFlattenedParticleList());
         dto.UpdateVoronoiTexture();
-        voronoiStarted = true;
     }
 
     /**
