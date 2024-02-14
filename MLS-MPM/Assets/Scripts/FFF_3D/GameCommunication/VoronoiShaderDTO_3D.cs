@@ -88,5 +88,17 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         //mat2.SetVectorArray("_SphereCenters", sphereCenters);
         //mat2.SetFloatArray("_SphereRadii", radii);
         //mat2.SetInteger("_Count", sphereCenters.Count);
+
+
+        /// TEST
+        GameObject cube = GameObject.Find("Cube");
+        Material cubeMaterial = cube.GetComponent<Renderer>().sharedMaterial;
+        List<float> testNumbers = new()
+        {
+            7f,
+            666f
+        };
+        cubeMaterial.SetFloatArray("_TestNumbers", testNumbers);
+        cubeMaterial.SetInteger("_CountMe", 2);
     }
 }

@@ -8,6 +8,7 @@ Shader "Custom/AnotherTestShader"
         _Metallic ("Metallic", Range(0,1)) = 0.0
         _DebugGreen("_DebugGreen", Color) = (0, 1, 0, 1)
         _DebugPink("_DebugPink", Color) = (1, 0, 1, 1)
+        _DebugBlue("_DebugBlue", Color) = (0, 0, 1, 1)
         _CountMe("_CountMe", Integer) = 0
     }
     SubShader
@@ -34,6 +35,7 @@ Shader "Custom/AnotherTestShader"
         fixed4 _Color;
         fixed4 _DebugGreen;
         fixed4 _DebugPink;
+        fixed4 _DebugBlue;
         float _TestNumbers[2];
         int _CountMe;
 
@@ -60,8 +62,14 @@ Shader "Custom/AnotherTestShader"
             {
                 if (_TestNumbers[0] == 7 && _TestNumbers[1] == 1924)
                 {
-                    // We want to see this
+                    // We want to see this if using FFFOptimized case
                     o.Albedo = _DebugGreen;
+                    o.Alpha = 1;
+                }
+                else if (_TestNumbers[0] == 7 && _TestNumbers[1] == 666)
+                {
+                    // We want to see this if using VoronoiShaderDTO case
+                    o.Albedo = _DebugBlue;
                     o.Alpha = 1;
                 }
                 else if (_TestNumbers[0] == 0 && _TestNumbers[1] == 0)

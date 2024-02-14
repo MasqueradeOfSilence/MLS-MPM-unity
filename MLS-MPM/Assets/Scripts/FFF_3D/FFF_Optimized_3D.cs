@@ -93,13 +93,13 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         GameObject cube = GameObject.Find("Cube");
         Material material = cube.GetComponent<Renderer>().sharedMaterial;
-        List<float> testNumbers = new()
-        {
-            7f,
-            1924f
-        };
-        material.SetFloatArray("_TestNumbers", testNumbers);
-        material.SetInteger("_CountMe", 2);
+        //List<float> testNumbers = new()
+        //{
+        //    7f,
+        //    1924f
+        //};
+        //material.SetFloatArray("_TestNumbers", testNumbers);
+        //material.SetInteger("_CountMe", 2);
     }
 
     private bool IsSphere1611Round1(double3 positionBeforeModification)
