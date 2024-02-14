@@ -99,6 +99,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             1924f
         };
         material.SetFloatArray("_TestNumbers", testNumbers);
+        material.SetInteger("_CountMe", 2);
     }
 
     private bool IsSphere1611Round1(double3 positionBeforeModification)
