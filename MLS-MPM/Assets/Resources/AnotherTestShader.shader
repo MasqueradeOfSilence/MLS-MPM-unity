@@ -69,6 +69,11 @@ Shader "Custom/AnotherTestShader"
                 else if (_TestNumbers[0] == 7 && _TestNumbers[1] == 666)
                 {
                     // We want to see this if using VoronoiShaderDTO case
+                    // Observation: It does turn blue, but then turns pink when I switch tabs. So the data is not preserved.
+                    // I am not sure if this matters if it only happens when I am paused. 
+                    // Possibly: Instead of discarding, try coloring, and see what happens.
+                    // Does this also happen if NOT done here inside the DTO?
+                    // what about in the 2d version?
                     o.Albedo = _DebugBlue;
                     o.Alpha = 1;
                 }
