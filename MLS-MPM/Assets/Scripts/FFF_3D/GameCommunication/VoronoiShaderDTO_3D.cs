@@ -92,13 +92,13 @@ public class VoronoiShaderDTO_3D : ScriptableObject
 
         /// TEST
         GameObject cube = GameObject.Find("Cube");
-        Material cubeMaterial = cube.GetComponent<Renderer>().sharedMaterial;
-        List<float> testNumbers = new()
-        {
-            7f,
-            666f
-        };
-        cubeMaterial.SetFloatArray("_TestNumbers", testNumbers);
-        cubeMaterial.SetInteger("_CountMe", 2);
+        //Material cubeMaterial = cube.GetComponent<Renderer>().sharedMaterial;
+        //List<float> testNumbers = new()
+        //{
+        //    7f,
+        //    666f
+        //};
+        //cubeMaterial.SetFloatArray("_TestNumbers", testNumbers);
+        //cubeMaterial.SetInteger("_CountMe", 2);
     }
 }

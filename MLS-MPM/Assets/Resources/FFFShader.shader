@@ -11,6 +11,7 @@ Shader "Custom/FFFShader"
         _Count("_Count", Integer) = 0
         _DebugCyan("_DebugCyan", Color) = (0, 1, 1, 1)
         _DebugWhite("_DebugWhite", Color) = (1, 1, 1, 1)
+        _DebugPink("_DebugPink", Color) = (1, 0, 1, 1)
     }
     SubShader
     {
@@ -45,6 +46,7 @@ Shader "Custom/FFFShader"
         int _Count;
         fixed4 _DebugCyan;
         fixed4 _DebugWhite;
+        fixed4 _DebugPink;
         //float4 _TheData[900];
         uniform float arrayName[2];
 
@@ -108,7 +110,10 @@ Shader "Custom/FFFShader"
                 //}
                 if (onCurrentSphere && minI != j)
                 {
-                    discard;
+                    // for ease of debug
+                    o.Albedo = _DebugPink;
+                    o.Alpha = 1;
+                    //discard;
                 }
             }
             

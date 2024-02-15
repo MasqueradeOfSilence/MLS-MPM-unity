@@ -34,6 +34,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     private int howManyStepsToTest = 1; // usually set to 1
     private bool runLimitedUpdates = false; // Set to TRUE only for debug purposes
     private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
+    private bool onlySimOnce = false; // Set to TRUE only for debug
+    private bool haveSimmedOnce = false; // No touchy
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +53,10 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             return;
         }
+        if (haveSimmedOnce && onlySimOnce)
+        {
+            return;
+        }
         if (runLimitedUpdates && numUpdates > howManyStepsToTest)
         {
             numUpdates++;
@@ -58,6 +64,12 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         for (int i = 0; i < numSimsPerUpdate; i++)
         {
+            int numTimesToSim = 2;
+            if (onlySimOnce && i == numTimesToSim)
+            {
+                haveSimmedOnce = true;
+                return;
+            }
             Simulate();
         }
         gameInterface.UpdateParticles(particles, true);
@@ -93,13 +105,13 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         GameObject cube = GameObject.Find("Cube");
         Material material = cube.GetComponent<Renderer>().sharedMaterial;
-        //List<float> testNumbers = new()
-        //{
-        //    7f,
-        //    1924f
-        //};
-        //material.SetFloatArray("_TestNumbers", testNumbers);
-        //material.SetInteger("_CountMe", 2);
+        List<float> testNumbers = new()
+        {
+            7f,
+            1924f
+        };
+        material.SetFloatArray("_TestNumbers", testNumbers);
+        material.SetInteger("_CountMe", 2);
     }
 
     private bool IsSphere1611Round1(double3 positionBeforeModification)
