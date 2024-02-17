@@ -9,6 +9,7 @@ Shader "Custom/AnotherTestShader"
         _DebugGreen("_DebugGreen", Color) = (0, 1, 0, 1)
         _DebugPink("_DebugPink", Color) = (1, 0, 1, 1)
         _DebugBlue("_DebugBlue", Color) = (0, 0, 1, 1)
+        _DebugWhite("_DebugWhite", Color) = (1, 1, 1, 1)
         _CountMe("_CountMe", Integer) = 0
     }
     SubShader
@@ -36,7 +37,9 @@ Shader "Custom/AnotherTestShader"
         fixed4 _DebugGreen;
         fixed4 _DebugPink;
         fixed4 _DebugBlue;
+        fixed4 _DebugWhite;
         float _TestNumbers[2];
+        float _SphereRadii[900];
         int _CountMe;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -63,7 +66,7 @@ Shader "Custom/AnotherTestShader"
                 if (_TestNumbers[0] == 7 && _TestNumbers[1] == 1924)
                 {
                     // We want to see this if using FFFOptimized case
-                    o.Albedo = _DebugGreen;
+                    //o.Albedo = _DebugGreen;
                     o.Alpha = 1;
                 }
                 else if (_TestNumbers[0] == 7 && _TestNumbers[1] == 666)
@@ -74,12 +77,19 @@ Shader "Custom/AnotherTestShader"
                     // Possibly: Instead of discarding, try coloring, and see what happens.
                     // Does this also happen if NOT done here inside the DTO?
                     // what about in the 2d version?
-                    o.Albedo = _DebugBlue;
+                    //o.Albedo = _DebugBlue;
                     o.Alpha = 1;
                 }
                 else if (_TestNumbers[0] == 0 && _TestNumbers[1] == 0)
                 {
-                    o.Albedo = _DebugPink;
+                    //o.Albedo = _DebugPink;
+                    o.Alpha = 1;
+                }
+        
+                // Test. Are these all zeroes like in FFFShader? It turned white, so no they are NOT all zeroes. Which means that it is set properly here.
+                if (_SphereRadii[0] != 0 && _SphereRadii[150] != 0)
+                {
+                    o.Albedo = _DebugWhite;
                     o.Alpha = 1;
                 }
             }
