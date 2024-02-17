@@ -40,6 +40,7 @@ Shader "Custom/AnotherTestShader"
         fixed4 _DebugWhite;
         float _TestNumbers[2];
         float _SphereRadii[900];
+        float4 _SphereCenters[900];
         int _CountMe;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -87,7 +88,11 @@ Shader "Custom/AnotherTestShader"
                 }
         
                 // Test. Are these all zeroes like in FFFShader? It turned white, so no they are NOT all zeroes. Which means that it is set properly here.
-                if (_SphereRadii[0] != 0 && _SphereRadii[150] != 0)
+                //if (_SphereRadii[0] != 0 && _SphereRadii[150] != 0)
+        
+                // Another test. Are these all zeroes too?
+                // Yes, it turns white as expected, which means that it does not get zeroed out, unlike FFFShader.
+                if (_SphereCenters[0].x != 0 && _SphereCenters[150].y != 0)
                 {
                     o.Albedo = _DebugWhite;
                     o.Alpha = 1;

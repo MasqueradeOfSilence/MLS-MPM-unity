@@ -94,6 +94,7 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         GameObject cube = GameObject.Find("Cube");
         Material cubeMaterial = cube.GetComponent<Renderer>().sharedMaterial;
         cubeMaterial.SetFloatArray("_SphereRadii", radii);
+        cubeMaterial.SetVectorArray("_SphereCenters", sphereCenters);
         //List<float> testNumbers = new()
         //{
         //    7f,
