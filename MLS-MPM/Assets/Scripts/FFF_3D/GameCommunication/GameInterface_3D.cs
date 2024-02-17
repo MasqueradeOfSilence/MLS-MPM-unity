@@ -66,6 +66,23 @@ public class GameInterface_3D : MonoBehaviour
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }
         }
+        // Try again
+        Material cubeMat = Resources.Load("AnotherTestMat", typeof(Material)) as Material;
+        GameObject cube = GameObject.Find("Cube");
+        // not sure if this will repro the issue since it already has that assigned, but let's try it
+        cube.GetComponent<MeshRenderer>().material = cubeMat;
+        cube.GetComponent<Renderer>().material = cubeMat;
+        cube.GetComponent<Renderer>().sharedMaterial = cubeMat;
+        GameObject testingSphere1 = GameObject.Find("TestingSphere1");
+        GameObject testingSphere2 = GameObject.Find("TestingSphere2");
+        Material sphereMat = Resources.Load(voronoiMaterial, typeof(Material)) as Material;
+        testingSphere1.GetComponent<MeshRenderer>().material = sphereMat;
+        testingSphere1.GetComponent<Renderer>().material = sphereMat;
+        testingSphere1.GetComponent<Renderer>().sharedMaterial = sphereMat;
+
+        testingSphere2.GetComponent<MeshRenderer>().material = sphereMat;
+        testingSphere2.GetComponent<Renderer>().material = sphereMat;
+        testingSphere2.GetComponent<Renderer>().sharedMaterial = sphereMat;
     }
 
     public void RemoveParticlesFromScene()

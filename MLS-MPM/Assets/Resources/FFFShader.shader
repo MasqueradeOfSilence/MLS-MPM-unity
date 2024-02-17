@@ -93,8 +93,9 @@ Shader "Custom/FFFShader"
                 // (11.32, 4.24, 3.17, 0.00)
                 if (_SphereCenters[j].x == 0 && _SphereCenters[j].y == 0 && _SphereCenters[j].z == 0)
                 {
-                    //o.Albedo = _DebugCyan;
-                    //o.Alpha = 1;
+                    // TEST uncommenting -- if they are zeroes it will all be CYAN
+                    o.Albedo = _DebugCyan;
+                    o.Alpha = 1;
                 }
         
                 // always cyan in 3D (incorrect)

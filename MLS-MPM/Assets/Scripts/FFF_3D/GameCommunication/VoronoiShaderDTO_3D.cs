@@ -102,5 +102,27 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         //};
         //cubeMaterial.SetFloatArray("_TestNumbers", testNumbers);
         //cubeMaterial.SetInteger("_CountMe", 2);
+
+        // TEST 2
+        GameObject testingSphere1 = GameObject.Find("TestingSphere1");
+        GameObject testingSphere2 = GameObject.Find("TestingSphere2");
+        Material testingSphere1Mat = testingSphere1.GetComponent<Renderer>().sharedMaterial;
+        Material testingSphere2Mat = testingSphere2.GetComponent<Renderer>().sharedMaterial;
+        List<float> miniRadii = new()
+        {
+            1,
+            1
+        };
+        List<Vector4> miniSphereCenters = new()
+        {
+            new Vector4(10.9499998f, 4.19869328f, -5.03000021f, 0),
+            new Vector4(11.0299997f, 4.19869328f, -4.75f, 0)
+        };
+        // Indeed, these are cyan with the debug condition uncommented, so they are suffering from the same resets.
+        testingSphere1Mat.SetFloatArray("_SphereRadii", miniRadii);
+        testingSphere1Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
+        // should be redundant, but commenting it out does not fix the issue
+        testingSphere2Mat.SetFloatArray("_SphereRadii", miniRadii);
+        testingSphere2Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
     }
 }
