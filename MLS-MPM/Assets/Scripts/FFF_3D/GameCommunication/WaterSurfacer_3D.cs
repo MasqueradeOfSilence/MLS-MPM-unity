@@ -315,7 +315,7 @@ public class WaterSurfacer_3D : MonoBehaviour
     private Vector3 Get3DPointSide3(int index, TriangleNetMesh mesh)
     {
         Vertex vertex = mesh.Vertices.ElementAt(index);
-        return new Vector3(vertex.X, vertex.Y, 12);
+        return new Vector3(vertex.X, vertex.Y, 14);
     }
 
     private Vector3 Get3DPointSide2(int index, TriangleNetMesh mesh)
