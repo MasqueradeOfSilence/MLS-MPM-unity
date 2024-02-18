@@ -26,12 +26,7 @@ public class GeometryCreator_3D : MonoBehaviour
 
     public static GameObject SpawnParticleSphere3D(double3 location, double mass, float sphereSize = 0.1f, string materialName = defaultClearMaterial)
     {
-        bool isFoam = false;
-
-        if (IsAir(mass)) 
-        {
-            isFoam = true;
-        }
+        bool isFoam = IsAir(mass);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, (float)location.z);
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);

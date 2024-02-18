@@ -124,5 +124,20 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         // should be redundant, but commenting it out does not fix the issue
         testingSphere2Mat.SetFloatArray("_SphereRadii", miniRadii);
         testingSphere2Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
+
+        // It still breaks here, turns cyan...
+        GameObject yetAnotherTestCube = GameObject.Find("HiIAmATestCube");
+        Material anotherTestCubeMat = yetAnotherTestCube.GetComponent<Renderer>().sharedMaterial;
+        // specifically with these commented-out lines
+        anotherTestCubeMat.SetFloatArray("_SphereRadii", radii);
+        anotherTestCubeMat.SetVectorArray("_SphereCenters", sphereCenters);
+
+        // Do these reset to 0? Yes, they sure do. So it's the material, not the specific array, but it's something with this material *in this file specifically*
+        //anotherTestCubeMat.SetFloatArray("_SphereRadii", miniRadii);
+        //anotherTestCubeMat.SetVectorArray("_SphereCenters", miniSphereCenters);
+        GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
+        Material anotherMaterial = thereIsAnother.GetComponent<Renderer>().sharedMaterial;
+        anotherMaterial.SetFloatArray("_SphereRadii", radii);
+        anotherMaterial.SetVectorArray("_SphereCenters", sphereCenters);
     }
 }
