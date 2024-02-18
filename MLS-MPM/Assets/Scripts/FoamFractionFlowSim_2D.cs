@@ -382,7 +382,7 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
                     // removing the bubble to better see the Voronoi interactions
                     // we do not want to skip the blue-labeled bubbles...
                     // volume fraction number is now not necessary.
-                    p.SetBubbleWithSize(-200, true); // many bubbles are not getting the right material assigned to them. it's still ClearBubbleTest which is incorrect.
+                    p.SetBubbleWithSize(-200, true); 
                 }
                 particles[i, j] = p;
                 // water part: https://straypixels.net/delaunay-triangulation-terrain/ 
@@ -409,7 +409,6 @@ public class FoamFractionFlowSim_2D : MonoBehaviour
             fluidSurfacer.InitializeFluidSurface(particles);
         }
         // Next: Voronoi diagram to update bubble shapes
-        // Using: https://github.com/PixelsForGlory/VoronoiDiagram/tree/master
         //if (foamSurfacer != null)
         //{
         //    foamSurfacer.CreateUnweightedVoronoiDiagram(particles);

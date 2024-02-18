@@ -85,7 +85,7 @@ public class GameInterface_3D : MonoBehaviour
                         mat = Resources.Load(voronoiMaterial, typeof(Material)) as Material;
                     }
 
-                    currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
+                    //currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
                     currentParticleSphere.GetComponent<Renderer>().material = mat;
                     currentParticleSphere.GetComponent<Renderer>().sharedMaterial = mat;
                     //if (currentParticleSphere.GetComponent<Renderer>().sharedMaterial.GetFloatArray("_SphereRadii")[0] == 0 || !fffMaterial)
@@ -134,6 +134,14 @@ public class GameInterface_3D : MonoBehaviour
          * What do the 2D particles get initialized with?
          */
 
+        // didn't assign it initially here and it just worked...IF the mat is myTest
+        // If it's sphereMat, we absolutely get a cyan capsule
+        GameObject aCapsule = GameObject.Find("Capsule");
+        //aCapsule.GetComponent<Renderer>().sharedMaterial = myTest;
+        //aCapsule.GetComponent<Renderer>().material = myTest;
+
+        aCapsule.GetComponent<Renderer>().sharedMaterial = sphereMat;
+        aCapsule.GetComponent<Renderer>().material = sphereMat;
     }
 
     public void RemoveParticlesFromScene()

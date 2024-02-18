@@ -42,7 +42,7 @@ public class VoronoiShaderDTO_3D : ScriptableObject
     public void UpdateVoronoiTexture()
     {
         // Grab a reference to the FFF shader -- NOTE, not all spheres may have it!!
-        string sphereWithTexture = "Sphere27";
+        string sphereWithTexture = "Sphere106";
         GameObject sphere = GameObject.Find(sphereWithTexture);
         Material material = sphere.GetComponent<Renderer>().sharedMaterial;
         List<Vector4> sphereCenters = new();
@@ -128,7 +128,7 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         // It still breaks here, turns cyan...
         GameObject yetAnotherTestCube = GameObject.Find("HiIAmATestCube");
         Material anotherTestCubeMat = yetAnotherTestCube.GetComponent<Renderer>().sharedMaterial;
-        // specifically with these commented-out lines
+        // specifically with these lines
         anotherTestCubeMat.SetFloatArray("_SphereRadii", radii);
         anotherTestCubeMat.SetVectorArray("_SphereCenters", sphereCenters);
 
@@ -139,5 +139,10 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         Material anotherMaterial = thereIsAnother.GetComponent<Renderer>().sharedMaterial;
         anotherMaterial.SetFloatArray("_SphereRadii", radii);
         anotherMaterial.SetVectorArray("_SphereCenters", sphereCenters);
+
+        GameObject aCapsule = GameObject.Find("Capsule");
+        Material capsuleMat = aCapsule.GetComponent<Renderer>().sharedMaterial;
+        capsuleMat.SetFloatArray("_SphereRadii", radii);
+        capsuleMat.SetVectorArray("_SphereCenters", sphereCenters);
     }
 }

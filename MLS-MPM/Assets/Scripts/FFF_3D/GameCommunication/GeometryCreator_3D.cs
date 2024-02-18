@@ -104,7 +104,7 @@ public class GeometryCreator_3D : MonoBehaviour
     {
         Grid_3D grid = ScriptableObject.CreateInstance("Grid_3D") as Grid_3D;
         grid.Init(resolution, zResolution);
-        return grid;
+        return grid; // TODO delete this
     }
 
     public static int GetSphereID()
