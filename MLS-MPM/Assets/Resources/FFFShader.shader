@@ -6,8 +6,6 @@ Shader "Custom/FFFShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 1.0
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        //_SphereCenters ("_SphereCenters", Vector) = (1, 1, 1, 1)
-        //_SphereRadii ("_SphereRadii", Float) = 1.0
         _Count("_Count", Integer) = 0
         _DebugCyan("_DebugCyan", Color) = (0, 1, 1, 1)
         _DebugWhite("_DebugWhite", Color) = (1, 1, 1, 1)
@@ -67,19 +65,9 @@ Shader "Custom/FFFShader"
             float radiusOfCollider = 0.5; // Default radius for Unity colliders
             half minDist = 10000;
             int minI = -1;
-            //_SphereCenters[0].x = 5;
             for (int i = 0; i < _Count; i++)
             {
                 half dist = distance(IN.worldPos, _SphereCenters[i].xyz) - (_SphereRadii[i] * radiusOfCollider);
-        
-                // Always white for some reason, even though we set it in the DTO
-                //if (_SphereCenters[i].x == 0 && _SphereCenters[i].y == 0 && _SphereCenters[i].z == 0)
-        
-                // Always white
-                //if (_SphereRadii[i] == 0)
-        
-                // Never white, so set correctly.
-                //if (_Count == 0)
                 if (dist < minDist)
                 {
                     minDist = dist;
@@ -90,30 +78,8 @@ Shader "Custom/FFFShader"
             for (int j = 0; j < _Count; j++)
             {
                 bool onCurrentSphere = distance(_SphereCenters[j].xyz, IN.worldPos) <= (_SphereRadii[j] * radiusOfCollider);
-                // (11.32, 4.24, 3.17, 0.00)
-                if (_SphereCenters[j].x == 0 && _SphereCenters[j].y == 0 && _SphereCenters[j].z == 0)
-                {
-                    // TEST uncommenting -- if they are zeroes it will all be CYAN
-                    //o.Albedo = _DebugCyan;
-                    //o.Alpha = 1;
-                }
-        
-                // always cyan in 3D (incorrect)
-                //if (distance(_SphereCenters[j].xyz, IN.worldPos) > 5)
-                //{
-                    //o.Albedo = _DebugCyan;
-                    //o.Alpha = 1;
-                //}
-                //else
-                //{
-                    //o.Albedo = _DebugWhite;
-                    //o.Alpha = 1;
-                //}
                 if (onCurrentSphere && minI != j)
                 {
-                    // for ease of debug
-                    //o.Albedo = _DebugPink;
-                    //o.Alpha = 1;
                     discard;
                 }
             }

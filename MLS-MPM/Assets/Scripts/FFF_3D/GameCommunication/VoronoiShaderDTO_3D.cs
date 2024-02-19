@@ -47,47 +47,19 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         Material material = sphere.GetComponent<Renderer>().sharedMaterial;
         List<Vector4> sphereCenters = new();
         List<float> radii = new();
-        int current = 0;
         foreach (ShaderSphere shaderSphere in spheres)
         {
             // 4th value is meaningless
             sphereCenters.Add(new Vector4((float)shaderSphere.center.x, (float)shaderSphere.center.y, (float)shaderSphere.center.z, 0));
             radii.Add(shaderSphere.radius);
-            //Debug.Log("Center: " + shaderSphere.center);
-            //Debug.Log("Center to float: " + sphereCenters.ElementAt(current));
-            //Debug.Log("radius: " + shaderSphere.radius);
-            current++; // remove me, debug only
         }
-        //Debug.Log("Count: " + sphereCenters.Count);
         if (sphereCenters.Count <= 1 || radii.Count <= 1)
         {
             return;
         }
-        material.SetVectorArray("_SphereCenters", sphereCenters); // For some reason, these are turning into 0, 0, 0 when passed in, and it doesn't matter what w is
-        //Vector4[] returnedCenters = material.GetVectorArray("_SphereCenters");
-        //foreach(Vector4 v in returnedCenters) 
-        //{
-        //    Debug.Log("Vector: " + v); // despite this being correct, it is all zeroes in the shader
-        // HYPOTHESIS: something LATER, after this class, resets it
-        //}
+        material.SetVectorArray("_SphereCenters", sphereCenters);
         material.SetFloatArray("_SphereRadii", radii);
-        // This is still zeroed out
-        //Shader.SetGlobalVectorArray("_TheData", sphereCenters);
         material.SetInteger("_Count", sphereCenters.Count);
-
-
-        // doesn't work, this still turns into zeroes somehow
-        //var materialProperty = new MaterialPropertyBlock();
-        //float[] floatArray = new float[] { 2f, 1f };
-        //materialProperty.SetFloatArray("arrayName", floatArray);
-        //sphere.GetComponent<Renderer>().SetPropertyBlock(materialProperty);
-
-
-        //// doesn't do anything
-        //Material mat2 = sphere.GetComponent<Renderer>().material;
-        //mat2.SetVectorArray("_SphereCenters", sphereCenters);
-        //mat2.SetFloatArray("_SphereRadii", radii);
-        //mat2.SetInteger("_Count", sphereCenters.Count);
 
 
         /// TEST
@@ -118,21 +90,16 @@ public class VoronoiShaderDTO_3D : ScriptableObject
             new Vector4(10.9499998f, 4.19869328f, -5.03000021f, 0),
             new Vector4(11.0299997f, 4.19869328f, -4.75f, 0)
         };
-        // Indeed, these are cyan with the debug condition uncommented, so they are suffering from the same resets.
         testingSphere1Mat.SetFloatArray("_SphereRadii", miniRadii);
         testingSphere1Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
-        // should be redundant, but commenting it out does not fix the issue
         testingSphere2Mat.SetFloatArray("_SphereRadii", miniRadii);
         testingSphere2Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
 
-        // It still breaks here, turns cyan...
         GameObject yetAnotherTestCube = GameObject.Find("HiIAmATestCube");
         Material anotherTestCubeMat = yetAnotherTestCube.GetComponent<Renderer>().sharedMaterial;
-        // specifically with these lines
         anotherTestCubeMat.SetFloatArray("_SphereRadii", radii);
         anotherTestCubeMat.SetVectorArray("_SphereCenters", sphereCenters);
 
-        // Do these reset to 0? Yes, they sure do. So it's the material, not the specific array, but it's something with this material *in this file specifically*
         //anotherTestCubeMat.SetFloatArray("_SphereRadii", miniRadii);
         //anotherTestCubeMat.SetVectorArray("_SphereCenters", miniSphereCenters);
         GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
