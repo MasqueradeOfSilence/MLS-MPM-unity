@@ -65,15 +65,15 @@ public class WaterSurfacer_3D : MonoBehaviour
         fluidSurface = CreateMesh(polygon);
         MakeMesh(fluidSurface);
 
-        Polygon side1 = InitializePolygonSide1(particles, resolution);
+        Polygon side1 = InitializePolygonSide1(particles, resolution, fluidOnly);
         sideFluidSurface1 = CreateMesh(side1);
         MakeMeshSide1(sideFluidSurface1);
 
-        Polygon side2 = InitializePolygonSide2(particles, resolution);
+        Polygon side2 = InitializePolygonSide2(particles, resolution, fluidOnly);
         sideFluidSurface2 = CreateMesh(side2);
         MakeMeshSide2(sideFluidSurface2);
 
-        Polygon side3 = InitializePolygonSide3(particles, resolution);
+        Polygon side3 = InitializePolygonSide3(particles, resolution, fluidOnly);
         sideFluidSurface3 = CreateMesh(side3);
         MakeMeshSide3(sideFluidSurface3);
     }
@@ -83,13 +83,17 @@ public class WaterSurfacer_3D : MonoBehaviour
         return p.GetMass() != 3;
     }
 
-    private Polygon InitializePolygonSide3(Particle_3D[] particles, int resolution)
+    private Polygon InitializePolygonSide3(Particle_3D[] particles, int resolution, bool fluidOnly = false)
     {
         Polygon polygon = new();
         for (int i = 0; i < particles.Length; i++)
         {
             int z = i % resolution;
             Particle_3D p = particles[i];
+            if (fluidOnly && ParticleIsAir(p))
+            {
+                continue;
+            }
             // side 1
             if (z == resolution - 1)
             {
@@ -100,13 +104,17 @@ public class WaterSurfacer_3D : MonoBehaviour
         return polygon;
     }
 
-    private Polygon InitializePolygonSide2(Particle_3D[] particles, int resolution)
+    private Polygon InitializePolygonSide2(Particle_3D[] particles, int resolution, bool fluidOnly = false)
     {
         Polygon polygon = new();
         for (int i = 0; i < particles.Length; i++)
         {
             int x = i / (resolution * resolution);
             Particle_3D p = particles[i];
+            if (fluidOnly && ParticleIsAir(p))
+            {
+                continue;
+            }
             // side 1
             if (x == resolution - 1)
             {
@@ -117,13 +125,17 @@ public class WaterSurfacer_3D : MonoBehaviour
         return polygon;
     }
 
-    private Polygon InitializePolygonSide1(Particle_3D[] particles, int resolution)
+    private Polygon InitializePolygonSide1(Particle_3D[] particles, int resolution, bool fluidOnly = false)
     {
         Polygon polygon = new();
         for (int i = 0; i < particles.Length; i++)
         {
             int x = i / (resolution * resolution);
             Particle_3D p = particles[i];
+            if (fluidOnly && ParticleIsAir(p))
+            {
+                continue;
+            }
             // side 2
             if (x == 0)
             {
@@ -142,7 +154,6 @@ public class WaterSurfacer_3D : MonoBehaviour
         {
             int z = i % resolution;
             Particle_3D p = particles[i];
-            // probably not gonna use
             if (fluidOnly && ParticleIsAir(p))
             {
                 continue;
