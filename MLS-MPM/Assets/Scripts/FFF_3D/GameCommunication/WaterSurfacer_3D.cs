@@ -283,6 +283,7 @@ public class WaterSurfacer_3D : MonoBehaviour
         };
         sidePlane1.GetComponent<MeshFilter>().mesh = meshForUnity;
         sidePlane1.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
+        // scale here?
     }
 
     private void MakeMesh(TriangleNetMesh mesh)
