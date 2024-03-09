@@ -48,7 +48,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RunATestOnShading();
+        //RunATestOnShading();
         if (onlyDisplayInitialSetup)
         {
             return;
