@@ -101,6 +101,11 @@ public class WaterSurfacer_3D : MonoBehaviour
                 polygon.Add(new Vertex((float)position.x, (float)position.y));
             }
         }
+        // XY
+        polygon.Add(new Vertex(2, 1));
+        polygon.Add(new Vertex(2, 2));
+        polygon.Add(new Vertex(12, 1));
+        polygon.Add(new Vertex(12, 2));
         return polygon;
     }
 
@@ -122,6 +127,11 @@ public class WaterSurfacer_3D : MonoBehaviour
                 polygon.Add(new Vertex((float)position.y, (float)position.z));
             }
         }
+        // YZ
+        polygon.Add(new Vertex(1, 3));
+        polygon.Add(new Vertex(2, 3));
+        polygon.Add(new Vertex(1, 14));
+        polygon.Add(new Vertex(2, 14));
         return polygon;
     }
 
@@ -143,6 +153,11 @@ public class WaterSurfacer_3D : MonoBehaviour
                 polygon.Add(new Vertex((float)position.y, (float)position.z));
             }
         }
+        // YZ
+        polygon.Add(new Vertex(1, 3));
+        polygon.Add(new Vertex(2, 3));
+        polygon.Add(new Vertex(1, 14));
+        polygon.Add(new Vertex(2, 14));
         return polygon;
     }
 
@@ -165,6 +180,11 @@ public class WaterSurfacer_3D : MonoBehaviour
                 polygon.Add(new Vertex((float)position.x, (float)position.y));
             }
         }
+        // XY
+        polygon.Add(new Vertex(2, 1));
+        polygon.Add(new Vertex(2, 2));
+        polygon.Add(new Vertex(12, 1));
+        polygon.Add(new Vertex(12, 2));
         return polygon;
     }
 
@@ -283,7 +303,6 @@ public class WaterSurfacer_3D : MonoBehaviour
         };
         sidePlane1.GetComponent<MeshFilter>().mesh = meshForUnity;
         sidePlane1.GetComponent<MeshCollider>().sharedMesh = meshForUnity;
-        // scale here?
     }
 
     private void MakeMesh(TriangleNetMesh mesh)
@@ -346,8 +365,8 @@ public class WaterSurfacer_3D : MonoBehaviour
     private Vector3 Get3DPoint(int index, TriangleNetMesh mesh)
     {
         Vertex vertex = mesh.Vertices.ElementAt(index);
-        // Hardcoding 2 is not ideal but it gets close to our current sim
-        return new Vector3(vertex.X, vertex.Y, 2);
+        // Hardcoding 3 is not ideal but it gets close to our current sim
+        return new Vector3(vertex.X, vertex.Y, 3);
     }
 
     public void SetPlane(GameObject plane)
