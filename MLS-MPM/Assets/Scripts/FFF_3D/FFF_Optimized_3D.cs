@@ -37,6 +37,13 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
 
+    public enum SimType
+    {
+        defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
+    }
+
+    private SimType simType = SimType.jacuzzi;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -512,6 +519,18 @@ public class FFF_Optimized_3D : MonoBehaviour
 
         // Fluid at bottom
         int fluidLevel = 3;
+        switch (simType)
+        {
+            case SimType.defaultSim:
+                fluidLevel = 3;
+                break;
+            case SimType.jacuzzi:
+                // Bubbles up top, water down below
+                fluidLevel = 6;
+                break;
+            default:
+                break;
+        }
         for (int i = 0; i < particles.Length; i++)
         {
             int y = (i / resolution) % resolution;

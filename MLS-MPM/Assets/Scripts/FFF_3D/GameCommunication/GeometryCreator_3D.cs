@@ -24,7 +24,7 @@ public class GeometryCreator_3D : MonoBehaviour
         return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), materialName: shaderName);
     }
 
-    public static GameObject SpawnParticleSphere3D(double3 location, double mass, float sphereSize = 0.1f, string materialName = defaultClearMaterial)
+    public static GameObject SpawnParticleSphere3D(double3 location, double mass, float sphereSize = 0.01f, string materialName = defaultClearMaterial)
     {
         bool isFoam = IsAir(mass);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -37,6 +37,7 @@ public class GeometryCreator_3D : MonoBehaviour
         }
         else
         {
+            Debug.Log("RADIUS: " + sphereSize); // TODO not sure why this is jittering
             // It's a fluid
             mat = Resources.Load(fluidMatForViewport, typeof(Material)) as Material;
         }
