@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FFFBubbles
+  m_Name: WhiteBubble
   m_Shader: {fileID: 4800000, guid: e58a0543ee80348b68dc970ee8810601, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -82,7 +82,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.21960783, g: 0.21960783, b: 0.21960783, a: 0}
+    - _Color: {r: 0.990566, g: 0.9204788, b: 0.9204788, a: 0}
     - _DebugCyan: {r: 0, g: 1, b: 1, a: 1}
     - _DebugPink: {r: 1, g: 0, b: 1, a: 1}
     - _DebugWhite: {r: 1, g: 1, b: 1, a: 1}
