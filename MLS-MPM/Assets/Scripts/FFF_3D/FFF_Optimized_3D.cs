@@ -452,6 +452,20 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
 
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
+        // duplication is BAD, fix
+        int fluidLevel = 3;
+        switch (simType)
+        {
+            case SimType.defaultSim:
+                fluidLevel = 3;
+                break;
+            case SimType.jacuzzi:
+                // Bubbles up top, water down below
+                fluidLevel = 6;
+                break;
+            default:
+                break;
+        }
         for (int i = 0; i < particles.Length; i++)
         {
             int x = i / (resolution * resolution);
@@ -474,6 +488,10 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 // skipping is correct
                 p.SetBubble(-200, true);
+            }
+            else if (y < fluidLevel)
+            {
+                p.SetBubble(50); // very small size
             }
             //else if (!MathUtils_3D.IsAir(p))
             //{

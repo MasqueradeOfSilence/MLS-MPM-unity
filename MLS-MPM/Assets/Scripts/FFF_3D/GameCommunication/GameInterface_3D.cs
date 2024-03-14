@@ -117,7 +117,6 @@ public class GameInterface_3D : MonoBehaviour
         testingSphere2.GetComponent<Renderer>().sharedMaterial = sphereMat;
 
         Material myTest = Resources.Load("Test_FFF", typeof(Material)) as Material;
-        // It still turns cyan! Whaaaat (Note: This only turns cyan if the material is not originally assigned)
         GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
         thereIsAnother.GetComponent<Renderer>().sharedMaterial = myTest;
         // Try: Commenting this out and assigning it initially
