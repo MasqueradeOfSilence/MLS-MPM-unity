@@ -452,16 +452,22 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
 
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
-        // duplication is BAD, fix
+        // TODO duplication is BAD, fix. 
         int fluidLevel = 3;
+        float initialSizingFactor = 1f;
+        double skipProbability = 0.7;
         switch (simType)
         {
             case SimType.defaultSim:
                 fluidLevel = 3;
+                initialSizingFactor = 1f;
+                skipProbability = 0.7;
                 break;
             case SimType.jacuzzi:
                 // Bubbles up top, water down below
                 fluidLevel = 6;
+                initialSizingFactor = 0.5f;
+                skipProbability = 0.5;
                 break;
             default:
                 break;
@@ -479,8 +485,8 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             System.Random random = new();
             double randomValue = random.NextDouble();
-            // Closer random value is to 1 = more bubbles skipped
-            if (randomValue < 0.7)// && MathUtils_3D.IsAir(p))
+            // Closer skipProbability is to 1 = more bubbles skipped
+            if (randomValue < skipProbability)// && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
             }
@@ -502,7 +508,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             else
             {
                 double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);
-                p.SetBubble(volumeFraction);
+                p.SetBubble(volumeFraction, initialSizingFactor: initialSizingFactor);
                 sw.WriteLine(volumeFraction);
             }
             particles[i] = p;

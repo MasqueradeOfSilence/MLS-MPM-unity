@@ -21,7 +21,7 @@ public class Bubble_3D : ScriptableObject
     private float radius = -100;
     private bool instantiated = false;
 
-    public void InstantiateBubble(double volumeFraction, bool skipMe = false)
+    public void InstantiateBubble(double volumeFraction, bool skipMe = false, float initialSizingFactor = 1f)
     {
         if (skipMe)
         {
@@ -47,11 +47,11 @@ public class Bubble_3D : ScriptableObject
         instantiated = true;
         if (radius == -100)
         {
-            ComputeUnitySphereRadius();
+            ComputeUnitySphereRadius(initialSizingFactor);
         }
     }
 
-    public float ComputeUnitySphereRadius()
+    public float ComputeUnitySphereRadius(float initialSizingFactor = 1f)
     {
         if (radius != -100)
         {
@@ -73,6 +73,7 @@ public class Bubble_3D : ScriptableObject
             BubbleSize.LARGE => 0.15f + scalingFactorFloat,
             _ => 0.1f,
         };
+        radius *= initialSizingFactor;
         return radius;
     }
 

@@ -85,10 +85,10 @@ public class Particle_3D : ScriptableObject
         return bubble;
     }
 
-    public void SetBubble(double volumeFraction, bool skipped = false)
+    public void SetBubble(double volumeFraction, bool skipped = false, float initialSizingFactor = 1f)
     {
         bubble = CreateInstance<Bubble_3D>();
-        bubble.InstantiateBubble(volumeFraction, skipped);
+        bubble.InstantiateBubble(volumeFraction, skipped, initialSizingFactor);
         bubbleSet = true;
     }
 
