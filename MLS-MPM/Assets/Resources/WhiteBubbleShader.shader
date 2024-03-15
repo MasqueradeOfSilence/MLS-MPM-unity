@@ -1,4 +1,4 @@
-Shader "Custom/FFFShader"
+Shader "Custom/WhiteBubbleShader"
 {
     Properties
     {
@@ -10,7 +10,7 @@ Shader "Custom/FFFShader"
         _DebugCyan("_DebugCyan", Color) = (0, 1, 1, 1)
         _DebugWhite("_DebugWhite", Color) = (1, 1, 1, 1)
         _DebugPink("_DebugPink", Color) = (1, 0, 1, 1)
-        _White("_White", Color) = (0, 0, 0, 1)
+        _White("_White", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -60,8 +60,8 @@ Shader "Custom/FFFShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             fixed4 c2 = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = _White;
-            o.Alpha = 1;
+            o.Albedo = c2;
+            o.Alpha = 0.1;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             float radiusOfCollider = 0.5; // Default radius for Unity colliders
