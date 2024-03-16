@@ -48,13 +48,22 @@ public class FFF_Optimized_3D : MonoBehaviour
     void Start()
     {
         Init();
-        gameInterface.DumpParticlesIntoScene(particles, true); 
+        bool shouldUseFFFShader = true;
+        bool shouldUseWhiteShader = false;
+        if (simType == SimType.jacuzzi)
+        {
+            // if I don't use these, but do use the UpdateParticles() ones, it gets the right radius, but not the texture?
+            shouldUseFFFShader = false;
+            shouldUseWhiteShader = true;
+        }
+        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader); 
         gameInterface.NukeClones();
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("WHO1");
         //RunATestOnShading();
         if (onlyDisplayInitialSetup)
         {
@@ -79,7 +88,14 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             Simulate();
         }
-        gameInterface.UpdateParticles(particles, true);
+        bool useFFF = true;
+        bool useWhite = false;
+        if (simType == SimType.jacuzzi)
+        {
+            useFFF = false;
+            useWhite = true;
+        }
+        gameInterface.UpdateParticles(particles, useFFF, useWhite);
         gameInterface.NukeClones();
         numUpdates++;
     }

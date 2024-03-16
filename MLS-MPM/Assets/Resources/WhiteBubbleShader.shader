@@ -61,7 +61,7 @@ Shader "Custom/WhiteBubbleShader"
         {
             fixed4 c2 = tex2D(_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c2;
-            o.Alpha = 0.1;
+            o.Alpha = 0.3;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             float radiusOfCollider = 0.5; // Default radius for Unity colliders

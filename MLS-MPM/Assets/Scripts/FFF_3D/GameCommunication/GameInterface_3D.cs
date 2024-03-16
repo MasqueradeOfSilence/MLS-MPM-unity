@@ -6,9 +6,11 @@ public class GameInterface_3D : MonoBehaviour
      * Data members
      */
     private GameObject[] particleSphereList;
-    private const double macroscopicThreshold = 0.7;
+    private double macroscopicThreshold = 0.7;
     private const string defaultMaterial = "ClearBubbleTest";
     private const string voronoiMaterial = "FFFBubbles";
+    // TODO: if FFF and White should not be true at the same time, we need to explicitly enforce that
+    private const string whiteFoamMaterial = "WhiteBubbleShader";
 
     public void NukeClones()
     {
@@ -35,19 +37,21 @@ public class GameInterface_3D : MonoBehaviour
         }
     }
 
-    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false)
+    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false)
     {
-        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader);
+        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader, shouldUseWhiteShader);
         particleSphereList = particleSpheres;
         AddAllParticles();
     }
 
-    public void UpdateParticles(Particle_3D[] particles, bool fffMaterial = false)
+    public void UpdateParticles(Particle_3D[] particles, bool fffMaterial = false, bool whiteMaterial = false)
     {
         if (particles.Length != particleSphereList.Length)
         {
             Debug.LogError("OH NO! Lengths are not equal!");
         }
+        Debug.Log("WHOOOO");
+        Debug.Log("WHOO length: " +  particleSphereList.Length);
         
         for (int i = 0; i < particleSphereList.Length; i++)
         {
@@ -77,12 +81,28 @@ public class GameInterface_3D : MonoBehaviour
             if (currentParticle.GetBubble() != null)
             {
                 float radius = currentParticle.GetBubble().ComputeUnitySphereRadius();
+                //if (whiteMaterial)
+                //{
+                //    // probably not necessary
+                //    macroscopicThreshold = 0.3;
+                //}
+                Debug.Log("HAS BUBBLE");
+                if (whiteMaterial)
+                {
+                    Debug.Log("RAD: " + radius);
+                }
                 if (radius >= macroscopicThreshold)
                 {
+                    Debug.Log("HOLANARGLES"); // not entered with white material...
                     Material mat = Resources.Load(defaultMaterial, typeof(Material)) as Material;
                     if (fffMaterial)
                     {
                         mat = Resources.Load(voronoiMaterial, typeof(Material)) as Material;
+                    }
+                    if (whiteMaterial)
+                    {
+                        mat = Resources.Load(whiteFoamMaterial, typeof(Material)) as Material;
+                        Debug.Log("HOLA1"); // never entered...why? the radius is always computed as tiny for some reason
                     }
 
                     //currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
@@ -98,10 +118,9 @@ public class GameInterface_3D : MonoBehaviour
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }
         }
-        // Try again
+        // TODO This is a bunch of debug test code that I need to remove
         Material cubeMat = Resources.Load("AnotherTestMat", typeof(Material)) as Material;
         GameObject cube = GameObject.Find("Cube");
-        // not sure if this will repro the issue since it already has that assigned, but let's try it
         cube.GetComponent<MeshRenderer>().material = cubeMat;
         cube.GetComponent<Renderer>().material = cubeMat;
         cube.GetComponent<Renderer>().sharedMaterial = cubeMat;
@@ -119,22 +138,6 @@ public class GameInterface_3D : MonoBehaviour
         Material myTest = Resources.Load("Test_FFF", typeof(Material)) as Material;
         GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
         thereIsAnother.GetComponent<Renderer>().sharedMaterial = myTest;
-        // Try: Commenting this out and assigning it initially
-        // Yes, if I assign it initially, it does not turn cyan. Let's see if we can turn it a different color instead. Like basically this could be resetting it
-        // but idk why it didn't mess up the other 2D one?
-
-        /*
-         * So basically, the above works properly IF I assign it the material initially, and then do NOT reassign the sharedMaterial here. 
-         * 
-         * However, if I just remove the reassignment with FFF, it breaks *and* everything still is cyan. Whereas in 2D, it is all pink as expected.
-         * 
-         * What if we assign it first and ALSO uncomment it? It still works. So actually, the thing is that the material is assigned and doesn't stick, possibly. 
-         * When we assign it beforehand, it is totally fine. 
-         * What do the 2D particles get initialized with?
-         */
-
-        // didn't assign it initially here and it just worked...IF the mat is myTest
-        // If it's sphereMat, we absolutely get a cyan capsule
         GameObject aCapsule = GameObject.Find("Capsule");
         //aCapsule.GetComponent<Renderer>().sharedMaterial = myTest;
         //aCapsule.GetComponent<Renderer>().material = myTest;

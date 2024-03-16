@@ -31,8 +31,13 @@ public class GeometryCreator_3D : MonoBehaviour
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, (float)location.z);
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material mat;
+        if (materialName == "WhiteBubbleShader")
+        {
+            Debug.Log("HOLA3");
+        }
         if (isFoam)
         {
+            Debug.Log("HOLA4");
             mat = Resources.Load(materialName, typeof(Material)) as Material;
         }
         else
@@ -50,7 +55,7 @@ public class GeometryCreator_3D : MonoBehaviour
         return sphere;
     }
 
-    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false)
+    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false)
     {
         GameObject[] finalParticleSpheres = new GameObject[particles.Length];
         for (int i = 0; i < particles.Length; i++) 
@@ -60,6 +65,12 @@ public class GeometryCreator_3D : MonoBehaviour
             {
                 GameObject particleSphere = ConstructSphereFromParticle(p, "FFFBubbles");
                 finalParticleSpheres[i] = particleSphere;
+            }
+            if (shouldUseWhiteShader)
+            {
+                GameObject particleSphere = ConstructSphereFromParticle(p, "WhiteBubbleShader");
+                finalParticleSpheres[i] = particleSphere;
+                Debug.Log("HOLA2");
             }
             else
             {
