@@ -43,7 +43,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
 
-    private SimType simType = SimType.jacuzzi;
+    private SimType simType = SimType.bubbleBath;
 
     // Start is called before the first frame update
     void Start()
@@ -51,13 +51,18 @@ public class FFF_Optimized_3D : MonoBehaviour
         Init();
         bool shouldUseFFFShader = true;
         bool shouldUseWhiteShader = false;
-        if (simType == SimType.jacuzzi)
+        if (simType == SimType.jacuzzi || simType == SimType.foamingSoap || simType == SimType.laundryDetergent || simType == SimType.bubbleBath)
         {
             // if I don't use these, but do use the UpdateParticles() ones, it gets the right radius, but not the texture?
             shouldUseFFFShader = false;
             shouldUseWhiteShader = true;
         }
-        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader); 
+        bool allFluid = false;
+        if (simType == SimType.foamingSoap)
+        {
+            allFluid = true;
+        }
+        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
         gameInterface.NukeClones();
     }
 
@@ -90,7 +95,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         bool useFFF = true;
         bool useWhite = false;
-        if (simType == SimType.jacuzzi)
+        if (simType == SimType.jacuzzi || simType == SimType.foamingSoap || simType == SimType.laundryDetergent || simType == SimType.bubbleBath)
         {
             useFFF = false;
             useWhite = true;
@@ -115,7 +120,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             Debug.Log("Foam simulator beginning!");
             DetermineBubbleSizes();
         }
-        if (waterSurfacer != null)
+        if (waterSurfacer != null && simType != SimType.foamingSoap)
         {
             waterSurfacer.InitializeFluidSurface(particles, resolution);
         }
@@ -485,6 +490,21 @@ public class FFF_Optimized_3D : MonoBehaviour
                 initialSizingFactor = 0.5f;
                 skipProbability = 0.5;
                 break;
+            case SimType.foamingSoap:
+                fluidLevel = 3;
+                initialSizingFactor = 0.3f;
+                skipProbability = 0.1;
+                break;
+            case SimType.laundryDetergent:
+                fluidLevel = 4;
+                initialSizingFactor = 0.35f;
+                skipProbability = 0.2;
+                break;
+            case SimType.bubbleBath:
+                fluidLevel = 1;
+                initialSizingFactor = 0.8f;
+                skipProbability = 0.3;
+                break;
             default:
                 break;
         }
@@ -498,6 +518,10 @@ public class FFF_Optimized_3D : MonoBehaviour
             if ((x % 2 == 0 || y % 2 == 0 || z % 2 == 0) && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
+                if (simType == SimType.foamingSoap && new System.Random().NextDouble() > 0.5)
+                {
+                    skipBubble = false;
+                }
             }
             System.Random random = new();
             double randomValue = random.NextDouble();
@@ -506,7 +530,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 skipBubble = true;
             }
-            if (skipBubble)
+            if (skipBubble || (y < fluidLevel && simType == SimType.foamingSoap))
             {
                 // skipping is correct
                 p.SetBubble(-200, true);

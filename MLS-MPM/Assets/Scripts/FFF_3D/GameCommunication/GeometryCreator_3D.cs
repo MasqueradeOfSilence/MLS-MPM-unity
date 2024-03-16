@@ -14,24 +14,24 @@ public class GeometryCreator_3D : MonoBehaviour
         return mass == airParticle.GetMass();
     }
 
-    private static GameObject ConstructSphereFromParticle(Particle_3D p, string shaderName = defaultClearMaterial)
+    private static GameObject ConstructSphereFromParticle(Particle_3D p, string shaderName = defaultClearMaterial, bool allFluid = false)
     {
         if (p.HasBubble())
         {
             float radius = p.GetBubble().ComputeUnitySphereRadius();
-            return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), radius, shaderName);
+            return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), radius, shaderName, allFluid);
         }
-        return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), materialName: shaderName);
+        return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), materialName: shaderName, allFluid: allFluid);
     }
 
-    public static GameObject SpawnParticleSphere3D(double3 location, double mass, float sphereSize = 0.01f, string materialName = defaultClearMaterial)
+    public static GameObject SpawnParticleSphere3D(double3 location, double mass, float sphereSize = 0.01f, string materialName = defaultClearMaterial, bool allFluid = false)
     {
         bool isFoam = IsAir(mass);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, (float)location.z);
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material mat;
-        if (isFoam)
+        if (isFoam || allFluid)
         {
             mat = Resources.Load(materialName, typeof(Material)) as Material;
         }
@@ -50,7 +50,7 @@ public class GeometryCreator_3D : MonoBehaviour
         return sphere;
     }
 
-    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false)
+    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false)
     {
         GameObject[] finalParticleSpheres = new GameObject[particles.Length];
         for (int i = 0; i < particles.Length; i++) 
@@ -63,7 +63,8 @@ public class GeometryCreator_3D : MonoBehaviour
             }
             else if (shouldUseWhiteShader)
             {
-                GameObject particleSphere = ConstructSphereFromParticle(p, "WhiteBubbleShader");
+                // Only foaming soap gets allFluid
+                GameObject particleSphere = ConstructSphereFromParticle(p, "WhiteBubbleShader", allFluid);
                 finalParticleSpheres[i] = particleSphere;
             }
             else

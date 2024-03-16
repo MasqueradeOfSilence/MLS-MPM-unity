@@ -37,9 +37,9 @@ public class GameInterface_3D : MonoBehaviour
         }
     }
 
-    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false)
+    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false)
     {
-        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader, shouldUseWhiteShader);
+        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid);
         particleSphereList = particleSpheres;
         AddAllParticles();
     }
