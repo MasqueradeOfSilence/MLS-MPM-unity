@@ -47,8 +47,6 @@ Shader "Custom/WhiteBubbleShader"
         fixed4 _DebugWhite;
         fixed4 _DebugPink;
         fixed4 _White;
-        //float4 _TheData[900];
-        uniform float arrayName[2];
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -61,7 +59,7 @@ Shader "Custom/WhiteBubbleShader"
         {
             fixed4 c2 = tex2D(_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c2;
-            o.Alpha = 0.3;
+            o.Alpha = 0.1;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             float radiusOfCollider = 0.5; // Default radius for Unity colliders

@@ -50,8 +50,6 @@ public class GameInterface_3D : MonoBehaviour
         {
             Debug.LogError("OH NO! Lengths are not equal!");
         }
-        Debug.Log("WHOOOO");
-        Debug.Log("WHOO length: " +  particleSphereList.Length);
         
         for (int i = 0; i < particleSphereList.Length; i++)
         {
@@ -86,14 +84,8 @@ public class GameInterface_3D : MonoBehaviour
                 //    // probably not necessary
                 //    macroscopicThreshold = 0.3;
                 //}
-                Debug.Log("HAS BUBBLE");
-                if (whiteMaterial)
-                {
-                    Debug.Log("RAD: " + radius);
-                }
                 if (radius >= macroscopicThreshold)
                 {
-                    Debug.Log("HOLANARGLES"); // not entered with white material...
                     Material mat = Resources.Load(defaultMaterial, typeof(Material)) as Material;
                     if (fffMaterial)
                     {
@@ -102,7 +94,6 @@ public class GameInterface_3D : MonoBehaviour
                     if (whiteMaterial)
                     {
                         mat = Resources.Load(whiteFoamMaterial, typeof(Material)) as Material;
-                        Debug.Log("HOLA1"); // never entered...why? the radius is always computed as tiny for some reason
                     }
 
                     //currentParticleSphere.GetComponent<MeshRenderer>().material = mat;

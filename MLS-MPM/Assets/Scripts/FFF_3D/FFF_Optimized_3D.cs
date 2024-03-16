@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /**
@@ -63,7 +64,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("WHO1");
         //RunATestOnShading();
         if (onlyDisplayInitialSetup)
         {
@@ -451,7 +451,7 @@ public class FFF_Optimized_3D : MonoBehaviour
          * VERDICT: Min = 105.1584. Max = 420.2093.
          *  So, basically 105 - 421
          */
-        StreamWriter sw;
+        StreamWriter sw = null;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions_3D.csv");
@@ -525,7 +525,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);
                 p.SetBubble(volumeFraction, initialSizingFactor: initialSizingFactor);
-                sw.WriteLine(volumeFraction);
+                sw?.WriteLine(volumeFraction);
             }
             particles[i] = p;
         }
