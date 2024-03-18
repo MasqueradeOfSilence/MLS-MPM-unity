@@ -43,7 +43,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
 
-    private SimType simType = SimType.bubbleBath;
+    private SimType simType = SimType.jacuzzi;
 
     // Start is called before the first frame update
     void Start()
