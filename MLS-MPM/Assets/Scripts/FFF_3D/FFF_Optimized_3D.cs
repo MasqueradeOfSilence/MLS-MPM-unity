@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Diagnostics;
 
 /**
  * Goal: Fully optimize FFF for 3D so it doesn't freeze Unity.
@@ -38,12 +39,19 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
 
+    // Computational Performance Metrics
+    private float elapsedTime = 0f;
+    private float updateTime = 0f;
+    private int numUpdatesForMetrics = 10;
+    private List<float> updateTimes = new();
+
     public enum SimType
     {
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
 
-    private SimType simType = SimType.jacuzzi;
+    // For now, change depending on what sim type you want
+    private readonly SimType simType = SimType.laundryDetergent;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +68,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         bool allFluid = false;
         if (simType == SimType.foamingSoap)
         {
+            // should this boolean be called allFoam?
             allFluid = true;
         }
         gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
@@ -83,6 +92,8 @@ public class FFF_Optimized_3D : MonoBehaviour
             numUpdates++;
             return;
         }
+        // Performance metrics
+        CalculatePerformanceMetrics();
         for (int i = 0; i < numSimsPerUpdate; i++)
         {
             int numTimesToSim = 2;
@@ -105,6 +116,51 @@ public class FFF_Optimized_3D : MonoBehaviour
         numUpdates++;
     }
 
+    private void CalculatePerformanceMetrics()
+    {
+        // Time
+        if (numUpdates <= numUpdatesForMetrics)
+        {
+            updateTime = Time.deltaTime;
+            elapsedTime += updateTime;
+            updateTimes.Add(updateTime);
+        }
+        if (numUpdates == numUpdatesForMetrics)
+        {
+            float total = 0f;
+            UnityEngine.Debug.Log("Count: " + updateTimes.Count);
+            UnityEngine.Debug.Assert(numUpdatesForMetrics == updateTimes.Count);
+            for (int i = 0; i < numUpdatesForMetrics; i++)
+            {
+                total += updateTimes.ElementAt(i);
+            }
+            float averageUpdateTime = total / numUpdatesForMetrics;
+            string totalTimeInfo = "Total time to run " + numUpdatesForMetrics + " updates: " + elapsedTime + " seconds";
+            string averageTimeInfo = "Average time per update: " + averageUpdateTime + " seconds";
+            UnityEngine.Debug.Log(totalTimeInfo);
+            UnityEngine.Debug.Log(averageTimeInfo);
+            StreamWriter sw;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\metrics_" + simType.ToString() + ".txt");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                sw = File.CreateText(@"/Users/Alex/Documents/Alex's Crap/Escuela/MS/Winter_2023/MLS-MPM-unity/MLS-MPM/Assets/Resources/metrics_" + simType.ToString() + ".txt");
+            }
+            else
+            {
+                // Linux
+                sw = File.CreateText(@"~/Desktop/metrics_" + simType.ToString() + ".txt");
+            }
+            sw?.WriteLine("Computational Metrics for " + simType.ToString() + ": ");
+            sw?.WriteLine(totalTimeInfo);
+            sw?.WriteLine(averageTimeInfo);
+            sw?.Close();
+        }
+        // CPU, GPU, RAM will not be done programmatically at this time. Instead we will be looking at the Unity profiler.
+    }
+
     /**
      * High-level simulation logic
      */
@@ -117,7 +173,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         GridToParticleStep();
         if (iteration == 1)
         {
-            Debug.Log("Foam simulator beginning!");
+            UnityEngine.Debug.Log("Foam simulator beginning!");
             DetermineBubbleSizes();
         }
         if (waterSurfacer != null && simType != SimType.foamingSoap)
@@ -487,8 +543,8 @@ public class FFF_Optimized_3D : MonoBehaviour
             case SimType.jacuzzi:
                 // Bubbles up top, water down below
                 fluidLevel = 6;
-                initialSizingFactor = 0.5f;
-                skipProbability = 0.5;
+                initialSizingFactor = 0.3f;
+                skipProbability = 0.3;
                 break;
             case SimType.foamingSoap:
                 fluidLevel = 3;
@@ -496,9 +552,9 @@ public class FFF_Optimized_3D : MonoBehaviour
                 skipProbability = 0.1;
                 break;
             case SimType.laundryDetergent:
-                fluidLevel = 4;
+                fluidLevel = 10;
                 initialSizingFactor = 0.35f;
-                skipProbability = 0.2;
+                skipProbability = 0.1;
                 break;
             case SimType.bubbleBath:
                 fluidLevel = 1;
@@ -553,6 +609,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             particles[i] = p;
         }
+        sw.Close();
     }
 
     private List<Particle_3D> GetFlattenedParticleList()

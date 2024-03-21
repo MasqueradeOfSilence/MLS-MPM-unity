@@ -109,32 +109,6 @@ public class GameInterface_3D : MonoBehaviour
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }
         }
-        // TODO This is a bunch of debug test code that I need to remove
-        Material cubeMat = Resources.Load("AnotherTestMat", typeof(Material)) as Material;
-        GameObject cube = GameObject.Find("Cube");
-        cube.GetComponent<MeshRenderer>().material = cubeMat;
-        cube.GetComponent<Renderer>().material = cubeMat;
-        cube.GetComponent<Renderer>().sharedMaterial = cubeMat;
-        GameObject testingSphere1 = GameObject.Find("TestingSphere1");
-        GameObject testingSphere2 = GameObject.Find("TestingSphere2");
-        Material sphereMat = Resources.Load(voronoiMaterial, typeof(Material)) as Material;
-        testingSphere1.GetComponent<MeshRenderer>().material = sphereMat;
-        testingSphere1.GetComponent<Renderer>().material = sphereMat;
-        testingSphere1.GetComponent<Renderer>().sharedMaterial = sphereMat;
-
-        testingSphere2.GetComponent<MeshRenderer>().material = sphereMat;
-        testingSphere2.GetComponent<Renderer>().material = sphereMat;
-        testingSphere2.GetComponent<Renderer>().sharedMaterial = sphereMat;
-
-        Material myTest = Resources.Load("Test_FFF", typeof(Material)) as Material;
-        GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
-        thereIsAnother.GetComponent<Renderer>().sharedMaterial = myTest;
-        GameObject aCapsule = GameObject.Find("Capsule");
-        //aCapsule.GetComponent<Renderer>().sharedMaterial = myTest;
-        //aCapsule.GetComponent<Renderer>().material = myTest;
-
-        aCapsule.GetComponent<Renderer>().sharedMaterial = sphereMat;
-        aCapsule.GetComponent<Renderer>().material = sphereMat;
     }
 
     public void RemoveParticlesFromScene()

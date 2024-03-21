@@ -60,56 +60,5 @@ public class VoronoiShaderDTO_3D : ScriptableObject
         material.SetVectorArray("_SphereCenters", sphereCenters);
         material.SetFloatArray("_SphereRadii", radii);
         material.SetInteger("_Count", sphereCenters.Count);
-
-
-        /// TEST
-        GameObject cube = GameObject.Find("Cube");
-        Material cubeMaterial = cube.GetComponent<Renderer>().sharedMaterial;
-        cubeMaterial.SetFloatArray("_SphereRadii", radii);
-        cubeMaterial.SetVectorArray("_SphereCenters", sphereCenters);
-        //List<float> testNumbers = new()
-        //{
-        //    7f,
-        //    666f
-        //};
-        //cubeMaterial.SetFloatArray("_TestNumbers", testNumbers);
-        //cubeMaterial.SetInteger("_CountMe", 2);
-
-        // TEST 2
-        GameObject testingSphere1 = GameObject.Find("TestingSphere1");
-        GameObject testingSphere2 = GameObject.Find("TestingSphere2");
-        Material testingSphere1Mat = testingSphere1.GetComponent<Renderer>().sharedMaterial;
-        Material testingSphere2Mat = testingSphere2.GetComponent<Renderer>().sharedMaterial;
-        List<float> miniRadii = new()
-        {
-            1,
-            1
-        };
-        List<Vector4> miniSphereCenters = new()
-        {
-            new Vector4(10.9499998f, 4.19869328f, -5.03000021f, 0),
-            new Vector4(11.0299997f, 4.19869328f, -4.75f, 0)
-        };
-        testingSphere1Mat.SetFloatArray("_SphereRadii", miniRadii);
-        testingSphere1Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
-        testingSphere2Mat.SetFloatArray("_SphereRadii", miniRadii);
-        testingSphere2Mat.SetVectorArray("_SphereCenters", miniSphereCenters);
-
-        GameObject yetAnotherTestCube = GameObject.Find("HiIAmATestCube");
-        Material anotherTestCubeMat = yetAnotherTestCube.GetComponent<Renderer>().sharedMaterial;
-        anotherTestCubeMat.SetFloatArray("_SphereRadii", radii);
-        anotherTestCubeMat.SetVectorArray("_SphereCenters", sphereCenters);
-
-        //anotherTestCubeMat.SetFloatArray("_SphereRadii", miniRadii);
-        //anotherTestCubeMat.SetVectorArray("_SphereCenters", miniSphereCenters);
-        GameObject thereIsAnother = GameObject.Find("ThereIsAnother");
-        Material anotherMaterial = thereIsAnother.GetComponent<Renderer>().sharedMaterial;
-        anotherMaterial.SetFloatArray("_SphereRadii", radii);
-        anotherMaterial.SetVectorArray("_SphereCenters", sphereCenters);
-
-        GameObject aCapsule = GameObject.Find("Capsule");
-        Material capsuleMat = aCapsule.GetComponent<Renderer>().sharedMaterial;
-        capsuleMat.SetFloatArray("_SphereRadii", radii);
-        capsuleMat.SetVectorArray("_SphereCenters", sphereCenters);
     }
 }
