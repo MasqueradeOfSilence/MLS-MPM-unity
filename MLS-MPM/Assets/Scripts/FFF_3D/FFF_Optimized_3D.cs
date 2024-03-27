@@ -44,6 +44,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private float updateTime = 0f;
     private int numUpdatesForMetrics = 10;
     private List<float> updateTimes = new();
+    string timestamp = "";
 
     public enum SimType
     {
@@ -73,6 +74,8 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
         gameInterface.NukeClones();
+        timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+
     }
 
     // Update is called once per frame
@@ -113,7 +116,32 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         gameInterface.UpdateParticles(particles, useFFF, useWhite);
         gameInterface.NukeClones();
+        if (numUpdates <= numUpdatesForMetrics)
+        {
+            ExportFluidParticleDataToCSVForAlembic(BuildListOfFluidParticlesOnly());
+        }
         numUpdates++;
+    }
+
+    private Particle_3D[] BuildListOfFluidParticlesOnly()
+    {
+        List<Particle_3D> fluidParticlesOnly = new();
+        foreach (Particle_3D p in particles)
+        {
+            if (p.GetBubble().GetBubbleSize() == Bubble_3D.BubbleSize.SKIP ||
+                p.GetBubble().GetBubbleSize() == Bubble_3D.BubbleSize.MICROSCOPIC)
+            {
+                fluidParticlesOnly.Add(p);
+            }
+        }
+        return fluidParticlesOnly.ToArray();
+    }
+
+    private void ExportFluidParticleDataToCSVForAlembic(Particle_3D[] fluidParticlesOnly)
+    {
+        CSVExporter csvExporter = ScriptableObject.CreateInstance<CSVExporter>();
+        // Note: Updates do not necessarily correlate to frames, but we are starting with that
+        csvExporter.ExportParticleDataToCSV(fluidParticlesOnly, numUpdates, timestamp, simType.ToString());
     }
 
     private void CalculatePerformanceMetrics()
