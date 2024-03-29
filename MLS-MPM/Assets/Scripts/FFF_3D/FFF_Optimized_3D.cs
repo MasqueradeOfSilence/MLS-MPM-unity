@@ -206,7 +206,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (waterSurfacer != null && simType != SimType.foamingSoap)
         {
-            waterSurfacer.InitializeFluidSurface(particles, resolution);
+            //waterSurfacer.InitializeFluidSurface(particles, resolution);
         }
         ComputeVoronoi();
         iteration++;

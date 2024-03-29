@@ -37,7 +37,6 @@ public class GeometryCreator_3D : MonoBehaviour
         }
         else
         {
-            Debug.Log("RADIUS: " + sphereSize); // TODO not sure why this is jittering
             // It's a fluid
             mat = Resources.Load(fluidMatForViewport, typeof(Material)) as Material;
         }
