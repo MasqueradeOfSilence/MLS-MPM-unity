@@ -53,7 +53,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.laundryDetergent;
+    private readonly SimType simType = SimType.foamingSoap;
 
     // Start is called before the first frame update
     void Start()
