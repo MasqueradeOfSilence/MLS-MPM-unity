@@ -42,7 +42,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Computational Performance Metrics
     private float elapsedTime = 0f;
     private float updateTime = 0f;
-    private int numUpdatesForMetrics = 10;
+    private DateTime startTime;
+    private int numUpdatesForMetrics = 15;
     private List<float> updateTimes = new();
     string timestamp = "";
 
@@ -57,6 +58,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        startTime = DateTime.Now;
         Init();
         bool shouldUseFFFShader = true;
         bool shouldUseWhiteShader = false;
@@ -144,12 +146,17 @@ public class FFF_Optimized_3D : MonoBehaviour
         csvExporter.ExportParticleDataToCSV(fluidParticlesOnly, numUpdates, timestamp, simType.ToString());
     }
 
+    private float GetNow()
+    {
+        return (float)(DateTime.Now - startTime).TotalSeconds;
+    }
+
     private void CalculatePerformanceMetrics()
     {
         // Time
         if (numUpdates <= numUpdatesForMetrics)
         {
-            updateTime = Time.deltaTime;
+            updateTime = GetNow();
             elapsedTime += updateTime;
             updateTimes.Add(updateTime);
         }

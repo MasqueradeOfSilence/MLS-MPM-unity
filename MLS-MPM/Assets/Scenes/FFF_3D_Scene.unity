@@ -347,6 +347,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: testdetergent001
       objectReference: {fileID: 0}
+    - target: {fileID: -8950360058916874324, guid: 3e390678b8efcfb45a36236d3c914c0b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -3232560322151568408, guid: 3e390678b8efcfb45a36236d3c914c0b, type: 3}
       propertyPath: m_LocalScale.x
       value: 100
@@ -585,7 +589,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 65f6a5a7d71d3514ca04858bfbcb9d4b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

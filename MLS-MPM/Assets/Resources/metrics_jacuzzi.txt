@@ -1,0 +1,3 @@
+Computational Metrics for jacuzzi: 
+Total time to run 15 updates: 127.9128 seconds
+Average time per update: 8.527517 seconds

@@ -25,7 +25,7 @@ public class CSVExporter : ScriptableObject
 
     public void ExportParticleDataToCSV(Particle_3D[] fluidParticlesOnly, int frame, string timestamp, string simType="DEFAULT")
     {
-        Debug.Log("Exporting to CSV");
+        //Debug.Log("Exporting to CSV");
         StreamWriter sw;
         string name = BuildName(simType, timestamp);
         if (UsingWindows())
@@ -53,6 +53,6 @@ public class CSVExporter : ScriptableObject
         }
 
         sw?.Close();
-        Debug.Log("End export");
+        //Debug.Log("End export");
     }
 }
