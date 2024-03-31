@@ -31,26 +31,26 @@ public class WaterSurfacer_3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        plane.name = "WaterPlane";
-        planeMaterial = Resources.Load(waterMaterialName, typeof(Material)) as Material;
-        plane.GetComponent<MeshRenderer>().material = planeMaterial;
-        plane.GetComponent<Renderer>().material = planeMaterial;
+        //plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        //plane.name = "WaterPlane";
+        //planeMaterial = Resources.Load(waterMaterialName, typeof(Material)) as Material;
+        //plane.GetComponent<MeshRenderer>().material = planeMaterial;
+        //plane.GetComponent<Renderer>().material = planeMaterial;
 
-        sidePlane1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        sidePlane1.name = "SidePlane1";
-        sidePlane1.GetComponent<MeshRenderer>().material = planeMaterial;
-        sidePlane1.GetComponent<Renderer>().material = planeMaterial;
+        //sidePlane1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        //sidePlane1.name = "SidePlane1";
+        //sidePlane1.GetComponent<MeshRenderer>().material = planeMaterial;
+        //sidePlane1.GetComponent<Renderer>().material = planeMaterial;
 
-        sidePlane2 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        sidePlane2.name = "SidePlane2";
-        sidePlane2.GetComponent<MeshRenderer>().material = planeMaterial;
-        sidePlane2.GetComponent<Renderer>().material = planeMaterial;
+        //sidePlane2 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        //sidePlane2.name = "SidePlane2";
+        //sidePlane2.GetComponent<MeshRenderer>().material = planeMaterial;
+        //sidePlane2.GetComponent<Renderer>().material = planeMaterial;
 
-        sidePlane3 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        sidePlane3.name = "SidePlane3";
-        sidePlane3.GetComponent<MeshRenderer>().material = planeMaterial;
-        sidePlane3.GetComponent<Renderer>().material = planeMaterial;
+        //sidePlane3 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        //sidePlane3.name = "SidePlane3";
+        //sidePlane3.GetComponent<MeshRenderer>().material = planeMaterial;
+        //sidePlane3.GetComponent<Renderer>().material = planeMaterial;
     }
 
     // Update is called once per frame

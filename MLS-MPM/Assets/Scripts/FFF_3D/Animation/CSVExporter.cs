@@ -17,17 +17,18 @@ public class CSVExporter : ScriptableObject
         return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
     }
 
-    private static string BuildName(string simType, string timestamp)
+    private static string BuildName(string simType, string timestamp, int numFrames)
     {
+        // NumFrames are not necessarily frames, but update calls. Might rename.
         string part1 = "ParticleData_";
-        return part1 + simType + "_" + timestamp + ".csv";
+        return part1 + simType + "_" + timestamp + "_" + numFrames + "_frames.csv";
     }
 
-    public void ExportParticleDataToCSV(Particle_3D[] fluidParticlesOnly, int frame, string timestamp, string simType="DEFAULT")
+    public void ExportParticleDataToCSV(Particle_3D[] fluidParticlesOnly, int frame, string timestamp, int numFrames, string simType="DEFAULT")
     {
         //Debug.Log("Exporting to CSV");
         StreamWriter sw;
-        string name = BuildName(simType, timestamp);
+        string name = BuildName(simType, timestamp, numFrames);
         if (UsingWindows())
         {
             sw = new StreamWriter(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\AnimData\" + name, true);

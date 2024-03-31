@@ -209,7 +209,6 @@ public class MathUtils_3D
 
     public static double3x3 RecomputeCMatrix(double3x3 B)
     {
-        // It's 4 in 2D, not sure if it should be 3 in 3D. 
         return B * 4;
     }
 

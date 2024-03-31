@@ -31,6 +31,7 @@ public class GeometryCreator_3D : MonoBehaviour
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, (float)location.z);
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material mat;
+        bool renderingVideos = false;
         if (isFoam || allFluid)
         {
             mat = Resources.Load(materialName, typeof(Material)) as Material;
@@ -39,11 +40,22 @@ public class GeometryCreator_3D : MonoBehaviour
         {
             // It's a fluid
             mat = Resources.Load(fluidMatForViewport, typeof(Material)) as Material;
+            if (renderingVideos)
+            {
+                // just choosing a random transparent one for now
+                sphere.GetComponent<MeshRenderer>().enabled = false;
+                sphere.GetComponent<Renderer>().enabled = false;
+            }
         }
-        sphere.GetComponent<MeshRenderer>().material = mat;
-        sphere.GetComponent<Renderer>().material = mat;
-        //sphere.GetComponent<Renderer>().sharedMaterial = mat;
-        //sphere.GetComponent<MeshRenderer>().sharedMaterial = mat;
+        if (!renderingVideos)
+        {
+            sphere.GetComponent<MeshRenderer>().material = mat;
+            sphere.GetComponent<Renderer>().material = mat;
+            //sphere.GetComponent<Renderer>().sharedMaterial = mat;
+            //sphere.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+        }
+
         sphere.name = "Sphere" + sphereID.ToString();
         sphereID++;
         return sphere;
@@ -59,17 +71,28 @@ public class GeometryCreator_3D : MonoBehaviour
             {
                 GameObject particleSphere = ConstructSphereFromParticle(p, "FFFBubbles");
                 finalParticleSpheres[i] = particleSphere;
+                if (particleSphere != null)
+                {
+                    finalParticleSpheres[i] = particleSphere;
+                }
             }
             else if (shouldUseWhiteShader)
             {
                 // Only foaming soap gets allFluid
                 GameObject particleSphere = ConstructSphereFromParticle(p, "WhiteBubbleShader", allFluid);
                 finalParticleSpheres[i] = particleSphere;
+                if (particleSphere != null)
+                {
+                    finalParticleSpheres[i] = particleSphere;
+                }
             }
             else
             {
                 GameObject particleSphere = ConstructSphereFromParticle(p);
-                finalParticleSpheres[i] = particleSphere;
+                if (particleSphere != null)
+                {
+                    finalParticleSpheres[i] = particleSphere;
+                }
             }
         }
         return finalParticleSpheres;

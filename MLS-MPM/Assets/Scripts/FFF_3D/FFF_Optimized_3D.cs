@@ -43,7 +43,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private float elapsedTime = 0f;
     private float updateTime = 0f;
     private DateTime startTime;
-    private int numUpdatesForMetrics = 15;
+    private int numUpdatesForMetrics = 8;
     private List<float> updateTimes = new();
     string timestamp = "";
 
@@ -53,7 +53,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.foamingSoap;
+    private readonly SimType simType = SimType.jacuzzi;
 
     // Start is called before the first frame update
     void Start()
@@ -143,7 +143,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         CSVExporter csvExporter = ScriptableObject.CreateInstance<CSVExporter>();
         // Note: Updates do not necessarily correlate to frames, but we are starting with that
-        csvExporter.ExportParticleDataToCSV(fluidParticlesOnly, numUpdates, timestamp, simType.ToString());
+        csvExporter.ExportParticleDataToCSV(fluidParticlesOnly, numUpdates, timestamp, numUpdatesForMetrics, simType.ToString());
     }
 
     private float GetNow()
