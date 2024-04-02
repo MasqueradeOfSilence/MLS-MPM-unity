@@ -150,7 +150,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             GameObject abcInScene = FindGameObjectsAll(abcName);
             if (abcInScene == null)
             {
-                UnityEngine.Debug.Log("Oh no");
+                UnityEngine.Debug.Log("Error: ABC " + abcName + " not found");
             }
             else
             {
