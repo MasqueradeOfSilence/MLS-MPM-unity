@@ -38,6 +38,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
+    private bool renderWater = true;
 
     // Computational Performance Metrics
     private float elapsedTime = 0f;
@@ -54,12 +55,14 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     // For now, change depending on what sim type you want
     private readonly SimType simType = SimType.jacuzzi;
+    private bool started = false;
 
     // Start is called before the first frame update
     //void Start()
     IEnumerator Start()
     {
         yield return new WaitForSeconds(2);
+        started = true;
         startTime = DateTime.Now;
         Init();
         bool shouldUseFFFShader = true;
@@ -78,13 +81,17 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
         gameInterface.NukeClones();
+        EnableAlembic();
         timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!started)
+        {
+            return;
+        }
         //RunATestOnShading();
         if (onlyDisplayInitialSetup)
         {
@@ -125,6 +132,31 @@ public class FFF_Optimized_3D : MonoBehaviour
             ExportFluidParticleDataToCSVForAlembic(BuildListOfFluidParticlesOnly());
         }
         numUpdates++;
+    }
+
+    public static GameObject FindGameObjectsAll(string name) =>
+        Resources.FindObjectsOfTypeAll<GameObject>().First(x => x.name == name);
+
+    private void EnableAlembic()
+    {
+        if (renderWater)
+        {
+            string abcName = simType.ToString();
+            if (abcName == "defaultSim")
+            {
+                abcName = "defaultFoam";
+            }
+            abcName += "1";
+            GameObject abcInScene = FindGameObjectsAll(abcName);
+            if (abcInScene == null)
+            {
+                UnityEngine.Debug.Log("Oh no");
+            }
+            else
+            {
+                abcInScene.SetActive(true);
+            }
+        }
     }
 
     private Particle_3D[] BuildListOfFluidParticlesOnly()
