@@ -62,7 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints:
     - _BumpScale: 1
-    - _Count: 1322
+    - _Count: 1285
     - _Cutoff: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 10

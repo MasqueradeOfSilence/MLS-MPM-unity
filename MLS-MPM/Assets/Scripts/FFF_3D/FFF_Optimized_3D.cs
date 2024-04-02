@@ -56,8 +56,10 @@ public class FFF_Optimized_3D : MonoBehaviour
     private readonly SimType simType = SimType.jacuzzi;
 
     // Start is called before the first frame update
-    void Start()
+    //void Start()
+    IEnumerator Start()
     {
+        yield return new WaitForSeconds(2);
         startTime = DateTime.Now;
         Init();
         bool shouldUseFFFShader = true;
