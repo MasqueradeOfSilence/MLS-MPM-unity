@@ -39,6 +39,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
     private bool renderWater = true;
+    private bool alembicEnabled = false;
 
     // Computational Performance Metrics
     private float elapsedTime = 0f;
@@ -54,7 +55,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.jacuzzi;
+    private readonly SimType simType = SimType.bubbleBath;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -69,7 +70,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         bool shouldUseWhiteShader = false;
         if (simType == SimType.jacuzzi || simType == SimType.foamingSoap || simType == SimType.laundryDetergent || simType == SimType.bubbleBath)
         {
-            // if I don't use these, but do use the UpdateParticles() ones, it gets the right radius, but not the texture?
             shouldUseFFFShader = false;
             shouldUseWhiteShader = true;
         }
@@ -81,7 +81,11 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
         gameInterface.NukeClones();
-        EnableAlembic();
+        if (!alembicEnabled)
+        {
+            EnableAlembic();
+            alembicEnabled = true;
+        }
         timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
     }
 
