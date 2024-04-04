@@ -55,7 +55,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.bubbleBath;
+    private readonly SimType simType = SimType.jacuzzi;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -143,7 +143,7 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     private void EnableAlembic()
     {
-        if (renderWater)
+        if (renderWater && simType != SimType.foamingSoap)
         {
             string abcName = simType.ToString();
             if (abcName == "defaultSim")
