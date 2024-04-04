@@ -150,7 +150,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 abcName = "defaultFoam";
             }
-            abcName += "1";
+            abcName += "2";
             GameObject abcInScene = FindGameObjectsAll(abcName);
             if (abcInScene == null)
             {
