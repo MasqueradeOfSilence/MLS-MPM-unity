@@ -62,7 +62,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     //void Start()
     IEnumerator Start()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         started = true;
         startTime = DateTime.Now;
         Init();

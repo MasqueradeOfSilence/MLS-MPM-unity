@@ -7,18 +7,19 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WhiteBubbleShader
-  m_Shader: {fileID: 4800000, guid: e757028437c4c46c29baddae8f28adad, type: 3}
+  m_Name: LightBlueTransparent
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
+  m_ValidKeywords:
   - _ALPHAPREMULTIPLY_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -60,40 +61,25 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints:
+    m_Ints: []
+    m_Floats:
     - _BumpScale: 1
-    - _Count: 857
-    - _Cutoff: 0
+    - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
-    - _GlossMapScale: 1
+    - _GlossMapScale: 0.308
     - _Glossiness: 1
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.604
     - _Mode: 3
     - _OcclusionStrength: 1
-    - _Parallax: 0
+    - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SphereRadii: 1
-    - _SphereRadius: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 0
-    m_Floats:
-    - _Glossiness: 1
-    - _Metallic: 0
     m_Colors:
-    - _Color: {r: 0.990566, g: 0.9204788, b: 0.9204788, a: 0}
-    - _DebugCyan: {r: 0, g: 1, b: 1, a: 1}
-    - _DebugPink: {r: 1, g: 0, b: 1, a: 1}
-    - _DebugWhite: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.6041097, g: 0.8512768, b: 0.93710685, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SphereCenter: {r: 39.95, g: 9.195999, b: -1.237, a: 1}
-    - _SphereCenters: {r: 1, g: 0, b: 0, a: 1}
-    - _TestColorBlue: {r: 0, g: 0, b: 1, a: 1}
-    - _TestColorGreen: {r: 0, g: 1, b: 0, a: 1}
-    - _TestColorRed: {r: 1, g: 0, b: 0, a: 1}
-    - _TestColorWhatever: {r: 0, g: 1, b: 1, a: 1}
-    - _White: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
