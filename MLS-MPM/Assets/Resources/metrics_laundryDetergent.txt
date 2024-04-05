@@ -1,3 +1,3 @@
 Computational Metrics for laundryDetergent: 
-Total time to run 8 updates: 43.7333 seconds
-Average time per update: 5.466662 seconds
+Total time to run 8 updates: 33.23818 seconds
+Average time per update: 4.154773 seconds
