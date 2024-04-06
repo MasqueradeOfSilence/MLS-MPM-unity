@@ -59,10 +59,10 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool started = false;
 
     // Start is called before the first frame update
-    //void Start()
-    IEnumerator Start()
+    void Start()
+    //IEnumerator Start()
     {
-        yield return new WaitForSeconds(3);
+        //yield return new WaitForSeconds(3);
         started = true;
         startTime = DateTime.Now;
         Init();
@@ -73,13 +73,13 @@ public class FFF_Optimized_3D : MonoBehaviour
             shouldUseFFFShader = false;
             shouldUseWhiteShader = true;
         }
-        bool allFluid = false;
+        bool allFoam = false;
         if (simType == SimType.foamingSoap)
         {
-            // should this boolean be called allFoam?
-            allFluid = true;
+            // allFoam = no fluid particles. Name needs to be changed inside of Game Interface.
+            allFoam = true;
         }
-        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid); 
+        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFoam); 
         gameInterface.NukeClones();
         if (!alembicEnabled)
         {
