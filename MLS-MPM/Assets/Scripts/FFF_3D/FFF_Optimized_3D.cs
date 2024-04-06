@@ -30,7 +30,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     private WaterSurfacer_3D waterSurfacer;
     int iteration = 0;
     private const string geoAttacher = "ExampleGeo";
-    // it is a subservient god, for it creates and destroys upon command
     private const string geoGod = "CreatorDestroyer";
     private int numUpdates = 1;
     private int howManyStepsToTest = 1; // usually set to 1
@@ -45,9 +44,10 @@ public class FFF_Optimized_3D : MonoBehaviour
     private float elapsedTime = 0f;
     private float updateTime = 0f;
     private DateTime startTime;
-    private int numUpdatesForMetrics = 8;
+    private int numUpdatesForMetrics = 16;
     private List<float> updateTimes = new();
-    string timestamp = "";
+    private string timestamp = "";
+    private bool exportToCSVForHoudini = true;
 
     public enum SimType
     {
@@ -55,7 +55,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.bubbleBath;
+    private readonly SimType simType = SimType.laundryDetergent;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -131,7 +131,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         gameInterface.UpdateParticles(particles, useFFF, useWhite);
         gameInterface.NukeClones();
-        if (numUpdates <= numUpdatesForMetrics)
+        if (numUpdates <= numUpdatesForMetrics && exportToCSVForHoudini && simType != SimType.foamingSoap)
         {
             ExportFluidParticleDataToCSVForAlembic(BuildListOfFluidParticlesOnly());
         }
@@ -150,7 +150,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 abcName = "defaultFoam";
             }
-            abcName += "2";
+            abcName += "3";
             GameObject abcInScene = FindGameObjectsAll(abcName);
             if (abcInScene == null)
             {
@@ -159,6 +159,18 @@ public class FFF_Optimized_3D : MonoBehaviour
             else
             {
                 abcInScene.SetActive(true);
+            }
+        }
+        else if (renderWater && simType == SimType.foamingSoap) 
+        {
+            GameObject bucket = FindGameObjectsAll("detergentbucket");
+            if (bucket == null)
+            {
+                UnityEngine.Debug.Log("Error: detergentBucket OBJ not found");
+            }
+            else
+            {
+                bucket.SetActive(true);
             }
         }
     }

@@ -1,3 +1,3 @@
 Computational Metrics for defaultSim: 
-Total time to run 8 updates: 32.99924 seconds
-Average time per update: 4.124906 seconds
+Total time to run 16 updates: 147.4506 seconds
+Average time per update: 9.21566 seconds
