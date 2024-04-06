@@ -31,10 +31,15 @@ public class GeometryCreator_3D : MonoBehaviour
         sphere.transform.position = new Vector3((float)location.x, (float)location.y, (float)location.z);
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material mat;
-        bool renderingVideos = false;
+        bool renderingVideos = true; // Turn this on to hide the blue particles
         if (isFoam || allFluid)
         {
             mat = Resources.Load(materialName, typeof(Material)) as Material;
+            if (renderingVideos)
+            {
+                sphere.GetComponent<MeshRenderer>().enabled = true;
+                sphere.GetComponent<Renderer>().enabled = true;
+            }
         }
         else
         {
@@ -47,14 +52,8 @@ public class GeometryCreator_3D : MonoBehaviour
                 sphere.GetComponent<Renderer>().enabled = false;
             }
         }
-        if (!renderingVideos)
-        {
-            sphere.GetComponent<MeshRenderer>().material = mat;
-            sphere.GetComponent<Renderer>().material = mat;
-            //sphere.GetComponent<Renderer>().sharedMaterial = mat;
-            //sphere.GetComponent<MeshRenderer>().sharedMaterial = mat;
-
-        }
+        sphere.GetComponent<MeshRenderer>().material = mat;
+        sphere.GetComponent<Renderer>().material = mat;
 
         sphere.name = "Sphere" + sphereID.ToString();
         sphereID++;

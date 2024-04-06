@@ -1,3 +1,3 @@
 Computational Metrics for bubbleBath: 
-Total time to run 8 updates: 36.62755 seconds
-Average time per update: 4.578444 seconds
+Total time to run 8 updates: 35.99501 seconds
+Average time per update: 4.499377 seconds
