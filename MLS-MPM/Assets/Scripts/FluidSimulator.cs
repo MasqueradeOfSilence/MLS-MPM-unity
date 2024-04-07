@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Mathematics;
+using System;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -23,6 +24,21 @@ public class FluidSimulator : MonoBehaviour
     private const double gravity = -0.3;
     private int neighborDimension = 3;
     private GameInterface gameInterface;
+
+    // CSV
+    private int numUpdatesForCSVExport = 32;
+    private bool exportToCSV = true;
+    private string timestamp = "";
+    private int numUpdates = 0;
+
+    private void ExportToCSV(int frame)
+    {
+        if (exportToCSV)
+        {
+            CSVExporter csvExporter = ScriptableObject.CreateInstance<CSVExporter>();
+            csvExporter.Export2DFluidOnlySimToCSV(FlattenParticles(), frame, timestamp, numUpdatesForCSVExport);
+        }
+    }
 
     public void InitializeFluidSimulator()
     {
@@ -341,6 +357,7 @@ public class FluidSimulator : MonoBehaviour
         print("Starting fluid simulator");
         InitializeFluidSimulator();
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
+        timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
     }
 
     // Update is called once per frame
@@ -353,6 +370,15 @@ public class FluidSimulator : MonoBehaviour
         }
         gameInterface.UpdateParticles(FlattenParticles());
         gameInterface.NukeClones();
+        numUpdates++;
+        if (numUpdates < numUpdatesForCSVExport && exportToCSV)
+        {
+            ExportToCSV(numUpdates);
+        }
+        if (numUpdates == numUpdatesForCSVExport && exportToCSV)
+        {
+            Debug.Log("Finished CSV write");
+        }
     }
 
     // Getters and Setters

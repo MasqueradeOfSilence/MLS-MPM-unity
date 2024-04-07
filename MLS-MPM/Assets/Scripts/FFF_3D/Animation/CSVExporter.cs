@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using static FFF_Optimized_3D;
 
 public class CSVExporter : ScriptableObject
 {
@@ -21,9 +22,23 @@ public class CSVExporter : ScriptableObject
         return part1 + simType + "_" + timestamp + "_" + numFrames + "_frames.csv";
     }
 
-    public void ExportParticleDataToCSV(Particle_3D[] fluidParticlesOnly, int frame, string timestamp, int numFrames, string simType="DEFAULT")
+    public void Export2DFluidOnlySimToCSV(Particle[] fluidParticlesOnly, int frame, string timestamp, int numFrames)
     {
-        //Debug.Log("Exporting to CSV");
+        string simType = "FLUID_ONLY";
+        StreamWriter sw = BuildStreamWriter(simType, timestamp, numFrames);
+        sw?.WriteLine("X,Y,Frame");
+
+        foreach (Particle p in fluidParticlesOnly)
+        {
+            double x = p.GetPosition().x;
+            double y = p.GetPosition().y;
+            sw?.WriteLine(x + "," + y + "," + frame);
+        }
+        sw?.Close();
+    }
+
+    private StreamWriter BuildStreamWriter(string simType, string timestamp, int numFrames)
+    {
         StreamWriter sw;
         string name = BuildName(simType, timestamp, numFrames);
         if (UsingWindows())
@@ -39,7 +54,13 @@ public class CSVExporter : ScriptableObject
             // Linux
             sw = new StreamWriter(@"~/Desktop/" + name, true);
         }
+        return sw;
+    }
 
+    public void ExportParticleDataToCSV(Particle_3D[] fluidParticlesOnly, int frame, string timestamp, int numFrames, string simType="DEFAULT")
+    {
+        //Debug.Log("Exporting to CSV");
+        StreamWriter sw = BuildStreamWriter(simType, timestamp, numFrames);
         sw?.WriteLine("X,Y,Z,Frame");
 
         foreach (Particle_3D p in fluidParticlesOnly)
