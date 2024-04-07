@@ -32,10 +32,11 @@ public class GeometryCreator_3D : MonoBehaviour
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
         Material mat;
         bool renderingVideos = true; // Turn this on to hide the blue particles
+        bool showBothParticlesAndAlembic = false; // not the best solution but I did not account for wanting to show both
         if (isFoam || allFluid)
         {
             mat = Resources.Load(materialName, typeof(Material)) as Material;
-            if (renderingVideos)
+            if (renderingVideos && !showBothParticlesAndAlembic)
             {
                 sphere.GetComponent<MeshRenderer>().enabled = true;
                 sphere.GetComponent<Renderer>().enabled = true;
@@ -45,7 +46,7 @@ public class GeometryCreator_3D : MonoBehaviour
         {
             // It's a fluid
             mat = Resources.Load(fluidMatForViewport, typeof(Material)) as Material;
-            if (renderingVideos)
+            if (renderingVideos && !showBothParticlesAndAlembic)
             {
                 // just choosing a random transparent one for now
                 sphere.GetComponent<MeshRenderer>().enabled = false;

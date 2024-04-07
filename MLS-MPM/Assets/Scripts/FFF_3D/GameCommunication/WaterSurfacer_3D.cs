@@ -31,6 +31,8 @@ public class WaterSurfacer_3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Not using this right now, so the start code is commented out for now. This solution is too primitive for proper 3D visualization.
+
         //plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         //plane.name = "WaterPlane";
         //planeMaterial = Resources.Load(waterMaterialName, typeof(Material)) as Material;

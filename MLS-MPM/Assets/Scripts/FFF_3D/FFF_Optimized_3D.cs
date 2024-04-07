@@ -55,7 +55,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.laundryDetergent;
+    private readonly SimType simType = SimType.defaultSim;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -158,6 +158,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             }
             else
             {
+                UnityEngine.Debug.Log("Enabling alembic: " + abcName + ".abc");
                 abcInScene.SetActive(true);
             }
         }
