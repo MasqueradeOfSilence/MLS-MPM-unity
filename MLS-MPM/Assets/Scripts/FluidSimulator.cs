@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 using System;
+using System.Collections.Generic;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -30,6 +31,11 @@ public class FluidSimulator : MonoBehaviour
     private bool exportToCSV = true;
     private string timestamp = "";
     private int numUpdates = 0;
+    // Computational Performance Metrics
+    private float elapsedTime = 0f;
+    private float updateTime = 0f;
+    private DateTime startTime;
+    private List<float> updateTimes = new();
 
     private void ExportToCSV(int frame)
     {
