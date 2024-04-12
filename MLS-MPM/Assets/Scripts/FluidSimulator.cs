@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /**
  * Fluid Simulator: Simulate a basic liquid. 
@@ -357,9 +358,40 @@ public class FluidSimulator : MonoBehaviour
         return toReturn;
     }
 
+    private float GetNow()
+    {
+        return (float)(DateTime.Now - startTime).TotalSeconds;
+    }
+
+    private void CalculateTimeMetrics()
+    {
+        if (numUpdates <= numUpdatesForCSVExport)
+        {
+            updateTime = GetNow();
+            elapsedTime += updateTime;
+            updateTimes.Add(updateTime);
+        }
+        if (numUpdates == numUpdatesForCSVExport)
+        {
+            float total = 0f;
+            Debug.Log("Count: " + updateTimes.Count);
+            Debug.Assert(numUpdatesForCSVExport == updateTimes.Count);
+            for (int i = 0; i < numUpdatesForCSVExport; i++)
+            {
+                total += updateTimes.ElementAt(i);
+            }
+            float averageUpdateTime = total / numUpdatesForCSVExport;
+            string totalTimeInfo = "Total time to run " + numUpdatesForCSVExport + " updates: " + elapsedTime + " seconds";
+            string averageTimeInfo = "Average time per update: " + averageUpdateTime + " seconds";
+            Debug.Log(totalTimeInfo);
+            Debug.Log(averageTimeInfo);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        startTime = DateTime.Now;
         print("Starting fluid simulator");
         InitializeFluidSimulator();
         gameInterface.DumpParticlesIntoScene(FlattenParticles());
@@ -369,6 +401,7 @@ public class FluidSimulator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CalculateTimeMetrics();
         // Each frame, run x simulations, then update the position of each particle
         for (int i = 0; i < numSimulationsPerUpdate; i++)
         {
