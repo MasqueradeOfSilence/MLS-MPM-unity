@@ -28,7 +28,7 @@ public class FluidSimulator : MonoBehaviour
     private GameInterface gameInterface;
 
     // CSV
-    private int numUpdatesForCSVExport = 32;
+    private int numUpdatesForCSVExport = 128;
     private bool exportToCSV = true;
     private string timestamp = "";
     private int numUpdates = 0;
