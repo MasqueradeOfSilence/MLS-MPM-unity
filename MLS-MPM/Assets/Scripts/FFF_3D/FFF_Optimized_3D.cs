@@ -44,7 +44,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private float elapsedTime = 0f;
     private float updateTime = 0f;
     private DateTime startTime;
-    private int numUpdatesForMetrics = 16;
+    private int numUpdatesForMetrics = 240;
     private List<float> updateTimes = new();
     private string timestamp = "";
     private bool exportToCSVForHoudini = true;
@@ -150,7 +150,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 abcName = "defaultFoam";
             }
-            abcName += "3";
+            abcName += "4";
             GameObject abcInScene = FindGameObjectsAll(abcName);
             if (abcInScene == null)
             {

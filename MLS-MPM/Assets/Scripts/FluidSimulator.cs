@@ -27,8 +27,8 @@ public class FluidSimulator : MonoBehaviour
     private int neighborDimension = 3;
     private GameInterface gameInterface;
 
-    // CSV
-    private int numUpdatesForCSVExport = 128;
+    // CSV -- more than 256 is too slow, and Houdini only exports 240 anyway
+    private int numUpdatesForCSVExport = 240;
     private bool exportToCSV = true;
     private string timestamp = "";
     private int numUpdates = 0;
