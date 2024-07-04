@@ -62,7 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints:
     - _BumpScale: 1
-    - _Count: 833
+    - _Count: 1094
     - _Cutoff: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
@@ -81,14 +81,18 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Floats:
+    - _FilmIor: 1.33
+    - _FilmThickness: 0.1
     - _Glossiness: 1
     - _Metallic: 0
+    - _WhitenessIntensity: 2
     m_Colors:
     - _Color: {r: 0.990566, g: 0.9204788, b: 0.9204788, a: 0}
     - _DebugCyan: {r: 0, g: 1, b: 1, a: 1}
     - _DebugPink: {r: 1, g: 0, b: 1, a: 1}
     - _DebugWhite: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FilmColor: {r: 1, g: 1, b: 1, a: 1}
     - _SphereCenter: {r: 39.95, g: 9.195999, b: -1.237, a: 1}
     - _SphereCenters: {r: 1, g: 0, b: 0, a: 1}
     - _TestColorBlue: {r: 0, g: 0, b: 1, a: 1}
