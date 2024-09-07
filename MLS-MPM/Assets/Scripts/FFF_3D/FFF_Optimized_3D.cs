@@ -346,10 +346,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3 distanceFromParticleToCell = MathUtils_3D.ComputeDistanceFromParticleToCell(particlePosition, cellPosition);
             List<double3> weights = MathUtils_3D.ComputeAllWeights(distanceFromParticleToCell);
             double3x3 C = p.GetC();
-            //int nx = 0;
-            //int ny = 0;
-            //int nz = 0;
-            //P2G1NeighborAlgorithm(nx, ny, nz, p, weights, C, particlePosition, cellPosition); // We can eliminate the triple-for here if desired
             for (int nx = 0; nx < neighborDimension; nx++)
             {
                 for (int ny = 0; ny < neighborDimension; ny++)
