@@ -12,7 +12,7 @@ public class FoamPhysicsEngine : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Log("Starting foam physics engine!");
     }
 
     // Update is called once per frame
