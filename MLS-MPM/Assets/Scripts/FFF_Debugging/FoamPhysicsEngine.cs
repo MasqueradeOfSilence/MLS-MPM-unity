@@ -13,11 +13,17 @@ public class FoamPhysicsEngine : MonoBehaviour
     void Start()
     {
         Debug.Log("Starting foam physics engine!");
+        InitializeFluid();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void InitializeFluid()
+    {
+
     }
 }
