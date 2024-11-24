@@ -24,6 +24,14 @@ public class FoamPhysicsEngine : MonoBehaviour
 
     public void InitializeFluid()
     {
+        InitializeGrid();
+        InitializeParticles();
+    }
+
+    public void InitializeGrid()
+    {
 
     }
+
+    public void InitializeParticles();
 }
