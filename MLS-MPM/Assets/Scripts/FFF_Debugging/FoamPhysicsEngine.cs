@@ -11,6 +11,8 @@ using UnityEngine;
  *  Reference along with nialltl: https://github.com/MasqueradeOfSilence/MLS-MPM-unity/blob/main/MLS-MPM/Assets/Scripts/FFF_3D/FFF_Optimized_3D.cs
  *  
  *  Parallelized reference for speedup: https://github.com/nialltl/incremental_mpm/blob/master/Assets/3.%20MLS_MPM_Fluid_Multithreaded/MLS_MPM_Fluid_Multithreaded.cs
+ *  
+ *  First objective: It was working fine in 2D. Is it the 3D that causes the divergence?
  */
 
 public class FoamPhysicsEngine : MonoBehaviour
