@@ -4,5 +4,9 @@ using UnityEngine;
 
 public class Grid_Debug
 {
-    private int resolution = 16;
+    private const int defaultResolution = 16;
+    public Grid_Debug(int resolution = defaultResolution)
+    {
+
+    }
 }
