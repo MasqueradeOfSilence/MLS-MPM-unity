@@ -15,6 +15,6 @@ public class Particle_Debug
         this.position = position;
         this.velocity = velocity;
         this.mass = mass;
-        this.C_affineMomentumMatrix = c;
+        C_affineMomentumMatrix = c;
     }
 }
