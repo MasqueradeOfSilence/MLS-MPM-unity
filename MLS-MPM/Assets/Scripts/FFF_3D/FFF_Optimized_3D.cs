@@ -37,7 +37,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
-    private bool renderWater = true;
+    private bool renderWater = false;
     private bool alembicEnabled = false;
 
     // Computational Performance Metrics
@@ -47,7 +47,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private int numUpdatesForMetrics = 240;
     private List<float> updateTimes = new();
     private string timestamp = "";
-    private bool exportToCSVForHoudini = true;
+    private bool exportToCSVForHoudini = false;
 
     public enum SimType
     {
@@ -260,13 +260,13 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (iteration == 1)
         {
             UnityEngine.Debug.Log("Foam simulator beginning!");
-            DetermineBubbleSizes();
+            //DetermineBubbleSizes();
         }
         if (waterSurfacer != null && simType != SimType.foamingSoap)
         {
             //waterSurfacer.InitializeFluidSurface(particles, resolution);
         }
-        ComputeVoronoi();
+        //ComputeVoronoi();
         iteration++;
     }
 
