@@ -79,6 +79,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             // allFoam = no fluid particles. Name needs to be changed inside of Game Interface.
             allFoam = true;
         }
+        // TODO start here -- we need to build a default mode to render opaque particles that are slightly larger
         gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFoam); 
         gameInterface.NukeClones();
         if (!alembicEnabled)
