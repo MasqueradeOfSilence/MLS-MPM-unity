@@ -68,6 +68,8 @@ public class FFF_Optimized_3D : MonoBehaviour
         Init();
         bool shouldUseFFFShader = true;
         bool shouldUseWhiteShader = false;
+        // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
+        bool shouldUseParticleOnlyShader = false;
         if (simType == SimType.jacuzzi || simType == SimType.foamingSoap || simType == SimType.laundryDetergent || simType == SimType.bubbleBath)
         {
             shouldUseFFFShader = false;
