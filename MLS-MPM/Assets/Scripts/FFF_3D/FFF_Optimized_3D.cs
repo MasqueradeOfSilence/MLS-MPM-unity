@@ -48,6 +48,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     private List<float> updateTimes = new();
     private string timestamp = "";
     private bool exportToCSVForHoudini = false;
+    // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
+    bool shouldUseParticleOnlyShader = true;
 
     public enum SimType
     {
@@ -68,8 +70,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         Init();
         bool shouldUseFFFShader = true;
         bool shouldUseWhiteShader = false;
-        // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
-        bool shouldUseParticleOnlyShader = false;
         if (simType == SimType.jacuzzi || simType == SimType.foamingSoap || simType == SimType.laundryDetergent || simType == SimType.bubbleBath)
         {
             shouldUseFFFShader = false;
@@ -82,7 +82,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             allFoam = true;
         }
         // TODO start here -- we need to build a default mode to render opaque particles that are slightly larger
-        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFoam); 
+        gameInterface.DumpParticlesIntoScene(particles, shouldUseFFFShader, shouldUseWhiteShader, allFoam, shouldUseParticleOnlyShader); 
         gameInterface.NukeClones();
         if (!alembicEnabled)
         {
@@ -132,7 +132,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             useFFF = false;
             useWhite = true;
         }
-        gameInterface.UpdateParticles(particles, useFFF, useWhite);
+        gameInterface.UpdateParticles(particles, useFFF, useWhite, shouldUseParticleOnlyShader);
         gameInterface.NukeClones();
         if (numUpdates <= numUpdatesForMetrics && exportToCSVForHoudini && simType != SimType.foamingSoap)
         {

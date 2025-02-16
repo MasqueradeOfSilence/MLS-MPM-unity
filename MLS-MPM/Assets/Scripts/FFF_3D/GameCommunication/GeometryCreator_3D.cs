@@ -16,7 +16,7 @@ public class GeometryCreator_3D : MonoBehaviour
 
     private static GameObject ConstructSphereFromParticle(Particle_3D p, string shaderName = defaultClearMaterial, bool allFluid = false)
     {
-        if (p.HasBubble())
+        if (p.HasBubble() && shaderName != "ParticleVis")
         {
             float radius = p.GetBubble().ComputeUnitySphereRadius();
             return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), radius, shaderName, allFluid);
@@ -61,13 +61,23 @@ public class GeometryCreator_3D : MonoBehaviour
         return sphere;
     }
 
-    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false)
+    public static GameObject[] SpawnFinalParticleSpheres(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false, bool shouldUseParticleShader = false)
     {
         GameObject[] finalParticleSpheres = new GameObject[particles.Length];
         for (int i = 0; i < particles.Length; i++) 
         {
             Particle_3D p = particles[i];
-            if (shouldUseFFFShader)
+            if (shouldUseParticleShader)
+            {
+                Debug.Log("Using particle vis shader");
+                GameObject particleSphere = ConstructSphereFromParticle(p, "ParticleVis");
+                finalParticleSpheres[i] = particleSphere;
+                if (particleSphere != null)
+                {
+                    finalParticleSpheres[i] = particleSphere;
+                }
+            }
+            else if (shouldUseFFFShader)
             {
                 GameObject particleSphere = ConstructSphereFromParticle(p, "FFFBubbles");
                 finalParticleSpheres[i] = particleSphere;

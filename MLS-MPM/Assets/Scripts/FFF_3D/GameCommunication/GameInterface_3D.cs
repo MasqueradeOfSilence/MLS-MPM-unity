@@ -11,6 +11,7 @@ public class GameInterface_3D : MonoBehaviour
     private const string voronoiMaterial = "FFFBubbles";
     // TODO: if FFF and White should not be true at the same time, we need to explicitly enforce that
     private const string whiteFoamMaterial = "WhiteBubbleShader";
+    private const string defaultParticleMaterialName = "ParticleVis";
 
     public void NukeClones()
     {
@@ -37,14 +38,14 @@ public class GameInterface_3D : MonoBehaviour
         }
     }
 
-    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false)
+    public void DumpParticlesIntoScene(Particle_3D[] particles, bool shouldUseFFFShader = false, bool shouldUseWhiteShader = false, bool allFluid = false, bool shouldUseParticleShader = false)
     {
-        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid);
+        GameObject[] particleSpheres = GeometryCreator_3D.SpawnFinalParticleSpheres(particles, shouldUseFFFShader, shouldUseWhiteShader, allFluid, shouldUseParticleShader);
         particleSphereList = particleSpheres;
         AddAllParticles();
     }
 
-    public void UpdateParticles(Particle_3D[] particles, bool fffMaterial = false, bool whiteMaterial = false)
+    public void UpdateParticles(Particle_3D[] particles, bool fffMaterial = false, bool whiteMaterial = false, bool defaultParticleMaterial = false)
     {
         if (particles.Length != particleSphereList.Length)
         {
@@ -94,6 +95,10 @@ public class GameInterface_3D : MonoBehaviour
                     if (whiteMaterial)
                     {
                         mat = Resources.Load(whiteFoamMaterial, typeof(Material)) as Material;
+                    }
+                    if (defaultParticleMaterial)
+                    {
+                        mat = Resources.Load(defaultParticleMaterialName, typeof(Material)) as Material;
                     }
 
                     //currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
