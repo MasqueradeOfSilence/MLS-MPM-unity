@@ -14,6 +14,13 @@ using System.Diagnostics;
  * Goal: Fully optimize FFF for 3D so it doesn't freeze Unity.
  */
 
+/**
+ * Debug notes
+ * - The error is almost certainly coming from the Herschel-Bulkley constitutive equation. 
+ * - I am still not 100% sure that we are using the proper values there. 
+ * - It is imperative to revisit them. 
+ */
+
 public class FFF_Optimized_3D : MonoBehaviour
 {
     /**
