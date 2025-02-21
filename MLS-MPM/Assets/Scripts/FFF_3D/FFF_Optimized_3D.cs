@@ -417,7 +417,8 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3x3 strain = p.GetC();
             double trace = MathUtils_3D.ComputeTrace(strain);
             strain.c0.z = strain.c1.y = strain.c2.x = trace;
-            // Herschel-Bulkley
+            // Herschel-Bulkley: TODO validate these variables as actually correct
+            // TODO double check the formula -- this is causing some instability
             double yieldStress_T0 = 0.319;
             double viscosity_mu = 2.72;
             double flowIndex_n = 0.22;
