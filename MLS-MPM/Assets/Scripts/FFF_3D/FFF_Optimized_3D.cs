@@ -565,8 +565,12 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
-        const double wallMin = 3;
+        // I experimented with changing this from 3->4
+        const double wallMin = 4;
         double wallMax = resolution - 4;
+        // they are supposed to swirl around the bottom but they are leaking out of the lower RH corner
+        // actually, I think they are swirling, but it leaves a lot of open space to the left, potentially giving the illusion of leaking 
+        // when considering varying radii (?)
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
