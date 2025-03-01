@@ -565,12 +565,14 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
-        // I experimented with changing this from 3->4
+        // I experimented with changing this (wallMin) from 3->4
         const double wallMin = 4;
         double wallMax = resolution - 4;
         // they are supposed to swirl around the bottom but they are leaking out of the lower RH corner
         // actually, I think they are swirling, but it leaves a lot of open space to the left, potentially giving the illusion of leaking 
         // when considering varying radii (?)
+        // the original MLS-MPM implementation from nialltl had that swirling pattern too
+        // I think the H-B equation slowed down the fluid, and then potentially pockets of air are getting trapped at the bottom?
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
