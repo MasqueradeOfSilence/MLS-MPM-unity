@@ -162,6 +162,20 @@ public class MathUtils_3D
         return toReturn;
     }
 
+    public static double3x3 ComputeNewtonianStress(double pressure)
+    {
+        // from constitutive model switchup section in nialltl's guide
+        // but adapted to 3D
+        // TODO need to remember how pressure is computed
+        double3x3 stress = new double3x3(
+            -pressure, 0, 0,
+            0, -pressure, 0,
+            0, 0, -pressure
+        );
+
+        return new double3x3();
+    }
+
     public static double3x3 ComputeEquation16Term0(double3x3 stress, double volume, double dt)
     {
         double3x3 term0 = -volume * 4 * stress * dt;
