@@ -167,6 +167,7 @@ public class MathUtils_3D
         // from constitutive model switchup section in nialltl's guide
         // but adapted to 3D
         // TODO need to remember how pressure is computed
+        // I think it still may be the Tait equation
         double3x3 stress = new double3x3(
             -pressure, 0, 0,
             0, -pressure, 0,
