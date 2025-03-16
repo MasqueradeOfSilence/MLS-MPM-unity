@@ -162,8 +162,9 @@ public class MathUtils_3D
         return toReturn;
     }
 
-    public static double3x3 ComputeNewtonianStress(double pressure)
+    public static double3x3 ComputeNewtonianStress(double eosStiffness, double density, double restDensity, double eosPower)
     {
+        double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         // from constitutive model switchup section in nialltl's guide
         // but adapted to 3D
         // TODO need to remember how pressure is computed

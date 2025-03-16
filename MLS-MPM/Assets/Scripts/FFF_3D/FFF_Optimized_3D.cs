@@ -455,6 +455,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
+            double3x3 newtonianStress = MathUtils_3D.ComputeNewtonianStress(eosStiffness, density, restDensity, eosPower);
             double3x3 equation16Term0 = MathUtils_3D.ComputeEquation16Term0(herschelBulkleyStress, volume, timestep);
             for (int nx = 0; nx < neighborDimension; nx++)
             {
