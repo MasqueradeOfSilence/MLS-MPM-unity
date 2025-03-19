@@ -162,7 +162,7 @@ public class MathUtils_3D
         return toReturn;
     }
 
-    public static double3x3 ComputeNewtonianStress(double eosStiffness, double density, double restDensity, double eosPower)
+    public static double3x3 ComputeNewtonianStress(double eosStiffness, double density, double restDensity, double eosPower, double3x3 strain)
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         // from constitutive model switchup section in nialltl's guide
@@ -174,8 +174,10 @@ public class MathUtils_3D
             0, -pressure, 0,
             0, 0, -pressure
         );
-
-        return new double3x3();
+        double dynamic_viscosity = 0.1;
+        double3x3 viscosityTerm = dynamic_viscosity * strain;
+        stress += viscosityTerm;
+        return stress;
     }
 
     public static double3x3 ComputeEquation16Term0(double3x3 stress, double volume, double dt)
