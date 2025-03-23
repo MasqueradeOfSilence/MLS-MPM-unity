@@ -169,7 +169,7 @@ public class MathUtils_3D
         // but adapted to 3D
         // TODO need to remember how pressure is computed
         // I think it still may be the Tait equation
-        double3x3 stress = new double3x3(
+        double3x3 stress = new(
             -pressure, 0, 0,
             0, -pressure, 0,
             0, 0, -pressure

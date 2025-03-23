@@ -64,7 +64,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     }
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.laundryDetergent;
+    private readonly SimType simType = SimType.defaultSim;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -762,7 +762,13 @@ public class FFF_Optimized_3D : MonoBehaviour
             bool shouldCreateFluidParticle = (y < fluidLevel);
             double3 initialVelocity = new(0);
             double3x3 initialC = new(0);
-            if (shouldCreateFluidParticle)
+            if (shouldUseParticleOnlyShader)
+            {
+                // TODO might want to rename that boolean. Basically full default no Voronoi just Newtonian
+                Particle_3D p = GeometryCreator_3D.CreateNewParticle(tempParticlePositions[i], initialVelocity, 1, initialC);
+                particles[i] = p;
+            }
+            else if (shouldCreateFluidParticle)
             {
                 FluidParticle_3D p = GeometryCreator_3D.CreateNewFluidParticle(tempParticlePositions[i], initialVelocity, initialC);
                 particles[i] = p;
