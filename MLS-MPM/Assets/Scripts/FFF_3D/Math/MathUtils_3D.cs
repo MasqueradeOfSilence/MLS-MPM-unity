@@ -175,6 +175,7 @@ public class MathUtils_3D
             0, 0, -pressure
         );
         double dynamic_viscosity = 0.1;
+        // could the issue be that some sort of offset is still happening on the outside even though we don't have it in here?
         double3x3 viscosityTerm = dynamic_viscosity * strain;
         stress += viscosityTerm;
         return stress;
