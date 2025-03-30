@@ -262,6 +262,7 @@ public class FFF_Optimized_3D : MonoBehaviour
      */
     public void Simulate()
     {
+        UnityEngine.Debug.Log("Simulating...");
         ClearGrid();
         ParticleToGridStep1();
         ParticleToGridStep2();
@@ -452,6 +453,8 @@ public class FFF_Optimized_3D : MonoBehaviour
                     }
                 }
             }
+
+            // TODO is this strain modification necessary if using Newtonian
             
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);

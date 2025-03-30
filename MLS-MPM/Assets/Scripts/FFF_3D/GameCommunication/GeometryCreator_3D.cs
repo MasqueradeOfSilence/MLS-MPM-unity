@@ -38,7 +38,13 @@ public class GeometryCreator_3D : MonoBehaviour
         Material mat;
         bool renderingVideos = true; // Turn this on to hide the blue particles
         bool showBothParticlesAndAlembic = false; // not the best solution but I did not account for wanting to show both
-        if (isFoam || allFluid)
+        if (materialName == "ParticleVis")
+        {
+            mat = Resources.Load(materialName, typeof(Material)) as Material;
+            sphere.GetComponent<MeshRenderer>().enabled = true;
+            sphere.GetComponent<Renderer>().enabled = true;
+        }
+        else if (isFoam || allFluid)
         {
             mat = Resources.Load(materialName, typeof(Material)) as Material;
             if (renderingVideos && !showBothParticlesAndAlembic)
