@@ -19,6 +19,8 @@ using System.Diagnostics;
  * - The error is almost certainly coming from the Herschel-Bulkley constitutive equation. 
  * - I am still not 100% sure that we are using the proper values there. 
  * - It is imperative to revisit them. 
+ * 
+ * - After reverting to Newtonian, it is not splashing properly. 
  */
 
 public class FFF_Optimized_3D : MonoBehaviour
