@@ -680,7 +680,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             int z = i % resolution;
             Particle_3D p = particles[i];
             bool skipBubble = false;
-            if ((x % 2 == 0 || y % 2 == 0 || z % 2 == 0) && MathUtils_3D.IsAir(p))
+            if (x != 0 && y != 0 && (x % 2 == 0 || y % 2 == 0 || z % 2 == 0) && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
                 if (simType == SimType.foamingSoap && new System.Random().NextDouble() > 0.5)
