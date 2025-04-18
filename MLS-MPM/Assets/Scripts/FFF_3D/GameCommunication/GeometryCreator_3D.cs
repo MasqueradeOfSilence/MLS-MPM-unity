@@ -23,7 +23,7 @@ public class GeometryCreator_3D : MonoBehaviour
         }
         if (shaderName == "ParticleVis")
         {
-            float radius = 1;
+            float radius = 0.1f;
             return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), radius, materialName: shaderName, allFluid: allFluid);
         }
         return SpawnParticleSphere3D(p.GetPosition(), p.GetMass(), materialName: shaderName, allFluid: allFluid);
