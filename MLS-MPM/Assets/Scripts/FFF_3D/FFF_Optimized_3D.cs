@@ -16,11 +16,9 @@ using System.Diagnostics;
 
 /**
  * Debug notes
- * - The error is almost certainly coming from the Herschel-Bulkley constitutive equation. 
- * - I am still not 100% sure that we are using the proper values there. 
- * - It is imperative to revisit them. 
- * 
- * - After reverting to Newtonian, it is not splashing properly. 
+ * - I think we are trying to rely on masses alone to separate fluid particles from gas bubbles. 
+ * - I don't think this is actually correct. 
+ * - They're probably trying to mix, but since we don't see the fluid particles, it looks like there are these air pockets. 
  */
 
 public class FFF_Optimized_3D : MonoBehaviour
@@ -48,6 +46,18 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool haveSimmedOnce = false; // No touchy
     private bool renderWater = false;
     private bool alembicEnabled = false;
+    // Use this boolean to flip between Newtonian and Herschel-Bulkley models. 
+    /*
+     * Newtonian -> HB in FFF_Optimized_3D.cs:
+     * - Gravity: -0.3 -> 9.8
+     * - shouldUseParticleOnlyShader: true -> false
+     * - uncomment DetermineBubbleSizes()
+     * - uncomment mapping logic
+     * - comment out the eos variable changes
+     * - newtonianStress vs. herschelBulkleyStress
+     * 
+     */
+    private bool useHerschelBulkley = true;
 
     // Computational Performance Metrics
     private float elapsedTime = 0f;
@@ -455,8 +465,6 @@ public class FFF_Optimized_3D : MonoBehaviour
                             }
                         }*/
             double extraOffset = 0;
-
-            // TODO is this strain modification necessary if using Newtonian
             
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
