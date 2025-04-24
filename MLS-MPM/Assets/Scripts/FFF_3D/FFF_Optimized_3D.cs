@@ -31,7 +31,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private readonly int resolution = 16; // Was 64 for 2D
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int)(1 / timestep);
-    private const double gravity = -0.3;
+    private double gravity = -0.3;
     private int neighborDimension = 3;
     private GameInterface_3D gameInterface;
     private WaterSurfacer_3D waterSurfacer;
@@ -49,10 +49,10 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Use this boolean to flip between Newtonian and Herschel-Bulkley models. 
     /*
      * Newtonian -> HB in FFF_Optimized_3D.cs:
-     * - Gravity: -0.3 -> 9.8
-     * - shouldUseParticleOnlyShader: true -> false
-     * - uncomment DetermineBubbleSizes()
-     * - uncomment mapping logic
+     * - Gravity: -0.3 -> 9.8 [check]
+     * - shouldUseParticleOnlyShader: true -> false [check]
+     * - uncomment DetermineBubbleSizes() [check]
+     * - uncomment mapping logic / if-guard it [check]
      * - comment out the eos variable changes
      * - newtonianStress vs. herschelBulkleyStress
      * 
@@ -83,6 +83,11 @@ public class FFF_Optimized_3D : MonoBehaviour
     void Start()
     //IEnumerator Start()
     {
+        if (useHerschelBulkley)
+        {
+            gravity = -9.8;
+            shouldUseParticleOnlyShader = false;
+        }
         //yield return new WaitForSeconds(3);
         started = true;
         startTime = DateTime.Now;
@@ -282,7 +287,10 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (iteration == 1)
         {
             UnityEngine.Debug.Log("Foam simulator beginning!");
-            //DetermineBubbleSizes();
+            if (useHerschelBulkley)
+            {
+                DetermineBubbleSizes();
+            }
         }
         if (waterSurfacer != null && simType != SimType.foamingSoap)
         {
@@ -438,33 +446,35 @@ public class FFF_Optimized_3D : MonoBehaviour
             double restDensity = 3.108;
             int eosPower = 2;
             double smallestValue = double.MaxValue;
-            // Mapping
-            /*            for (int l = 0; l < 3; l++)
-                        {
-                            for (int m = 0; m < 3; m++)
-                            {
-                                double currentValue = strain[l][m];
-                                if (currentValue < smallestValue)
-                                {
-                                    smallestValue = currentValue;
-                                }
-                            }
-                        }
-                        double extraOffset = 0;
-                        if (smallestValue < 0)
-                        {
-                            extraOffset = 0.001;
-                            smallestValue = math.abs(smallestValue);
-                            extraOffset += smallestValue;
-                            for (int row = 0; row < 3; row++)
-                            {
-                                for (int col = 0; col < 3; col++)
-                                {
-                                    strain[row][col] += extraOffset;
-                                }
-                            }
-                        }*/
             double extraOffset = 0;
+            if (useHerschelBulkley)
+            {
+                // Mapping
+                for (int l = 0; l < 3; l++)
+                {
+                    for (int m = 0; m < 3; m++)
+                    {
+                        double currentValue = strain[l][m];
+                        if (currentValue < smallestValue)
+                        {
+                            smallestValue = currentValue;
+                        }
+                    }
+                }
+                if (smallestValue < 0)
+                {
+                    extraOffset = 0.001;
+                    smallestValue = math.abs(smallestValue);
+                    extraOffset += smallestValue;
+                    for (int row = 0; row < 3; row++)
+                    {
+                        for (int col = 0; col < 3; col++)
+                        {
+                            strain[row][col] += extraOffset;
+                        }
+                    }
+                }
+            }
             
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
                         strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
