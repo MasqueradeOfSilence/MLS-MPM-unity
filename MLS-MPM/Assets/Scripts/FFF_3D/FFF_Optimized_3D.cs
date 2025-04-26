@@ -296,7 +296,10 @@ public class FFF_Optimized_3D : MonoBehaviour
         {
             //waterSurfacer.InitializeFluidSurface(particles, resolution);
         }
-        //ComputeVoronoi();
+        if (useHerschelBulkley)
+        {
+            ComputeVoronoi();
+        }
         iteration++;
     }
 
