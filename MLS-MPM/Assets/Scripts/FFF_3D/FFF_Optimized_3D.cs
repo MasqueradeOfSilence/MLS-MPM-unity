@@ -797,7 +797,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             bool shouldCreateFluidParticle = (y < fluidLevel);
             double3 initialVelocity = new(0);
             double3x3 initialC = new(0);
-            if (shouldUseParticleOnlyShader)
+            if (shouldUseParticleOnlyShader && !useHerschelBulkley)
             {
                 // TODO might want to rename that boolean. Basically full default no Voronoi just Newtonian
                 Particle_3D p = GeometryCreator_3D.CreateNewParticle(tempParticlePositions[i], initialVelocity, 1, initialC);
