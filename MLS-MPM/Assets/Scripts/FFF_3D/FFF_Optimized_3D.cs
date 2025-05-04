@@ -69,6 +69,10 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool exportToCSVForHoudini = false;
     // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
     bool shouldUseParticleOnlyShader = true;
+    // Boolean for showing all particles, even ones that were determined as fluid
+    // consider: also not skipping any bubbles with this boolean flag - ?
+    // for now, because won't that implicitly cause blank spaces?
+    bool showAllParticles = true;
 
     public enum SimType
     {
@@ -654,7 +658,8 @@ public class FFF_Optimized_3D : MonoBehaviour
         StreamWriter sw = null;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            sw = File.CreateText(@"c:\Users\alexc\School_Repos\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions_3D.csv");
+            // Old directory prefix: c:\Users\alexc\School_Repos
+            sw = File.CreateText(@"D:\Coding\Graphics\MLS-MPM-unity\MLS-MPM\Assets\Resources\volumeFractions_3D.csv");
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
