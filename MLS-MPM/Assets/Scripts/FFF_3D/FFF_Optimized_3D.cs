@@ -735,7 +735,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 skipBubble = true;
             }
-            if (skipBubble || (y < fluidLevel && simType == SimType.foamingSoap) && !showAllParticles)
+            if ((skipBubble || (y < fluidLevel && simType == SimType.foamingSoap)) && !showAllParticles)
             {
                 // skipping is correct
                 p.SetBubble(-200, true);
