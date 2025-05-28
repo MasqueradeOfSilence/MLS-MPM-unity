@@ -710,7 +710,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (showAllParticles)
         {
-            skipProbability = 0;
+            //skipProbability = 0;
             fluidLevel = 0;
         }
         for (int i = 0; i < particles.Length; i++)
@@ -731,11 +731,11 @@ public class FFF_Optimized_3D : MonoBehaviour
             System.Random random = new();
             double randomValue = random.NextDouble();
             // Closer skipProbability is to 1 = more bubbles skipped
-            if (randomValue < skipProbability && !showAllParticles)// && MathUtils_3D.IsAir(p))
+            if (randomValue < skipProbability)// && MathUtils_3D.IsAir(p))
             {
                 skipBubble = true;
             }
-            if ((skipBubble || (y < fluidLevel && simType == SimType.foamingSoap)) && !showAllParticles)
+            if ((skipBubble || (y < fluidLevel && simType == SimType.foamingSoap)))
             {
                 // skipping is correct
                 p.SetBubble(-200, true);
