@@ -682,13 +682,13 @@ public class FFF_Optimized_3D : MonoBehaviour
             case SimType.defaultSim:
                 fluidLevel = 3;
                 initialSizingFactor = 1f;
-                skipProbability = 0.7;
+                skipProbability = 0.4;
                 break;
             case SimType.jacuzzi:
                 // Bubbles up top, water down below
                 fluidLevel = 6;
                 initialSizingFactor = 0.3f;
-                skipProbability = 0.3;
+                skipProbability = 0.3; // as a test, changed from 0.7
                 break;
             case SimType.foamingSoap:
                 fluidLevel = 3;
