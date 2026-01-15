@@ -148,6 +148,12 @@ public class MathUtils_3D
         return stressMatrix;
     }
 
+    public static double3x3 ComputeNonNewtonianHBStress()
+    {
+        // TODO implement
+        return new double3x3();
+    }
+
     public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
         double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower, double offset = 0)
     {

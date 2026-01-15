@@ -446,6 +446,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             strain.c0.z = strain.c1.y = strain.c2.x = trace;
             // Herschel-Bulkley: TODO validate these variables as actually correct
             // TODO double check the formula -- this is causing some instability
+            // check the hardcoded values, but also the core issue appears to be with the computation
             double yieldStress_T0 = 0.319;
             double viscosity_mu = 2.72;
             double flowIndex_n = 0.22;
