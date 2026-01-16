@@ -148,8 +148,15 @@ public class MathUtils_3D
         return stressMatrix;
     }
 
-    public static double3x3 ComputeNonNewtonianHBStress()
+    public static double3x3 ComputeNonNewtonianHBStress(double eosStiffness, double density, double restDensity, double eosPower, double3x3 strain)
     {
+        double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
+        double3x3 stress = new(
+            -pressure, 0, 0,
+            0, -pressure, 0,
+            0, 0, -pressure
+        );
+        // next variable is dynamic_viscosity which WILL have HB
         // TODO implement
         return new double3x3();
     }
