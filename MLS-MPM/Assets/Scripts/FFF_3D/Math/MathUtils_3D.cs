@@ -158,7 +158,10 @@ public class MathUtils_3D
         );
         // next variable is dynamic_viscosity which WILL have HB
         // TODO implement
-        return new double3x3();
+        // dynamic_viscosity = HB
+        //        double3x3 viscosityTerm = dynamic_viscosity * strain;
+        // stress += viscosityTerm;
+        return stress;
     }
 
     public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
