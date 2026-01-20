@@ -158,8 +158,8 @@ public class MathUtils_3D
         );
         // next variable is dynamic_viscosity which WILL have HB
         // TODO implement
-        // dynamic_viscosity = HB
-        //        double3x3 viscosityTerm = dynamic_viscosity * strain;
+        // dynamic_viscosity = HB formula calculation
+        // double3x3 viscosityTerm = dynamic_viscosity * strain;
         // stress += viscosityTerm;
         return stress;
     }
