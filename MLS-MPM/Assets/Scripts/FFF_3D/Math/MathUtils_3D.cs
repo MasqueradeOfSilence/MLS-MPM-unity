@@ -156,7 +156,7 @@ public class MathUtils_3D
     }
 
     public static double3x3 ComputeNonNewtonianHBStress(double eosStiffness, double density, 
-        double restDensity, double eosPower, double3x3 strain)
+        double restDensity, double eosPower, double3x3 strain, double tauY, double K, double n)
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double3x3 pressureTerm = new(
@@ -175,8 +175,10 @@ public class MathUtils_3D
         else
         {
             //effectiveViscosity_eta = tauY / strainMagnitude + K * po
+            effectiveViscosity_eta = tauY / strainMagnitude + K * math.pow(strainMagnitude, n - 1.0);
         }
-        return pressureTerm;
+        double3x3 viscousStress = 2.0 * effectiveViscosity_eta * strain;
+        return pressureTerm + viscousStress;
     }
 
     public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
