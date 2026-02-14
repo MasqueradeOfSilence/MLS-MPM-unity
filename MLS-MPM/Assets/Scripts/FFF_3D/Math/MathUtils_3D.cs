@@ -155,7 +155,8 @@ public class MathUtils_3D
                          M[2][0] * M[2][0] + M[2][1] * M[2][1] + M[2][2] * M[2][2]);
     }
 
-    public static double3x3 ComputeNonNewtonianHBStress(double eosStiffness, double density, double restDensity, double eosPower, double3x3 strain)
+    public static double3x3 ComputeNonNewtonianHBStress(double eosStiffness, double density, 
+        double restDensity, double eosPower, double3x3 strain)
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
         double3x3 pressureTerm = new(
@@ -165,9 +166,11 @@ public class MathUtils_3D
         );
         double strainMagnitude = ComputeFrobeniusNorm(strain);
         double effectiveViscosity_eta;
-        if (strainMagnitude < 1e-6) // TODO remove magic number, this is the quasi-solid behavior threshold
+        double quasiSolidThreshold = 1e-6;
+        double quasiSolidViscosity = 1e6;
+        if (strainMagnitude < quasiSolidThreshold)
         {
-            effectiveViscosity_eta = 1e6;
+            effectiveViscosity_eta = quasiSolidViscosity;
         }
         else
         {
