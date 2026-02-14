@@ -148,20 +148,32 @@ public class MathUtils_3D
         return stressMatrix;
     }
 
+    public static double ComputeFrobeniusNorm(double3x3 M)
+    {
+        return math.sqrt(M[0][0] * M[0][0] + M[0][1] * M[0][1] + M[0][2] * M[0][2] +
+                         M[1][0] * M[1][0] + M[1][1] * M[1][1] + M[1][2] * M[1][2] +
+                         M[2][0] * M[2][0] + M[2][1] * M[2][1] + M[2][2] * M[2][2]);
+    }
+
     public static double3x3 ComputeNonNewtonianHBStress(double eosStiffness, double density, double restDensity, double eosPower, double3x3 strain)
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
-        double3x3 stress = new(
+        double3x3 pressureTerm = new(
             -pressure, 0, 0,
             0, -pressure, 0,
             0, 0, -pressure
         );
-        // next variable is dynamic_viscosity which WILL have HB
-        // TODO implement
-        // dynamic_viscosity = HB formula calculation
-        // double3x3 viscosityTerm = dynamic_viscosity * strain;
-        // stress += viscosityTerm;
-        return stress;
+        double strainMagnitude = ComputeFrobeniusNorm(strain);
+        double effectiveViscosity_eta;
+        if (strainMagnitude < 1e-6) // TODO remove magic number, this is the quasi-solid behavior threshold
+        {
+            effectiveViscosity_eta = 1e6;
+        }
+        else
+        {
+            //effectiveViscosity_eta = tauY / strainMagnitude + K * po
+        }
+        return pressureTerm;
     }
 
     public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
