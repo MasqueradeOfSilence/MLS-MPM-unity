@@ -89,7 +89,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         if (useHerschelBulkley)
         {
-            gravity = -9.8;
+            // gravity = -9.8;
             shouldUseParticleOnlyShader = false;
         }
         //yield return new WaitForSeconds(3);
@@ -302,7 +302,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (useHerschelBulkley)
         {
-            ComputeVoronoi();
+            ComputeVoronoi(); // TODO fix any issues with this
         }
         iteration++;
     }
@@ -450,43 +450,54 @@ public class FFF_Optimized_3D : MonoBehaviour
             double yieldStress_T0 = 0.319;
             double viscosity_mu = 2.72;
             double flowIndex_n = 0.22;
-            double eosStiffness = 19.6;
-            double restDensity = 3.108;
-            int eosPower = 2;
+            // double eosStiffness = 19.6;
+            // double restDensity = 3.108;
+            // int eosPower = 2;
+
+            // Take these from nialltl
+            double eosStiffness = 10;
+            double restDensity = 4;
+            int eosPower = 4;
+
             double smallestValue = double.MaxValue;
             double extraOffset = 0;
-            if (useHerschelBulkley)
-            {
-                // Mapping
-                for (int l = 0; l < 3; l++)
-                {
-                    for (int m = 0; m < 3; m++)
-                    {
-                        double currentValue = strain[l][m];
-                        if (currentValue < smallestValue)
-                        {
-                            smallestValue = currentValue;
-                        }
-                    }
-                }
-                if (smallestValue < 0)
-                {
-                    extraOffset = 0.001;
-                    smallestValue = math.abs(smallestValue);
-                    extraOffset += smallestValue;
-                    for (int row = 0; row < 3; row++)
-                    {
-                        for (int col = 0; col < 3; col++)
-                        {
-                            strain[row][col] += extraOffset;
-                        }
-                    }
-                }
-            }
+            // if (useHerschelBulkley)
+            // {
+            //     // Mapping
+            //     for (int l = 0; l < 3; l++)
+            //     {
+            //         for (int m = 0; m < 3; m++)
+            //         {
+            //             double currentValue = strain[l][m];
+            //             if (currentValue < smallestValue)
+            //             {
+            //                 smallestValue = currentValue;
+            //             }
+            //         }
+            //     }
+            //     if (smallestValue < 0)
+            //     {
+            //         extraOffset = 0.001;
+            //         smallestValue = math.abs(smallestValue);
+            //         extraOffset += smallestValue;
+            //         for (int row = 0; row < 3; row++)
+            //         {
+            //             for (int col = 0; col < 3; col++)
+            //             {
+            //                 strain[row][col] += extraOffset;
+            //             }
+            //         }
+            //     }
+            // }
 
             double3x3 stressToUse;
-            double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
-                        strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
+            // double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
+            //             strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
+            double tauY = 0.5;
+            double K = 0.05;
+            double n = 0.3;
+            double3x3 herschelBulkleyStress = MathUtils_3D.ComputeNonNewtonianHBStress(eosStiffness, density, restDensity,
+                eosPower, strain, tauY, K, n);
             double3x3 newtonianStress;
             if (!useHerschelBulkley)
             {
