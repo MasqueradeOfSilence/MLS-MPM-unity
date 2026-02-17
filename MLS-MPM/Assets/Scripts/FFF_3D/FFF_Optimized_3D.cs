@@ -72,7 +72,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     // Boolean for showing all particles, even ones that were determined as fluid
     // consider: also not skipping any bubbles with this boolean flag - ?
     // for now, because won't that implicitly cause blank spaces?
-    bool showAllParticles = true;
+    bool showAllParticles = false;
 
     public enum SimType
     {
