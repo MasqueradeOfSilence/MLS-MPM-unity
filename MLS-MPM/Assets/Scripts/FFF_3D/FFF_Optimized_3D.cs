@@ -493,9 +493,9 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3x3 stressToUse;
             // double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
             //             strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
-            double tauY = 0.5;
-            double K = 0.05;
-            double n = 0.3;
+            double tauY = 2.0; // Try: 0.5 to 2.0. Higher is more solid-like
+            double K = 0.5; // Try: 0.05 to 0.5. Higher is more viscous 
+            double n = 0.3; // Try: 0.3 to 0.5 -- it's just shear-thinning
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeNonNewtonianHBStress(eosStiffness, density, restDensity,
                 eosPower, strain, tauY, K, n);
             double3x3 newtonianStress;
