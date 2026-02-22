@@ -166,7 +166,7 @@ public class MathUtils_3D
         );
         double strainMagnitude = ComputeFrobeniusNorm(strain);
         double effectiveViscosity_eta;
-        double quasiSolidThreshold = 1e-6; // May change to 1e-3 or 1e-4 for greater settling
+        double quasiSolidThreshold = 1e-3; // May change to 1e-3 or 1e-4 for greater settling
         double quasiSolidViscosity = 1e6;
         if (strainMagnitude < quasiSolidThreshold)
         {
