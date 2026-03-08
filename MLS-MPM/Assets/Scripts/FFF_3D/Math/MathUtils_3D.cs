@@ -174,7 +174,9 @@ public class MathUtils_3D
         }
         else
         {
-            effectiveViscosity_eta = tauY / strainMagnitude + K * math.pow(strainMagnitude, n - 1.0);
+            double m = 100.0; // higher values = stiffer
+            double regularizationTerm = 1.0 - math.exp(-m * strainMagnitude);
+            effectiveViscosity_eta = (tauY / (strainMagnitude + 1e-10)) * regularizationTerm + K * math.pow(strainMagnitude, n - 1.0);
         }
         double3x3 viscousStress = 2.0 * effectiveViscosity_eta * strain;
         return pressureTerm + viscousStress;
