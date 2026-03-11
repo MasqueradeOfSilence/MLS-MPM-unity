@@ -174,8 +174,13 @@ public class MathUtils_3D
         }
         else
         {
-            double m = 100.0; // higher values = stiffer
+            int currentFrame = Time.frameCount;
+            double framesToFullStiffness = 100.0;
+            double timeFactor = math.min(1.0, Time.frameCount / framesToFullStiffness);
+            double agingMultiplier = 1.0 + 10.0 * timeFactor;
+            double m = 900.0; // higher values = stiffer
             double regularizationTerm = 1.0 - math.exp(-m * strainMagnitude);
+            tauY *= agingMultiplier;
             effectiveViscosity_eta = (tauY / (strainMagnitude + 1e-10)) * regularizationTerm + K * math.pow(strainMagnitude, n - 1.0);
         }
         double3x3 viscousStress = 2.0 * effectiveViscosity_eta * strain;
