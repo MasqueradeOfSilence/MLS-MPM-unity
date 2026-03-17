@@ -174,7 +174,6 @@ public class MathUtils_3D
         }
         else
         {
-            int currentFrame = Time.frameCount;
             double framesToFullStiffness = 100.0;
             double timeFactor = math.min(1.0, Time.frameCount / framesToFullStiffness);
             double agingMultiplier = 1.0 + 10.0 * timeFactor;

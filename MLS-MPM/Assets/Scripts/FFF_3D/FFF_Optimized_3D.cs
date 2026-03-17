@@ -54,7 +54,7 @@ public class FFF_Optimized_3D : MonoBehaviour
      * - uncomment DetermineBubbleSizes() [check]
      * - uncomment mapping logic / if-guard it [check]
      * - comment out the eos variable changes [check]
-     * - newtonianStress vs. herschelBulkleyStress [check]
+     * - newtonianStress vs. herschelBulkleyStress [check]f
      * 
      */
     private bool useHerschelBulkley = true;
@@ -138,6 +138,11 @@ public class FFF_Optimized_3D : MonoBehaviour
         if (runLimitedUpdates && numUpdates > howManyStepsToTest)
         {
             numUpdates++;
+            return;
+        }
+        if (Time.frameCount > 25)
+        {
+            UnityEngine.Debug.Log("Stopping");
             return;
         }
         // Performance metrics
