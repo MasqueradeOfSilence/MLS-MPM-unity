@@ -142,7 +142,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (Time.frameCount > 25)
         {
-            UnityEngine.Debug.Log("Stopping");
+            //UnityEngine.Debug.Log("Stopping");
             return;
         }
         // Performance metrics
@@ -287,7 +287,7 @@ public class FFF_Optimized_3D : MonoBehaviour
      */
     public void Simulate()
     {
-        UnityEngine.Debug.Log("Simulating...");
+        //UnityEngine.Debug.Log("Simulating...");
         ClearGrid();
         ParticleToGridStep1();
         ParticleToGridStep2();
