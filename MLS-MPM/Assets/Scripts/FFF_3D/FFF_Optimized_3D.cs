@@ -14,13 +14,6 @@ using System.Diagnostics;
  * Goal: Fully optimize FFF for 3D so it doesn't freeze Unity.
  */
 
-/**
- * Debug notes
- * - I think we are trying to rely on masses alone to separate fluid particles from gas bubbles. 
- * - I don't think this is actually correct. 
- * - They're probably trying to mix, but since we don't see the fluid particles, it looks like there are these air pockets. 
- */
-
 public class FFF_Optimized_3D : MonoBehaviour
 {
     /**
@@ -78,9 +71,11 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
+    // TODO: The following do not work: Foaming Soap, Detergent.
+    // Others are fine when tested
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.defaultSim;
+    private readonly SimType simType = SimType.bubbleBath;
     private bool started = false;
 
     // Start is called before the first frame update
