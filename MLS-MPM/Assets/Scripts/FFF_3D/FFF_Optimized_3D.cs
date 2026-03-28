@@ -40,16 +40,6 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool renderWater = false;
     private bool alembicEnabled = false;
     // Use this boolean to flip between Newtonian and Herschel-Bulkley models. 
-    /*
-     * Newtonian -> HB in FFF_Optimized_3D.cs:
-     * - Gravity: -0.3 -> 9.8 [check]
-     * - shouldUseParticleOnlyShader: true -> false [check]
-     * - uncomment DetermineBubbleSizes() [check]
-     * - uncomment mapping logic / if-guard it [check]
-     * - comment out the eos variable changes [check]
-     * - newtonianStress vs. herschelBulkleyStress [check]f
-     * 
-     */
     private bool useHerschelBulkley = true;
 
     // Computational Performance Metrics
@@ -63,19 +53,17 @@ public class FFF_Optimized_3D : MonoBehaviour
     // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
     bool shouldUseParticleOnlyShader = true;
     // Boolean for showing all particles, even ones that were determined as fluid
-    // consider: also not skipping any bubbles with this boolean flag - ?
-    // for now, because won't that implicitly cause blank spaces?
     bool showAllParticles = false;
 
     public enum SimType
     {
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
-    // TODO: The following do not work: Foaming Soap, Detergent.
+    // TODO: The following do not work: Jacuzzi, Detergent.
     // Others are fine when tested
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.bubbleBath;
+    private readonly SimType simType = SimType.jacuzzi;
     private bool started = false;
 
     // Start is called before the first frame update
