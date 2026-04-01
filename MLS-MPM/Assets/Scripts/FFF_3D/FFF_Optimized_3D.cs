@@ -688,7 +688,7 @@ public class FFF_Optimized_3D : MonoBehaviour
                 // Bubbles up top, water down below
                 fluidLevel = 6;
                 initialSizingFactor = 0.3f;
-                skipProbability = 0.3; // as a test, changed from 0.7
+                skipProbability = 0.7;
                 break;
             case SimType.foamingSoap:
                 fluidLevel = 3;
