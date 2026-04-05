@@ -59,11 +59,9 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
-    // TODO: The following do not work: Jacuzzi, Detergent.
-    // Others are fine when tested
 
     // For now, change depending on what sim type you want
-    private readonly SimType simType = SimType.jacuzzi;
+    private readonly SimType simType = SimType.laundryDetergent;
     private bool started = false;
 
     // Start is called before the first frame update
@@ -698,7 +696,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             case SimType.laundryDetergent:
                 fluidLevel = 10;
                 initialSizingFactor = 0.35f;
-                skipProbability = 0.1;
+                skipProbability = 0.6;
                 break;
             case SimType.bubbleBath:
                 fluidLevel = 1;
