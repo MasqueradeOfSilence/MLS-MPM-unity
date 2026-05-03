@@ -66,7 +66,6 @@ public class FFF_Optimized_3D : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    //IEnumerator Start()
     {
         if (useHerschelBulkley)
         {
