@@ -21,7 +21,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     */
     private Particle_3D[] particles;
     private Grid_3D grid;
-    private readonly int resolution = 16; // Was 64 for 2D
+    private readonly int resolution = 16;
+    // resolution was 64 for 2D - reducing for computational efficiency
     private const double timestep = 0.2;
     private const int numSimsPerUpdate = (int)(1 / timestep);
     private double gravity = -0.3;
@@ -69,10 +70,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         if (useHerschelBulkley)
         {
-            // gravity = -9.8;
             shouldUseParticleOnlyShader = false;
         }
-        //yield return new WaitForSeconds(3);
         started = true;
         startTime = DateTime.Now;
         Init();
@@ -287,7 +286,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
         if (useHerschelBulkley)
         {
-            ComputeVoronoi(); // TODO fix any issues with this
+            ComputeVoronoi();
         }
         iteration++;
     }
@@ -429,58 +428,15 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3x3 strain = p.GetC();
             double trace = MathUtils_3D.ComputeTrace(strain);
             strain.c0.z = strain.c1.y = strain.c2.x = trace;
-            // Herschel-Bulkley: TODO validate these variables as actually correct
-            // TODO double check the formula -- this is causing some instability
-            // check the hardcoded values, but also the core issue appears to be with the computation
-            double yieldStress_T0 = 0.319;
-            double viscosity_mu = 2.72;
-            double flowIndex_n = 0.22;
-            // double eosStiffness = 19.6;
-            // double restDensity = 3.108;
-            // int eosPower = 2;
 
             // Take these from nialltl
             double eosStiffness = 10;
             double restDensity = 4;
             int eosPower = 4;
-
-            double smallestValue = double.MaxValue;
-            double extraOffset = 0;
-            // if (useHerschelBulkley)
-            // {
-            //     // Mapping
-            //     for (int l = 0; l < 3; l++)
-            //     {
-            //         for (int m = 0; m < 3; m++)
-            //         {
-            //             double currentValue = strain[l][m];
-            //             if (currentValue < smallestValue)
-            //             {
-            //                 smallestValue = currentValue;
-            //             }
-            //         }
-            //     }
-            //     if (smallestValue < 0)
-            //     {
-            //         extraOffset = 0.001;
-            //         smallestValue = math.abs(smallestValue);
-            //         extraOffset += smallestValue;
-            //         for (int row = 0; row < 3; row++)
-            //         {
-            //             for (int col = 0; col < 3; col++)
-            //             {
-            //                 strain[row][col] += extraOffset;
-            //             }
-            //         }
-            //     }
-            // }
-
             double3x3 stressToUse;
-            // double3x3 herschelBulkleyStress = MathUtils_3D.ComputeHerschelBulkleyStress(yieldStress_T0,
-            //             strain, viscosity_mu, flowIndex_n, eosStiffness, density, restDensity, eosPower, extraOffset);
-            double tauY = 2.0; // Try: 0.5 to 2.0. Higher is more solid-like
-            double K = 0.5; // Try: 0.05 to 0.5. Higher is more viscous 
-            double n = 0.3; // Try: 0.3 to 0.5 -- it's just shear-thinning
+            double tauY = 2.0; // Range: 0.5 to 2.0. Higher is more solid-like
+            double K = 0.5; // Range: 0.05 to 0.5. Higher is more viscous 
+            double n = 0.3; // Range: 0.3 to 0.5 -- it's just shear-thinning
             double3x3 herschelBulkleyStress = MathUtils_3D.ComputeNonNewtonianHBStress(eosStiffness, density, restDensity,
                 eosPower, strain, tauY, K, n);
             double3x3 newtonianStress;
@@ -606,14 +562,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     {
         double3 velocity = p.GetVelocity();
         double3 xN = p.GetPosition() + velocity;
-        // I experimented with changing this (wallMin) from 3->4
-        const double wallMin = 3;// 4;
+        const double wallMin = 3;
         double wallMax = resolution - 4;
-        // they are supposed to swirl around the bottom but they are leaking out of the lower RH corner
-        // actually, I think they are swirling, but it leaves a lot of open space to the left, potentially giving the illusion of leaking 
-        // when considering varying radii (?)
-        // the original MLS-MPM implementation from nialltl had that swirling pattern too
-        // I think the H-B equation slowed down the fluid, and then potentially pockets of air are getting trapped at the bottom?
         if (xN.x < wallMin)
         {
             velocity.x += (wallMin - xN.x);
