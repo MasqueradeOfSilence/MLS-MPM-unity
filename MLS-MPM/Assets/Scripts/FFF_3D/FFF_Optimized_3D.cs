@@ -258,7 +258,7 @@ public class FFF_Optimized_3D : MonoBehaviour
             sw?.WriteLine(averageTimeInfo);
             sw?.Close();
         }
-        // CPU, GPU, RAM will not be done programmatically at this time. Instead we will be looking at the Unity profiler.
+        // Use Unity profiler to observe CPU, GPU, and RAM.
     }
 
     /**
@@ -304,6 +304,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         material.SetInteger("_CountMe", 2);
     }
 
+    // Debug sphere
     private bool IsSphere1611Round1(double3 positionBeforeModification)
     {
         double3 target = new(7, 6, 9.5);
@@ -691,12 +692,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             {
                 p.SetBubble(50); // very small size
             }
-            //else if (!MathUtils_3D.IsAir(p))
-            //{
-            //    // Enforcing microscopic size for fluid particles -- may delete
-            //    p.SetBubble(120);
-            //    sw.WriteLine(120);
-            //}
             else
             {
                 double volumeFraction = VolumeFractionUtils_3D.ComputeVolumeFraction(flatParticleList, p);
