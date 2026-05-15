@@ -621,7 +621,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         }
 
         List<Particle_3D> flatParticleList = GetFlattenedParticleList();
-        // TODO duplication is BAD, fix. 
         int fluidLevel = 3;
         float initialSizingFactor = 1f;
         double skipProbability = 0.7;
@@ -751,7 +750,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             double3x3 initialC = new(0);
             if (shouldUseParticleOnlyShader && !useHerschelBulkley)
             {
-                // TODO might want to rename that boolean. Basically full default no Voronoi just Newtonian
                 Particle_3D p = GeometryCreator_3D.CreateNewParticle(tempParticlePositions[i], initialVelocity, 1, initialC);
                 particles[i] = p;
             }
