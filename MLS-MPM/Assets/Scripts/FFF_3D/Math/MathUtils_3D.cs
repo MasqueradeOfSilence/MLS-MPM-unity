@@ -186,20 +186,6 @@ public class MathUtils_3D
         return pressureTerm + viscousStress;
     }
 
-    public static double3x3 ComputeHerschelBulkleyStress(double yieldStress_T0, double3x3 strain_deltaVPlusDeltaVTransposed,
-        double viscosity_mu, double flowIndex_n, double eosStiffness, double density, double restDensity, int eosPower, double offset = 0)
-    {
-        double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
-        double3x3 pressureTimesTranspose = CreateStressMatrix(pressure);
-        double3x3 strainRaisedToPower = new(math.pow(strain_deltaVPlusDeltaVTransposed[0], flowIndex_n), math.pow(strain_deltaVPlusDeltaVTransposed[1], flowIndex_n), 
-            math.pow(strain_deltaVPlusDeltaVTransposed[2], flowIndex_n));
-        strainRaisedToPower -= offset;
-        double3x3 viscosity = viscosity_mu * strainRaisedToPower;
-        double3x3 shearStress = yieldStress_T0 + viscosity;
-        double3x3 toReturn = pressureTimesTranspose + shearStress;
-        return toReturn;
-    }
-
     public static double3x3 ComputeNewtonianStress(double eosStiffness, double density, double restDensity, double eosPower, double3x3 strain)
     {
         double pressure = ComputePressure(eosStiffness, density, restDensity, eosPower);
@@ -211,7 +197,6 @@ public class MathUtils_3D
             0, 0, -pressure
         );
         double dynamic_viscosity = 0.1;
-        // could the issue be that some sort of offset is still happening on the outside even though we don't have it in here?
         double3x3 viscosityTerm = dynamic_viscosity * strain;
         stress += viscosityTerm;
         return stress;

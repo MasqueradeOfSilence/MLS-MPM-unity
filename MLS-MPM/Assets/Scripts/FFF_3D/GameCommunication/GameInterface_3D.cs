@@ -57,34 +57,9 @@ public class GameInterface_3D : MonoBehaviour
             GameObject currentParticleSphere = particleSphereList[i];
             Particle_3D currentParticle = particles[i];
             currentParticleSphere.transform.position = new Vector3((float)currentParticle.GetPosition().x, (float)currentParticle.GetPosition().y, (float)currentParticle.GetPosition().z);
-            // only do if it hasn't been set yet (not 100% sure this will work)
-            //if (currentParticleSphere.GetComponent<Renderer>().sharedMaterial.GetFloatArray("_SphereRadii")[0] == 0)
-            //{
-            //    if (currentParticle.GetBubble() != null)
-            //    {
-            //        float radius = currentParticle.GetBubble().ComputeUnitySphereRadius();
-            //        if (radius >= macroscopicThreshold)
-            //        {
-            //            Material mat = Resources.Load(defaultMaterial, typeof(Material)) as Material;
-            //            if (fffMaterial)
-            //            {
-            //                mat = Resources.Load(voronoiMaterial, typeof(Material)) as Material;
-            //            }
-            //            currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
-            //            currentParticleSphere.GetComponent<Renderer>().material = mat;
-            //            currentParticleSphere.GetComponent<Renderer>().sharedMaterial = mat;
-            //        }
-            //        currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
-            //    }
-            //}
             if (currentParticle.GetBubble() != null)
             {
                 float radius = currentParticle.GetBubble().ComputeUnitySphereRadius();
-                //if (whiteMaterial)
-                //{
-                //    // probably not necessary
-                //    macroscopicThreshold = 0.3;
-                //}
                 if (radius >= macroscopicThreshold)
                 {
                     Material mat = Resources.Load(defaultMaterial, typeof(Material)) as Material;
@@ -101,15 +76,8 @@ public class GameInterface_3D : MonoBehaviour
                         mat = Resources.Load(defaultParticleMaterialName, typeof(Material)) as Material;
                     }
 
-                    //currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
                     currentParticleSphere.GetComponent<Renderer>().material = mat;
                     currentParticleSphere.GetComponent<Renderer>().sharedMaterial = mat;
-                    //if (currentParticleSphere.GetComponent<Renderer>().sharedMaterial.GetFloatArray("_SphereRadii")[0] == 0 || !fffMaterial)
-                    //{
-                    //    currentParticleSphere.GetComponent<MeshRenderer>().material = mat;
-                    //    currentParticleSphere.GetComponent<Renderer>().material = mat;
-                    //    currentParticleSphere.GetComponent<Renderer>().sharedMaterial = mat;
-                    //}
                 }
                 currentParticleSphere.transform.localScale = new Vector3(radius, radius, radius);
             }

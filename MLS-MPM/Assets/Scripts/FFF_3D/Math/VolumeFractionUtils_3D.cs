@@ -84,7 +84,6 @@ public class VolumeFractionUtils_3D
         {
             volumeFraction += ComputeVolumeFractionContributionForParticle(p, neighbor, neighbors);
         }
-        //volumeFraction /= 10;
         return volumeFraction;
     }
 }

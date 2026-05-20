@@ -9,6 +9,7 @@ using UnityEngine;
 
 /**
  * Water Surfacer: Creates a mesh of water over fluid particles. 
+ * DEPRECATED
  */
 public class WaterSurfacer_3D : MonoBehaviour
 {
