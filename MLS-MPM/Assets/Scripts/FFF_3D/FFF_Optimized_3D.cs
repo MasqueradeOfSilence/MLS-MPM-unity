@@ -12,6 +12,7 @@ using System.Diagnostics;
 
 /**
  * Goal: Fully optimize FFF for 3D so it doesn't freeze Unity.
+ * This is the MAIN SOLVER!
  */
 
 public class FFF_Optimized_3D : MonoBehaviour
