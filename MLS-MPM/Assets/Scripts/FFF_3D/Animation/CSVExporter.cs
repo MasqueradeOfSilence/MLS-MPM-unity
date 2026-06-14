@@ -1,7 +1,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using static FFF_Optimized_3D;
 
 public class CSVExporter : ScriptableObject
 {

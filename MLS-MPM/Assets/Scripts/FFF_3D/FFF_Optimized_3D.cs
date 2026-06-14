@@ -53,7 +53,8 @@ public class FFF_Optimized_3D : MonoBehaviour
     private int numUpdatesForMetrics = 240;
     private List<float> updateTimes = new();
     private string timestamp = "";
-    private bool exportToCSVForHoudini = false;
+    // NOTE: Variable will have no effect if simType is foamingSoap since there's no water in it
+    private bool exportToCSVForHoudini = true;
     // The FFF and White shaders have Voronoi logic. The Particle Only will be to not show anything other than particles represented as spheres.
     bool shouldUseParticleOnlyShader = true;
     // Boolean for showing all particles, even ones that were determined as fluid
