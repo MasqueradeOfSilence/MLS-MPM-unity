@@ -66,7 +66,7 @@ public class FFF_Optimized_3D : MonoBehaviour
         defaultSim, jacuzzi, foamingSoap, laundryDetergent, bubbleBath
     }
 
-    // For now, change depending on what sim type you want
+    // Change this variable to shift which type of foam you are simming. 
     private readonly SimType simType = SimType.defaultSim;
     private bool started = false;
 
