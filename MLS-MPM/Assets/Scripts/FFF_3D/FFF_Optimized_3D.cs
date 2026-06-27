@@ -480,7 +480,6 @@ public class FFF_Optimized_3D : MonoBehaviour
             int x = i / (resolution * resolution);
             int y = (i / resolution) % resolution;
             int z = i % resolution;
-            int3 testIndex = new(x, y, z);
             Cell_3D cell = grid.At(i); // Using i and testIndex is the same thing.
             if (cell.GetMass() > 0)
             {
