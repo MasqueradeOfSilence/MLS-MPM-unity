@@ -403,7 +403,6 @@ public class FFF_Optimized_3D : MonoBehaviour
         int3 neighborPosition = MathUtils_3D.ComputeNeighborPosition(cellPosition, nx, ny, nz);
         double3 distanceFromParticleToNeighbor = MathUtils_3D.ComputeDistanceFromParticleToNeighbor(neighborPosition, particlePosition);
         Cell_3D correspondingCell = grid.At(neighborPosition);
-        double3 savedVelocityInitialForTesting = correspondingCell.GetVelocity();
         double3 momentum = MathUtils_3D.ComputeMomentum(equation16Term0, weight, distanceFromParticleToNeighbor);
         double3 updatedVelocity = MathUtils_3D.AddMomentumToVelocity(momentum, correspondingCell.GetVelocity());
         correspondingCell.SetVelocity(updatedVelocity);
@@ -607,7 +606,7 @@ public class FFF_Optimized_3D : MonoBehaviour
          * VERDICT: Min = 105.1584. Max = 420.2093.
          *  So, basically 105 - 421
          */
-        StreamWriter sw = null;
+        StreamWriter sw;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             // Old directory prefix: c:\Users\alexc\School_Repos
