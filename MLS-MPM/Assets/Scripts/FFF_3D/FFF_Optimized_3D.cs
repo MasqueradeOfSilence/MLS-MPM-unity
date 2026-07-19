@@ -39,9 +39,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool onlyDisplayInitialSetup = false; // Set to TRUE only for debug purposes
     private bool onlySimOnce = false; // Set to TRUE only for debug
     private bool haveSimmedOnce = false; // No touchy
-    // TODO revisit how the alembic was working
-    // it's not currently on point
-    // simply setting this to true does not show alembics - wrong path? 
+    // TODO alembicEnabled might need to be enabled in addition to exportToCSVForHoudini
     private bool renderWater = false;
     private bool alembicEnabled = false;
     // Use this boolean to flip between Newtonian and Herschel-Bulkley models. 
