@@ -41,7 +41,7 @@ public class FFF_Optimized_3D : MonoBehaviour
     private bool haveSimmedOnce = false; // No touchy
     // TODO alembicEnabled might need to be enabled in addition to exportToCSVForHoudini
     private bool renderWater = false;
-    private bool alembicEnabled = false;
+    private bool alembicEnabled = true;
     // Use this boolean to flip between Newtonian and Herschel-Bulkley models. 
     private bool useHerschelBulkley = true;
 
